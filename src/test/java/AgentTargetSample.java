@@ -1,4 +1,4 @@
-
+import java.io.File;
 
 public class AgentTargetSample {
     public static void output(String name) {
@@ -6,9 +6,15 @@ public class AgentTargetSample {
         System.out.println(String.format("%s say hello!", name));
     }
 
-    public static void output(String name, float code) {
-        String msg = name;
-        float c = code;
+    public static void output(String name, long code, File f) {
+        StringBuilder sb = new StringBuilder();
+
+        sb.append(name);
+        sb.append('|');
+        sb.append(code);
+        sb.append('|');
+        sb.append(f);
+        System.out.println(sb.toString());
         System.out.println(String.format("%s say hello!", name));
     }
 
