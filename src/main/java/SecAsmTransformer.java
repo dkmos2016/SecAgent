@@ -1,8 +1,18 @@
 
-import com.sun.javafx.binding.StringFormatter;
+
+import java.io.*;
 import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.IllegalClassFormatException;
 import java.security.ProtectionDomain;
+
+import SecAsm.Track.TrackAdapter;
+import SecAsm.test.testClassVisitor;
+
+import org.apache.log4j.Logger;
+import org.objectweb.asm.ClassReader;
+import org.objectweb.asm.ClassVisitor;
+import org.objectweb.asm.ClassWriter;
+
 
 public class SecAsmTransformer implements ClassFileTransformer {
   @Override
@@ -13,8 +23,33 @@ public class SecAsmTransformer implements ClassFileTransformer {
       ProtectionDomain protectionDomain,
       byte[] classfileBuffer)
       throws IllegalClassFormatException {
-      if (className.equals("test")) {
+      if (className.equals("AgentTargetSample")) {
+          ClassReader cr = new ClassReader(classfileBuffer);
+          ClassWriter cw = new ClassWriter(cr, ClassWriter.COMPUTE_FRAMES);
+          ClassVisitor cv = new testClassVisitor(cw, className);
+          cr.accept(cv, ClassReader.EXPAND_FRAMES);
 
+          byte[] new_classfileBuffer = cw.toByteArray();
+
+          // for test
+          try {
+              System.out.println("write to test1.class");
+              File file = new File("test1.class");
+              FileOutputStream fileOutputStream = new FileOutputStream(file);
+              fileOutputStream.write(new_classfileBuffer);
+              fileOutputStream.close();
+              System.out.println("write to test1.class");
+
+          } catch (IOException e) {
+              Logger.getLogger(this.getClass()).info("IOException");
+              e.printStackTrace();
+          }
+          return new_classfileBuffer;
+      } else {
+          ClassReader cr = new ClassReader(classfileBuffer);
+          ClassWriter cw = new ClassWriter(cr, ClassWriter.COMPUTE_FRAMES);
+          ClassVisitor cv = new TrackAdapter(cw, className);
+          cr.accept(cv, ClassReader.EXPAND_FRAMES);
       }
     return new byte[0];
   }

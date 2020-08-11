@@ -1,16 +1,18 @@
 
 
 public class AgentTargetSample {
-
-    public void sayHello(String name) {
+    public static void output(String name) {
+        String msg = name;
         System.out.println(String.format("%s say hello!", name));
     }
 
-    public static void main(String[] args) throws Exception {
-        AgentTargetSample sample = new AgentTargetSample();
-        for (; ; ) {
-            Thread.sleep(1000);
-            sample.sayHello(Thread.currentThread().getName());
-        }
+    public static void output(String name, float code) {
+        String msg = name;
+        float c = code;
+        System.out.println(String.format("%s say hello!", name));
+    }
+
+    public static void main(String[] args) {
+        output("len");
     }
 }
