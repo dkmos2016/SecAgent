@@ -21,7 +21,37 @@ public class AgentTargetSample {
         private int id;
         private String desc;
 
+        public  test(int id) {
+            this(id, "test");
+
+            StringBuilder sb = new StringBuilder();
+            sb.append(this.getClass().getName());
+            sb.append('|');
+            sb.append(id);
+            sb.append('|');
+            sb.append(desc);
+            System.out.println(sb.toString());
+        }
+
         public test(int id, String desc) {
+//            try{
+//                System.out.println(this.getClass().getName());
+//                System.out.println(id);
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+            try{
+                StringBuilder sb = new StringBuilder();
+                sb.append(this.getClass().getName());
+                sb.append('|');
+                sb.append(id);
+                sb.append('|');
+                sb.append(desc);
+                System.out.println(sb.toString());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
             this.id = id;
             this.desc = desc;
         }
@@ -32,25 +62,15 @@ public class AgentTargetSample {
         }
     }
 
-    public static void output(String[] strings, String name, test t, double i,int j) {
-
-        StringBuilder sb = new StringBuilder();
-        sb.append(strings[0]);
-        sb.append("|");
-        sb.append(strings[1]);
-        sb.append("|");
-        sb.append(strings[2]);
-        sb.append("|");
-        sb.append(t.toString());
-        System.out.println(sb.toString());
-
-        System.out.println(String.format("%s say hello!",name));
+    public static void output(String name, test t, double i,int j) {
+        System.out.println(String.format("%s|%d", name,i));
     }
 
     public static void main(String[] args) {
-        String[] strings = new String[] {"hello", "world", "!"};
+//        String[] strings = new String[] {"hello", "world", "!"};
         test t = new test(1, "HHHHHH");
-        output(strings, "hhhh",  t, 1, 1);
-        System.out.println(args.length);
+        t.toString();
+//        output("hhhh",  t, 1, 300000);
+//        System.out.println("hello world!");
     }
 }
