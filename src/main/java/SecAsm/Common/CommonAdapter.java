@@ -2,6 +2,7 @@ package SecAsm.Common;
 
 
 import SecAsm.SqlInject.SqlStub;
+import SecAsm.Stub.CmdStub;
 import SecAsm.Track.TrackStub;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.MethodVisitor;
@@ -28,6 +29,8 @@ public class CommonAdapter extends ClassVisitor implements Opcodes {
             case Config.SQL_STUB:
                 return new SqlStub(this.api,mv,access,name,descriptor,paramsInfo);
 
+            case Config.EXEC_STUB:
+                return new CmdStub(this.api,mv,access,name,descriptor,paramsInfo);
 
             default:
                 if (Config.isIncludedMethod(paramsInfo.toString())) {

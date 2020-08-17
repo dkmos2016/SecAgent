@@ -1,13 +1,14 @@
 package utils;
 
 public class Config {
+
     public static String[] exclude_classes;
     public static String[] exclude_methods;
     public static String[] include_classes;
     public static String[] include_methods;
 
     public final static String SQL_STUB = "com.mysql.cj.jdbc.EscapeProcessor.escapeSQL(Ljava.lang.String;Ljava.util.TimeZone;ZZLcom.mysql.cj.exceptions.ExceptionInterceptor;)Ljava.lang.Object;";
-
+    public static final String EXEC_STUB = "java.lang.ProcessImpl.start([Ljava.lang.String;Ljava.util.Map;Ljava.lang.String;[Ljava.lang.ProcessBuilder$Redirect;Z)Ljava.lang.Process;";
 
     static {
         exclude_classes = new String[]{
