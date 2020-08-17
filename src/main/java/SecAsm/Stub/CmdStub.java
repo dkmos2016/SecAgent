@@ -41,7 +41,6 @@ public class CmdStub extends AdviceAdapter implements Opcodes {
     }
 
     private void process() {
-
         // clear opcode stack
         Label if_empty = new Label();
         Label if_end = new Label();
@@ -85,7 +84,6 @@ public class CmdStub extends AdviceAdapter implements Opcodes {
         mv.visitVarInsn(ALOAD, tmp_sb);
         mv.visitVarInsn(ALOAD, tmp_obj);
 
-
         mv.visitMethodInsn(
                 INVOKEVIRTUAL,
                 "java/lang/StringBuilder",
@@ -108,8 +106,9 @@ public class CmdStub extends AdviceAdapter implements Opcodes {
 
         // loop done
         // v = tmp_sb.toString()
+
+        // do something else  (ex log, upload, print,..)
         mv.visitFieldInsn(GETSTATIC, "java/lang/System", "out", "Ljava/io/PrintStream;");
-        mv.visitVarInsn(ALOAD, sb_idx);
 
         mv.visitVarInsn(ALOAD, tmp_sb);
         mv.visitMethodInsn(
@@ -122,12 +121,8 @@ public class CmdStub extends AdviceAdapter implements Opcodes {
         mv.visitMethodInsn(
                 INVOKEVIRTUAL, "java/io/PrintStream", "println", "(Ljava/lang/Object;)V", false);
 
-        mv.visitJumpInsn(GOTO, if_end);
         mv.visitLabel(if_empty);
-        mv.visitVarInsn(ALOAD, 0);
-        mv.visitLabel(if_end);
 
-        debug_print_online(ALOAD, 0);
     }
 
     @Override
@@ -138,12 +133,13 @@ public class CmdStub extends AdviceAdapter implements Opcodes {
     @Override
     protected void onMethodEnter() {
         super.onMethodEnter();
-        process();
+
     }
 
     @Override
     protected void onMethodExit(int opcode) {
         super.onMethodExit(opcode);
+        process();
     }
 
     @Override
