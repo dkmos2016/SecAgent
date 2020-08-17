@@ -38,8 +38,8 @@ public class Config {
 
         };
         include_methods = new String[]{
-                "com.mysql.cj.conf.HostInfo.<init>(Lcom.mysql.cj.conf.DatabaseUrlContainer;Ljava.lang.String;ILjava.lang.String;ZLjava.lang.String;ZLjava.util.Map;)V",
-                "len.test"
+//                "com.mysql.cj.conf.HostInfo.<init>(Lcom.mysql.cj.conf.DatabaseUrlContainer;Ljava.lang.String;ILjava.lang.String;ZLjava.lang.String;ZLjava.util.Map;)V",
+                "len.test.show"
         };
     }
 

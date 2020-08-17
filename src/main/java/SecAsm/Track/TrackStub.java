@@ -6,6 +6,8 @@ import org.objectweb.asm.Type;
 import org.objectweb.asm.commons.AdviceAdapter;
 import utils.ParamsInfo;
 
+import java.lang.reflect.Modifier;
+
 public class TrackStub extends AdviceAdapter implements Opcodes {
   ParamsInfo paramsInfo;
 
@@ -30,9 +32,11 @@ public class TrackStub extends AdviceAdapter implements Opcodes {
   }
 
   public void process() {
-    int size = paramsInfo.getSize();
-    int param_idx = 0;
-    int sb_idx = size + 1;
+
+    int param_idx = 1;
+    int size = paramsInfo.getSize()+1;
+
+    int sb_idx = newLocal(Type.getType(StringBuilder.class));
 
     mv.visitTypeInsn(NEW, "java/lang/StringBuilder");
     mv.visitInsn(DUP);
@@ -40,30 +44,12 @@ public class TrackStub extends AdviceAdapter implements Opcodes {
     mv.visitVarInsn(ASTORE, sb_idx);
 
     // fix init param_idx 0
-
-    if ((this.getAccess() & (ACC_STATIC | ACC_INTERFACE | ACC_ABSTRACT)) == 0) {
-//      System.out.println("matched " + this.paramsInfo + " " + this.getAccess());
-
-      param_idx = 1;
-      size += 1;
+    if (Modifier.isStatic(this.paramsInfo.getAccess())) {
+      param_idx = 0;
+      size -= 1;
     }
 
-    if ( this.paramsInfo.getSize()>0 ){
-      // sb.append(this.paramsInfo.toString() + '|');
-      mv.visitVarInsn(ALOAD, sb_idx);
-      mv.visitLdcInsn(this.paramsInfo.toString() + '|');
-      mv.visitMethodInsn(
-              INVOKEVIRTUAL,
-              "java/lang/StringBuilder",
-              "append",
-              "(Ljava/lang/String;)Ljava/lang/StringBuilder;",
-              false);
-      mv.visitInsn(POP);
-    } else {
-      return;
-    }
-
-    for (Type type : this.getArgumentTypes()) {
+    for (Type type : this.paramsInfo.getIn_types()) {
       mv.visitVarInsn(ALOAD, sb_idx);
       String desc = String.format("(%s)Ljava/lang/StringBuilder;", type.toString());
 
@@ -94,17 +80,16 @@ public class TrackStub extends AdviceAdapter implements Opcodes {
           break;
 
         default:
-          // System.out.println("default");
+          System.out.println("default");
           desc = "(Ljava/lang/String;)Ljava/lang/StringBuilder;";
           mv.visitVarInsn(ALOAD, param_idx);
           mv.visitMethodInsn(
-              INVOKEVIRTUAL, paramsInfo.getClazz(), "toString", "()Ljava/lang/String;", false);
+              INVOKEVIRTUAL, "java/lang/Object", "toString", "()Ljava/lang/String;", false);
           break;
       }
-//      System.out.println(
-//          String.format("%s, load %s, param_idx %d", paramsInfo, type.toString(), param_idx));
 
       param_idx += type.getSize();
+
       // sb.append(v.toString())
       mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/StringBuilder", "append", desc, false);
       mv.visitInsn(POP);
@@ -135,22 +120,18 @@ public class TrackStub extends AdviceAdapter implements Opcodes {
   @Override
   protected void onMethodEnter() {
     super.onMethodEnter();
-//    System.out.println(String.format("stub into %s, params %d", paramsInfo, paramsInfo.getSize()));
+    System.out.println(String.format("stub into %s, params %d", paramsInfo, paramsInfo.getSize()));
   }
 
   @Override
   protected void onMethodExit(int opcode) {
-    if (!this.paramsInfo.toString().contains(".main([Ljava.lang.String;)V")) {
-      process();
-    }
+    process();
+
     super.onMethodExit(opcode);
   }
 
   @Override
   public void endMethod() {
-    if (this.paramsInfo.toString().contains(".main([Ljava.lang.String;)V")) {
-      process();
-    }
     super.endMethod();
   }
 }

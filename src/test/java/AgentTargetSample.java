@@ -66,11 +66,24 @@ public class AgentTargetSample {
         System.out.println(String.format("%s|%d", name,i));
     }
 
+    public static void show(String name, test []t) {
+        StringBuilder sb = new StringBuilder();
+        for (test n: t) {
+            sb.append(t.toString());
+        }
+
+        System.out.println(sb.toString());
+    }
+
     public static void main(String[] args) {
 //        String[] strings = new String[] {"hello", "world", "!"};
-        test t = new test(1, "HHHHHH");
-        t.toString();
+//        test t = new test(1, "HHHHHH");
+//        t.toString();
 //        output("hhhh",  t, 1, 300000);
 //        System.out.println("hello world!");
+
+        show("hell", new test[]{
+                new test(1111),new test(4444),new test(7777),
+        });
     }
 }
