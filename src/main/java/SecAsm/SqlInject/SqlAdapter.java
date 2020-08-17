@@ -1,14 +1,16 @@
 package SecAsm.SqlInject;
 
-
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
+import org.objectweb.asm.Type;
+import utils.ParamsInfo;
 
-public class SqlAdapter extends ClassVisitor implements Opcodes {
-    static protected String CLASSNAME;
 
-    public SqlAdapter(final ClassVisitor cv, final String name){
+public class SqlAdapter extends ClassVisitor implements Opcodes  {
+    protected static String CLASSNAME;
+
+    public SqlAdapter(final ClassVisitor cv, final String name) {
         super(Opcodes.ASM5, cv);
         CLASSNAME = name;
     }
@@ -16,12 +18,9 @@ public class SqlAdapter extends ClassVisitor implements Opcodes {
     @Override
     public MethodVisitor visitMethod(int access, String name, String descriptor, String signature, String[] exceptions) {
         MethodVisitor mv = super.visitMethod(access, name, descriptor, signature, exceptions);
-        // check classname and method name
+        ParamsInfo paramsInfo = new ParamsInfo(CLASSNAME, access, name, Type.getArgumentTypes(descriptor), descriptor, signature);
 
-        if (CLASSNAME.equals("")){
-            return new SqlStub(this.api, mv, access, name, descriptor);
-        }
-        return mv;
+        return new SqlStub(this.api, mv, access, name, descriptor, paramsInfo);
     }
 
 }

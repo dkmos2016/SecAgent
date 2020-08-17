@@ -6,31 +6,12 @@ public class Config {
     public static String[] include_classes;
     public static String[] include_methods;
 
+    public final static String SQL_STUB = "com.mysql.cj.jdbc.EscapeProcessor.escapeSQL(Ljava.lang.String;Ljava.util.TimeZone;ZZLcom.mysql.cj.exceptions.ExceptionInterceptor;)Ljava.lang.Object;";
+
 
     static {
         exclude_classes = new String[]{
                 "MethodHandleImpl","ClassValue","ExceptionInInitializerError",
-                "Shutdown","Throwable","NonRegisteringDriver","AbandonedConnectionCleanupThread",
-                "IdentityHashMap","FloatingDecimal","NoSuchFieldException","IllegalAccessException",
-                "Wrapper","java.lang.", "sun.invoke.util.BytecodeDescriptor",
-                "jdk.internal.org.objectweb.asm",
-                "java.util.",
-                "sun.reflect.UnsafeStaticObjectFieldAccessorImpl",
-                "java.net.SocketPermission",
-                "java.sql.DriverManager.registerDriver",
-                "com.mysql.cj.jdbc.Driver",
-                "java.sql.DriverManager",
-                "sun.net.www.protocol.",
-                "sun.misc.CompoundEnumeration",
-                "java.security.PrivilegedActionException",
-                "sun.misc.Launcher",
-                "sun.misc.URLClassPath",
-                "java.net.URLClassLoader",
-                "java.io.FileNotFoundException",
-                "sun.invoke.util",
-                "sun.launcher.LauncherHelper",
-                "sun.usagetracker.UsageTrackerClient",
-
         };
 
         exclude_methods = new String[]{"main", "<clinit>"};
@@ -38,8 +19,11 @@ public class Config {
 
         };
         include_methods = new String[]{
-//                "com.mysql.cj.conf.HostInfo.<init>(Lcom.mysql.cj.conf.DatabaseUrlContainer;Ljava.lang.String;ILjava.lang.String;ZLjava.lang.String;ZLjava.util.Map;)V",
-                "len.test.show"
+                "len.test.show2",
+                "java.lang.Runtime.exec",
+                "java.lang.ProcessImpl.start",
+                "java.lang.ProcessImpl.createCommandLine",
+                "com.mysql.cj.jdbc.EscapeProcessor.escapeSQL"
         };
     }
 

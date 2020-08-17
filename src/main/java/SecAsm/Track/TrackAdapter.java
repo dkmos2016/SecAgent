@@ -23,8 +23,8 @@ public class TrackAdapter extends ClassVisitor implements Opcodes {
 
     ParamsInfo paramsInfo = new ParamsInfo(CLASSNAME, access, name, types, descriptor, signature);
 
-//    if (!Config.isExcludedClass(CLASSNAME) && !Config.isExcludedMethod(name)) {
-      if (Config.isIncludedMethod(paramsInfo.toString())) {
+    //    if (!Config.isExcludedClass(CLASSNAME) && !Config.isExcludedMethod(name)) {
+    if (Config.isIncludedMethod(paramsInfo.toString())) {
       mv = new TrackStub(this.api, mv, access, name, descriptor, paramsInfo);
     }
 
