@@ -66,10 +66,15 @@ public class AgentTargetSample {
         System.out.println(String.format("%s|%d", name,i));
     }
 
-    public static void show(String name, test []t) {
+    public static void show(String name, test []t, byte[] bs) {
         StringBuilder sb = new StringBuilder();
         for (test n: t) {
-            sb.append(t.toString());
+            sb.append(n.toString());
+        }
+
+
+        if (bs != null) {
+            sb.append(bs);
         }
 
         System.out.println(sb.toString());
@@ -83,7 +88,8 @@ public class AgentTargetSample {
 //        System.out.println("hello world!");
 
         show("hell", new test[]{
-                new test(1111),new test(4444),new test(7777),
-        });
+                new test(1111),new test(4444),new test(7777)},
+                new byte[]{1,2,3}
+        );
     }
 }
