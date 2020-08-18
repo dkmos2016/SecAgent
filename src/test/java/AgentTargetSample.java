@@ -1,4 +1,11 @@
+
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.datasource.DriverManagerDataSource;
+
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 public class AgentTargetSample {
     private int id;
@@ -80,7 +87,7 @@ public class AgentTargetSample {
         System.out.println(sb.toString());
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
 //        String[] strings = new String[] {"hello", "world", "!"};
 //        test t = new test(1, "HHHHHH");
 //        t.toString();
@@ -91,5 +98,20 @@ public class AgentTargetSample {
                 new test(1111),new test(4444),new test(7777)},
                 new byte[]{1,2,3}
         );
+
+        DriverManagerDataSource dataSource = new DriverManagerDataSource();
+        dataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
+        dataSource.setUrl("jdbc:mysql://localhost:3306/test");
+        dataSource.setUsername("root");
+        dataSource.setPassword("f2]tD#M-{hB}*te;(H.");
+        JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+        jdbcTemplate.execute("select 1 from test");
+
+        File file = new File("log.txt");
+        byte [] bytes = "hello world".getBytes();
+        FileOutputStream fout = new FileOutputStream(file);
+        fout.write(bytes);
+
+        fout.close();
     }
 }

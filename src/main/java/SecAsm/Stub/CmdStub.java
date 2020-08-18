@@ -7,6 +7,7 @@ import org.objectweb.asm.Type;
 import org.objectweb.asm.commons.AdviceAdapter;
 import utils.ParamsInfo;
 
+import java.lang.reflect.Modifier;
 
 
 public class CmdStub extends AdviceAdapter implements Opcodes {
@@ -16,7 +17,7 @@ public class CmdStub extends AdviceAdapter implements Opcodes {
     final int tmp_len = newLocal(Type.getType(int.class));
     final int tmp_idx = newLocal(Type.getType(int.class));
     final int tmp_obj = newLocal(Type.getType(Object.class));
-    ParamsInfo paramsInfo;
+    protected ParamsInfo paramsInfo;
 
     public CmdStub(
             int api, MethodVisitor methodVisitor, int access, String name, String descriptor, ParamsInfo paramsInfo) {
@@ -125,10 +126,6 @@ public class CmdStub extends AdviceAdapter implements Opcodes {
 
     }
 
-    @Override
-    public void visitCode() {
-        super.visitCode();
-    }
 
     @Override
     protected void onMethodEnter() {
@@ -139,6 +136,7 @@ public class CmdStub extends AdviceAdapter implements Opcodes {
     @Override
     protected void onMethodExit(int opcode) {
         super.onMethodExit(opcode);
+        System.out.println(String.format("stub into %s, params %d", paramsInfo, paramsInfo.getSize()));
         process();
     }
 
@@ -146,4 +144,6 @@ public class CmdStub extends AdviceAdapter implements Opcodes {
     public void visitEnd() {
         super.visitEnd();
     }
+
+
 }

@@ -4,6 +4,7 @@ import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
+import org.objectweb.asm.commons.AdviceAdapter;
 import utils.ParamsInfo;
 
 
@@ -22,5 +23,4 @@ public class SqlAdapter extends ClassVisitor implements Opcodes  {
 
         return new SqlStub(this.api, mv, access, name, descriptor, paramsInfo);
     }
-
 }
