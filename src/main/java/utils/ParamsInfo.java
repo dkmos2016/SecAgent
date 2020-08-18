@@ -58,6 +58,6 @@ public class ParamsInfo {
 
     @Override
     public String toString() {
-        return String.format("%s.%s%s", clazz, method, desc).replace('/', '.');
+        return String.format("%s.%s%s", clazz.replace('/', '.'), method, desc).replace('/', '.');
     }
 }

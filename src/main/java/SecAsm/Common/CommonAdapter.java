@@ -1,6 +1,5 @@
 package SecAsm.Common;
 
-
 import SecAsm.SqlInject.SqlStub;
 import SecAsm.Stub.CmdStub;
 import SecAsm.Track.TrackStub;
@@ -11,13 +10,13 @@ import org.objectweb.asm.Type;
 import utils.Config;
 import utils.ParamsInfo;
 
-
 public class CommonAdapter extends ClassVisitor implements Opcodes {
-    static public String CLASSNAME;
+    private String CLASSNAME;
 
     public CommonAdapter(final ClassVisitor cv, final String name){
-        super(Opcodes.ASM5, cv);
+        super(Opcodes.ASM9, cv);
         CLASSNAME = name;
+
     }
 
     @Override
@@ -25,6 +24,21 @@ public class CommonAdapter extends ClassVisitor implements Opcodes {
         MethodVisitor mv = super.visitMethod(access, name, descriptor, signature, exceptions);
         ParamsInfo paramsInfo = new ParamsInfo(CLASSNAME, access, name, Type.getArgumentTypes(descriptor), descriptor, signature);
 
+//        try {
+//            File file = new File("./logxxx.txt");
+//            FileOutputStream fout = new FileOutputStream(file, true);
+//
+//            fout.write(String.format("%s %s\n", CLASSNAME, name).getBytes());
+//            fout.close();
+//        } catch (FileNotFoundException e) {
+//
+//        } catch (IOException e) {
+//
+//        }
+
+//        if (paramsInfo.toString().startsWith("java.lang.S")) {
+//            System.out.println(paramsInfo.toString());
+//        }
         switch (paramsInfo.toString()) {
             case Config.SQL_STUB:
                 return new SqlStub(this.api,mv,access,name,descriptor,paramsInfo);
