@@ -1,42 +1,41 @@
-import java.io.File;
-import java.io.FileOutputStream;
 import java.lang.instrument.Instrumentation;
 import java.lang.instrument.UnmodifiableClassException;
 
 public class AgentDemo {
+  private static final String[] TARGET_CLASSES;
   private static Instrumentation INST;
-  private static String[] TARGET_CLASSES;
 
   static {
-    TARGET_CLASSES = new String[] {
-      "java.io.FileOutputStream",
-            "java.io.FileInputStream",
-            "java.io.File",
-            "java.lang.SecurityManager",
-//            "javax.servlet.http.HttpServlet",
-    };
+    TARGET_CLASSES =
+        new String[] {
+          "java.io.FileOutputStream",
+          "java.io.FileInputStream",
+//          "java.io.File",
+//          "java.lang.SecurityManager",
+          "java.io.ObjectInputStream",
+        };
   }
 
-
-  public static void premain(String args, Instrumentation instrumentation) throws UnmodifiableClassException, ClassNotFoundException {
+  public static void premain(String args, Instrumentation instrumentation)
+      throws UnmodifiableClassException, ClassNotFoundException {
     System.out.println("run in premain");
     INST = instrumentation;
 
     instrumentation.addTransformer(new SecAsmTransformer(), true);
-//    instrumentation.retransformClasses(FileOutputStream.class);
-//    instrumentation.retransformClasses(File.class);
-//    instrumentation.retransformClasses(SecurityManager.class);
-    for (String cls: TARGET_CLASSES) {
+    //    instrumentation.retransformClasses(FileOutputStream.class);
+    //    instrumentation.retransformClasses(File.class);
+    //    instrumentation.retransformClasses(SecurityManager.class);
+    for (String cls : TARGET_CLASSES) {
       System.out.println(String.format("reload %s", cls));
       instrumentation.retransformClasses(Class.forName(cls));
     }
 
-//    for (Class cls: instrumentation.getAllLoadedClasses()) {
-//      System.out.println(cls.getName());
-//    }
+    //    for (Class cls: instrumentation.getAllLoadedClasses()) {
+    //      System.out.println(cls.getName());
+    //    }
   }
 
   public static void agentmain(String args, Instrumentation instrumentation) {
-//    premain(args, instrumentation);
+    //    premain(args, instrumentation);
   }
 }

@@ -42,6 +42,9 @@ public class CmdStub extends AdviceAdapter implements Opcodes {
     }
 
     private void process() {
+        debug_print_offline(
+                String.format(
+                        "[DEBUG] [CmdStub]: %s", this.paramsInfo.toString()));
         // clear opcode stack
         Label if_empty = new Label();
         Label if_end = new Label();
@@ -130,13 +133,12 @@ public class CmdStub extends AdviceAdapter implements Opcodes {
     @Override
     protected void onMethodEnter() {
         super.onMethodEnter();
-
+        System.out.println(String.format("stub into %s, params %d", paramsInfo, paramsInfo.getSize()));
     }
 
     @Override
     protected void onMethodExit(int opcode) {
         super.onMethodExit(opcode);
-        System.out.println(String.format("stub into %s, params %d", paramsInfo, paramsInfo.getSize()));
         process();
     }
 
