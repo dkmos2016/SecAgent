@@ -30,7 +30,9 @@ public class Config {
 //                "java.lang.ProcessImpl.createCommandLine",
 //                "com.mysql.cj.jdbc.EscapeProcessor.escapeSQL",
                 "java.lang.SecurityManager.checkWrite(Ljava.lang.String;)V",
-                "java.io.FileOutputStream.<init>(Ljava.lang.String;)V"
+                "java.io.FileOutputStream.<init>(Ljava.io.File;Z)V",
+                "java.io.FileInputStream.<init>(Ljava.io.File;)V",
+
         };
     }
 

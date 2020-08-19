@@ -1,4 +1,4 @@
-package SecAsm.SqlInject;
+package SecAsm.Stub;
 
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;

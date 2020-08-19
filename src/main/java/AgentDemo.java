@@ -10,8 +10,10 @@ public class AgentDemo {
   static {
     TARGET_CLASSES = new String[] {
       "java.io.FileOutputStream",
+            "java.io.FileInputStream",
             "java.io.File",
-            "java.lang.SecurityManager"
+            "java.lang.SecurityManager",
+//            "javax.servlet.http.HttpServlet",
     };
   }
 
@@ -25,8 +27,13 @@ public class AgentDemo {
 //    instrumentation.retransformClasses(File.class);
 //    instrumentation.retransformClasses(SecurityManager.class);
     for (String cls: TARGET_CLASSES) {
+      System.out.println(String.format("reload %s", cls));
       instrumentation.retransformClasses(Class.forName(cls));
     }
+
+//    for (Class cls: instrumentation.getAllLoadedClasses()) {
+//      System.out.println(cls.getName());
+//    }
   }
 
   public static void agentmain(String args, Instrumentation instrumentation) {
