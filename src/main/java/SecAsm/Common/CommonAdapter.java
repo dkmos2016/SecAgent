@@ -1,8 +1,8 @@
 package SecAsm.Common;
 
-import SecAsm.SqlInject.SqlStub;
+import SecAsm.Stub.SqlStub;
 import SecAsm.Stub.CmdStub;
-import SecAsm.Track.TrackStub;
+import SecAsm.Stub.TrackStub;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;

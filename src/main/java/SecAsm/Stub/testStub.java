@@ -1,4 +1,4 @@
-package SecAsm.test;
+package SecAsm.Stub;
 
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.commons.AdviceAdapter;
