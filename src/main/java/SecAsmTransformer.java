@@ -1,18 +1,9 @@
 import SecAsm.Common.CommonAdapter;
-import SecAsm.Track.TrackAdapter;
-import SecAsm.test.testClassVisitor;
-import org.apache.log4j.Logger;
+
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.ClassWriter;
-import utils.Config;
-
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.lang.instrument.ClassFileTransformer;
-import java.lang.instrument.IllegalClassFormatException;
 import java.security.ProtectionDomain;
 
 public class SecAsmTransformer implements ClassFileTransformer {

@@ -73,7 +73,7 @@ public class TrackStub extends AdviceAdapter implements Opcodes {
             String desc = String.format("(%s)Ljava/lang/StringBuilder;", type.toString());
             debug_print(
                     String.format(
-                            "[DEBUG]: %s %s %d", this.paramsInfo.toString(), type.toString(), param_idx));
+                            "[DEBUG] [TrackStub]: %s %s %d", this.paramsInfo.toString(), type.toString(), param_idx));
 
             switch (type.toString()) {
                 case "B":

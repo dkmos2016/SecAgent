@@ -110,6 +110,7 @@ public class AgentTargetSample {
         File file = new File("log.txt");
         byte [] bytes = "hello world".getBytes();
         FileOutputStream fout = new FileOutputStream(file);
+        System.out.println(file.getAbsolutePath());
         fout.write(bytes);
 
         fout.close();

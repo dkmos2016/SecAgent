@@ -1,8 +1,6 @@
 package SecAsm.Common;
 
-import SecAsm.Stub.SqlStub;
-import SecAsm.Stub.CmdStub;
-import SecAsm.Stub.TrackStub;
+import SecAsm.Stub.*;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
@@ -45,6 +43,12 @@ public class CommonAdapter extends ClassVisitor implements Opcodes {
 
             case Config.EXEC_STUB:
                 return new CmdStub(this.api,mv,access,name,descriptor,paramsInfo);
+
+            case Config.DOWN_STUB:
+                return new DownStub(this.api,mv,access,name,descriptor,paramsInfo);
+
+            case Config.UPLOAD_STUB:
+                return new UploadStub(this.api,mv,access,name,descriptor,paramsInfo);
 
             default:
                 if (Config.isIncludedMethod(paramsInfo.toString())) {
