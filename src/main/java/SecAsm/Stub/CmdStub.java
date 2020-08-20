@@ -7,11 +7,8 @@ import org.objectweb.asm.Type;
 import org.objectweb.asm.commons.AdviceAdapter;
 import utils.ParamsInfo;
 
-import java.lang.reflect.Modifier;
-
 
 public class CmdStub extends AdviceAdapter implements Opcodes {
-    final int sb_idx = newLocal(Type.getType(StringBuilder.class));
     final int tmp_sb = newLocal(Type.getType(StringBuilder.class));
     final int tmp_arr = newLocal(Type.getType("[Ljava/lang/Object;"));
     final int tmp_len = newLocal(Type.getType(int.class));
@@ -47,10 +44,8 @@ public class CmdStub extends AdviceAdapter implements Opcodes {
                         "[DEBUG] [CmdStub]: %s", this.paramsInfo.toString()));
         // clear opcode stack
         Label if_empty = new Label();
-        Label if_end = new Label();
         mv.visitVarInsn(ALOAD, 0);
         mv.visitJumpInsn(IFNULL, if_empty);
-        mv.visitInsn(POP);
 
         // StringBuilder sb = new StringBuilder();
         mv.visitTypeInsn(NEW, "java/lang/StringBuilder");
@@ -126,7 +121,6 @@ public class CmdStub extends AdviceAdapter implements Opcodes {
                 INVOKEVIRTUAL, "java/io/PrintStream", "println", "(Ljava/lang/Object;)V", false);
 
         mv.visitLabel(if_empty);
-
     }
 
 
