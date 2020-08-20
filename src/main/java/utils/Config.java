@@ -16,6 +16,8 @@ public class Config {
     public static final String DOWN_STUB = "java.io.FileInputStream.<init>(Ljava.io.File;)V";
     public static final String UPLOAD_STUB = "java.io.FileOutputStream.<init>(Ljava.io.File;Z)V";
 
+    public static final String SPRING_URL_STUB = "org.springframework.web.servlet.DispatcherServlet.doService(Ljavax.servlet.http.HttpServletRequest;Ljavax.servlet.http.HttpServletResponse;)V";
+
     // todo
     public static final String SSRF_STUB = "java.io.FileOutputStream.<init>(Ljava.io.File;Z)V";
 
@@ -41,7 +43,9 @@ public class Config {
 
 //                "java.io.File.renameTo",
 //                "java.io.File.list",
-
+//                "org.springframework.web.servlet.DispatcherServlet.doService(Ljavax.servlet.http.HttpServletRequest;Ljavax.servlet.http.HttpServletResponse;)V",
+//                "org.springframework.web.servlet.DispatcherServlet",
+//                "org.apache.catalina.core.StandardEngineValve.invoke"
         };
     }
 

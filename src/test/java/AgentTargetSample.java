@@ -99,20 +99,12 @@ public class AgentTargetSample {
                 new byte[]{1,2,3}
         );
 
-        DriverManagerDataSource dataSource = new DriverManagerDataSource();
-        dataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
-        dataSource.setUrl("jdbc:mysql://localhost:3306/test");
-        dataSource.setUsername("root");
-        dataSource.setPassword("f2]tD#M-{hB}*te;(H.");
-        JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-        jdbcTemplate.execute("select 1 from test");
 
-        File file = new File("log.txt");
-        byte [] bytes = "hello world".getBytes();
-        FileOutputStream fout = new FileOutputStream(file);
-        System.out.println(file.getAbsolutePath());
-        fout.write(bytes);
 
-        fout.close();
+        try {
+            Runtime.getRuntime().exec("cmd /c 'whoami'");
+        } catch (Exception e) {
+
+        }
     }
 }
