@@ -41,7 +41,6 @@ public class Config {
 
 //                "java.io.File.renameTo",
 //                "java.io.File.list",
-                "",
 
         };
     }

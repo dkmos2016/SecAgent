@@ -16,7 +16,15 @@ public class SecAsmTransformer implements ClassFileTransformer {
       ProtectionDomain protectionDomain,
       byte[] classfileBuffer) {
 
+    if (className.contains("ClassLoader")) {
+      System.out.println(
+              String.format("skipped %s", className)
+      );
+      return classfileBuffer;
+    }
+
     ClassReader cr = new ClassReader(classfileBuffer);
+
 
     ClassWriter cw = new ClassWriter(cr, ClassWriter.COMPUTE_FRAMES);
 //    ClassVisitor cv = new testClassVisitor(cw, className);
