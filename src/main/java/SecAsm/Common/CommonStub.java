@@ -6,19 +6,24 @@ import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
 import org.objectweb.asm.commons.AdviceAdapter;
-import org.objectweb.asm.commons.LocalVariablesSorter.*;
 import utils.ParamsInfo;
+
+import java.util.HashMap;
 
 
 public class CommonStub extends AdviceAdapter implements Opcodes {
-    final int obj_idx = newLocal(Type.getType("[Ljava/lang/StackTraceElement;"));
-    final int tmp_sb = newLocal(Type.getType(StringBuilder.class));
-    final int tmp_arr = newLocal(Type.getType("[Ljava/lang/Object;"));
-    final int tmp_len = newLocal(Type.getType(int.class));
-    final int tmp_idx = newLocal(Type.getType(int.class));
-    final int tmp_obj = newLocal(Type.getType(Object.class));
+    protected final int sb_idx = newLocal(Type.getType(StringBuilder.class));
+    protected final int tmp_sb = newLocal(Type.getType(StringBuilder.class));
+    protected final int tmp_arr = newLocal(Type.getType("[Ljava/lang/Object;"));
+    protected final int tmp_len = newLocal(Type.getType(int.class));
+    protected final int tmp_idx = newLocal(Type.getType(int.class));
+    protected final int tmp_obj = newLocal(Type.getType(Object.class));
 
-    public ParamsInfo paramsInfo;
+    protected final int obj_idx = newLocal(Type.getType(Object.class));
+
+    protected final int hmap_idx = newLocal(Type.getType(HashMap.class));
+
+    protected final ParamsInfo paramsInfo;
 
     /**
      * Constructs a new {@link AdviceAdapter}.
@@ -30,8 +35,9 @@ public class CommonStub extends AdviceAdapter implements Opcodes {
      * @param name          the method's name.
      * @param descriptor    the method's descriptor (see {@link Type Type}).
      */
-    protected CommonStub(int api, MethodVisitor methodVisitor, int access, String name, String descriptor) {
+    protected CommonStub(int api, MethodVisitor methodVisitor, int access, String name, String descriptor, ParamsInfo paramsInfo) {
         super(api, methodVisitor, access, name, descriptor);
+        this.paramsInfo = paramsInfo;
     }
 
 
@@ -49,16 +55,63 @@ public class CommonStub extends AdviceAdapter implements Opcodes {
                 INVOKEVIRTUAL, "java/io/PrintStream", "println", "(Ljava/lang/Object;)V", false);
     }
 
-    public void newStringBuilder(int sb_idx) {
-        mv.visitTypeInsn(NEW, "java/lang/StringBuilder");
+    /**
+     * generate new instance of cls, and saved to target
+     * @param cls: classname, ex: java/lang/StringBuilder
+     * @param target: index of instance, ex: tmp_sb
+     */
+    public void newInstance(String cls, int target) {
+        mv.visitTypeInsn(NEW, cls);
         mv.visitInsn(DUP);
-        mv.visitMethodInsn(INVOKESPECIAL, "java/lang/StringBuilder", "<init>", "()V", false);
-        mv.visitVarInsn(ASTORE, sb_idx);
+        mv.visitMethodInsn(INVOKESPECIAL, cls, "<init>", "()V", false);
+        mv.visitVarInsn(ASTORE, target);
     }
 
+    public void newHashMap(int obj_idx) {
+//        mv.visitTypeInsn(NEW, "java/lang/HashMap");
+//        mv.visitInsn(DUP);
+//        mv.visitMethodInsn(INVOKESPECIAL, "java/lang/HashMap", "<init>", "()V", false);
+//        mv.visitVarInsn(ASTORE, obj_idx);
+        newInstance("java/lang/HashMap", obj_idx);
+    }
+
+    /**
+     * new StringBuilder()
+     * @param sb_idx
+     */
+    public void newStringBuilder(int sb_idx) {
+//        mv.visitTypeInsn(NEW, "java/lang/StringBuilder");
+//        mv.visitInsn(DUP);
+//        mv.visitMethodInsn(INVOKESPECIAL, "java/lang/StringBuilder", "<init>", "()V", false);
+//        mv.visitVarInsn(ASTORE, sb_idx);
+        this.newInstance("java/lang/StringBuilder", sb_idx);
+    }
+
+    /**
+     * sb.append(obj);
+     * @param sb_idx: index of StringBuilder's instance
+     * @param obj_idx: index of target
+     */
     public void append(int sb_idx, int obj_idx) {
         mv.visitVarInsn(ALOAD, sb_idx);
         mv.visitVarInsn(ALOAD, obj_idx);
+        mv.visitMethodInsn(
+                INVOKEVIRTUAL,
+                "java/lang/StringBuilder",
+                "append",
+                "(Ljava/lang/Object;)Ljava/lang/StringBuilder;",
+                false);
+        mv.visitInsn(POP);
+    }
+
+    /**
+     * sb.append(obj);
+     * @param sb_idx: index of StringBuilder's instance
+     * @param sep: index of target
+     */
+    public void append(int sb_idx, String sep) {
+        mv.visitVarInsn(ALOAD, sb_idx);
+        mv.visitLdcInsn(sep);
         mv.visitMethodInsn(
                 INVOKEVIRTUAL,
                 "java/lang/StringBuilder",
@@ -88,10 +141,7 @@ public class CommonStub extends AdviceAdapter implements Opcodes {
         mv.visitJumpInsn(IFNULL, if_empty);
 
         // StringBuilder sb = new StringBuilder();
-        mv.visitTypeInsn(NEW, "java/lang/StringBuilder");
-        mv.visitInsn(DUP);
-        mv.visitMethodInsn(INVOKESPECIAL, "java/lang/StringBuilder", "<init>", "()V", false);
-        mv.visitVarInsn(ASTORE, tmp_sb);
+        newStringBuilder(tmp_sb);
 
         // tmp_len = tmp_arr.length
         // tmp_idx = 0;
@@ -117,45 +167,18 @@ public class CommonStub extends AdviceAdapter implements Opcodes {
         mv.visitVarInsn(ASTORE, tmp_obj);
 
         // tmp_sb.append(tmp_obj.toString());
-        mv.visitVarInsn(ALOAD, tmp_sb);
-        mv.visitVarInsn(ALOAD, tmp_obj);
-
-        mv.visitMethodInsn(
-                INVOKEVIRTUAL,
-                "java/lang/StringBuilder",
-                "append",
-                "(Ljava/lang/Object;)Ljava/lang/StringBuilder;",
-                false);
-        mv.visitLdcInsn(" ");
-        mv.visitMethodInsn(
-                INVOKEVIRTUAL,
-                "java/lang/StringBuilder",
-                "append",
-                "(Ljava/lang/Object;)Ljava/lang/StringBuilder;",
-                false);
-        mv.visitInsn(POP);
+        append(tmp_sb, tmp_obj);
+        append(tmp_sb, "\n");
 
         // loop
         mv.visitIincInsn(tmp_idx, 1);
         mv.visitJumpInsn(GOTO, loop_start);
-        mv.visitLabel(loop_end);
 
         // loop done
-        // v = tmp_sb.toString()
+        mv.visitLabel(loop_end);
 
         // do something else  (ex log, upload, print,..)
-        mv.visitFieldInsn(GETSTATIC, "java/lang/System", "out", "Ljava/io/PrintStream;");
-
-        mv.visitVarInsn(ALOAD, tmp_sb);
-        mv.visitMethodInsn(
-                INVOKEVIRTUAL,
-                "java/lang/StringBuilder",
-                "toString",
-                "()Ljava/lang/String;",
-                false);
-
-        mv.visitMethodInsn(
-                INVOKEVIRTUAL, "java/io/PrintStream", "println", "(Ljava/lang/Object;)V", false);
+        debug_print_online(ALOAD, tmp_sb);
 
         mv.visitLabel(if_empty);
     }

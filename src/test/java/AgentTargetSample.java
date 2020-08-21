@@ -1,4 +1,5 @@
 
+import org.apache.log4j.Logger;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
@@ -6,6 +7,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.HashMap;
 
 public class AgentTargetSample {
     private int id;
@@ -99,6 +101,8 @@ public class AgentTargetSample {
                 new byte[]{1,2,3}
         );
 
+        Logger.getLogger("test").info("hello world");
+
 
 
         try {
@@ -106,5 +110,9 @@ public class AgentTargetSample {
         } catch (Exception e) {
 
         }
+
+        HashMap<String, String> result = new HashMap<>();
+
+        result.put("hello", "world");
     }
 }
