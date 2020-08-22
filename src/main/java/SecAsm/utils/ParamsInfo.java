@@ -1,8 +1,6 @@
-package utils;
+package SecAsm.utils;
 
 import org.objectweb.asm.Type;
-
-import java.util.Arrays;
 
 public class ParamsInfo {
     private Type[] in_types;

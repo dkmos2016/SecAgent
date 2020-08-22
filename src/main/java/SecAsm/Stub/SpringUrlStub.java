@@ -2,7 +2,7 @@ package SecAsm.Stub;
 
 import SecAsm.Common.CommonStub;
 import org.objectweb.asm.MethodVisitor;
-import utils.ParamsInfo;
+import SecAsm.utils.ParamsInfo;
 
 public class SpringUrlStub extends CommonStub {
   public SpringUrlStub(
@@ -17,7 +17,6 @@ public class SpringUrlStub extends CommonStub {
   }
 
 
-
   private void process() {
     debug_print_offline(String.format("[DEBUG] [SpringUrlStub]: %s", this.paramsInfo.toString()));
     newStringBuilder(tmp_sb);
@@ -26,13 +25,16 @@ public class SpringUrlStub extends CommonStub {
     mv.visitMethodInsn(
         INVOKEINTERFACE, "javax/servlet/http/HttpServletRequest", "getRequestURI", "()Ljava/lang/String;", true);
 
-    mv.visitVarInsn(ASTORE, obj_idx);
+    mv.visitVarInsn(ASTORE, res_idx);
 
-    append(tmp_sb, obj_idx);
+    append(tmp_sb, res_idx);
 
     debug_print_online(ALOAD, tmp_sb);
 
     stackTrack();
+
+
+    ReqTest();
   }
 
   @Override

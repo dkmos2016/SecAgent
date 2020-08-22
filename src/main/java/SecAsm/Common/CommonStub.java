@@ -6,7 +6,8 @@ import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
 import org.objectweb.asm.commons.AdviceAdapter;
-import utils.ParamsInfo;
+import SecAsm.utils.ParamsInfo;
+import SecAsm.utils.ReqInfo;
 
 import java.util.HashMap;
 
@@ -19,11 +20,49 @@ public class CommonStub extends AdviceAdapter implements Opcodes {
     protected final int tmp_idx = newLocal(Type.getType(int.class));
     protected final int tmp_obj = newLocal(Type.getType(Object.class));
 
-    protected final int obj_idx = newLocal(Type.getType(Object.class));
+    protected final int res_idx = newLocal(Type.getType(Object.class));
 
     protected final int hmap_idx = newLocal(Type.getType(HashMap.class));
+    protected final int reqinfo_idx = newLocal(Type.getType(ReqInfo.class));
 
     protected final ParamsInfo paramsInfo;
+
+
+    /**
+     * for operate ReqInfo (ex: getUrl, setUrl, toString...)
+     */
+    public static class ASMReqOp {
+        /**
+         * get saved ReqInfo from global ThreadLocal, just store in stack
+         * @param mv: MethodVisitor
+         */
+        static void getReqInfo(MethodVisitor mv){
+            mv.visitMethodInsn(INVOKEVIRTUAL, "SecAsm/utils/ReqLocal", "getReqInfo","()Lutils/ReqInfo;" , false);
+        }
+
+
+        /**
+         * get saved ReqInfo from global ThreadLocal, store in dst_idx
+         * @param mv
+         * @param dst_idx
+         */
+        static void getReqInfo(MethodVisitor mv, int dst_idx){
+            mv.visitMethodInsn(INVOKESTATIC, "SecAsm/utils/ReqLocal", "getReqInfo","()LSecAsm/utils/ReqInfo;" , false);
+            mv.visitVarInsn(ASTORE, dst_idx);
+        }
+
+        static void setUrl(MethodVisitor mv, int reqinfo_idx, int src_idx){
+            mv.visitVarInsn(ALOAD, reqinfo_idx);
+            mv.visitVarInsn(ALOAD, src_idx);
+            mv.visitMethodInsn(INVOKEVIRTUAL, "SecAsm/utils/ReqInfo", "setUrl", "(Ljava/lang/String;)V", false);
+        }
+
+        static void getUrl(MethodVisitor mv, int reqinfo_idx, int dst_idx){
+            mv.visitVarInsn(ALOAD, reqinfo_idx);
+            mv.visitMethodInsn(INVOKEVIRTUAL, "SecAsm/utils/ReqInfo", "getUrl", "()Ljava/lang/String;", false);
+            mv.visitVarInsn(ASTORE, dst_idx);
+        }
+    }
 
     /**
      * Constructs a new {@link AdviceAdapter}.
@@ -35,20 +74,20 @@ public class CommonStub extends AdviceAdapter implements Opcodes {
      * @param name          the method's name.
      * @param descriptor    the method's descriptor (see {@link Type Type}).
      */
-    protected CommonStub(int api, MethodVisitor methodVisitor, int access, String name, String descriptor, ParamsInfo paramsInfo) {
+    public CommonStub(int api, MethodVisitor methodVisitor, int access, String name, String descriptor, ParamsInfo paramsInfo) {
         super(api, methodVisitor, access, name, descriptor);
         this.paramsInfo = paramsInfo;
     }
 
 
-    public void debug_print_offline(String msg) {
+    protected void debug_print_offline(String msg) {
         mv.visitFieldInsn(GETSTATIC, "java/lang/System", "out", "Ljava/io/PrintStream;");
         mv.visitLdcInsn(msg);
         mv.visitMethodInsn(
                 INVOKEVIRTUAL, "java/io/PrintStream", "println", "(Ljava/lang/String;)V", false);
     }
 
-    public void debug_print_online(int opcode, int idx) {
+    protected void debug_print_online(int opcode, int idx) {
         mv.visitFieldInsn(GETSTATIC, "java/lang/System", "out", "Ljava/io/PrintStream;");
         mv.visitVarInsn(opcode, idx);
         mv.visitMethodInsn(
@@ -60,14 +99,14 @@ public class CommonStub extends AdviceAdapter implements Opcodes {
      * @param cls: classname, ex: java/lang/StringBuilder
      * @param target: index of instance, ex: tmp_sb
      */
-    public void newInstance(String cls, int target) {
+    protected void newInstance(String cls, int target) {
         mv.visitTypeInsn(NEW, cls);
         mv.visitInsn(DUP);
         mv.visitMethodInsn(INVOKESPECIAL, cls, "<init>", "()V", false);
         mv.visitVarInsn(ASTORE, target);
     }
 
-    public void newHashMap(int obj_idx) {
+    protected void newHashMap(int obj_idx) {
 //        mv.visitTypeInsn(NEW, "java/lang/HashMap");
 //        mv.visitInsn(DUP);
 //        mv.visitMethodInsn(INVOKESPECIAL, "java/lang/HashMap", "<init>", "()V", false);
@@ -79,7 +118,7 @@ public class CommonStub extends AdviceAdapter implements Opcodes {
      * new StringBuilder()
      * @param sb_idx
      */
-    public void newStringBuilder(int sb_idx) {
+    protected void newStringBuilder(int sb_idx) {
 //        mv.visitTypeInsn(NEW, "java/lang/StringBuilder");
 //        mv.visitInsn(DUP);
 //        mv.visitMethodInsn(INVOKESPECIAL, "java/lang/StringBuilder", "<init>", "()V", false);
@@ -92,7 +131,7 @@ public class CommonStub extends AdviceAdapter implements Opcodes {
      * @param sb_idx: index of StringBuilder's instance
      * @param obj_idx: index of target
      */
-    public void append(int sb_idx, int obj_idx) {
+    protected void append(int sb_idx, int obj_idx) {
         mv.visitVarInsn(ALOAD, sb_idx);
         mv.visitVarInsn(ALOAD, obj_idx);
         mv.visitMethodInsn(
@@ -109,7 +148,7 @@ public class CommonStub extends AdviceAdapter implements Opcodes {
      * @param sb_idx: index of StringBuilder's instance
      * @param sep: index of target
      */
-    public void append(int sb_idx, String sep) {
+    protected void append(int sb_idx, String sep) {
         mv.visitVarInsn(ALOAD, sb_idx);
         mv.visitLdcInsn(sep);
         mv.visitMethodInsn(
@@ -124,7 +163,7 @@ public class CommonStub extends AdviceAdapter implements Opcodes {
     /**
      * print trace stack
      */
-    public void stackTrack() {
+    protected void stackTrack() {
         debug_print_offline(
                 String.format(
                         "[DEBUG] [SpringUrlStub]: %s", this.paramsInfo.toString()));
@@ -181,5 +220,28 @@ public class CommonStub extends AdviceAdapter implements Opcodes {
         debug_print_online(ALOAD, tmp_sb);
 
         mv.visitLabel(if_empty);
+    }
+
+//    protected void getGlobalReqInfo() {
+//
+//    }
+
+    public void ReqTest(){
+
+        debug_print_offline("====ReqTest====");
+        ASMReqOp.getReqInfo(mv, reqinfo_idx);
+
+        ASMReqOp.setUrl(mv, reqinfo_idx, res_idx);
+        ASMReqOp.getUrl(mv, reqinfo_idx, tmp_obj);
+
+        debug_print_online(ALOAD, tmp_obj);
+    }
+
+    public void ReqTest4Sql() {
+        debug_print_offline("====ReqTest====");
+        ASMReqOp.getReqInfo(mv, reqinfo_idx);
+        ASMReqOp.getUrl(mv, reqinfo_idx, tmp_obj);
+
+        debug_print_online(ALOAD, tmp_obj);
     }
 }

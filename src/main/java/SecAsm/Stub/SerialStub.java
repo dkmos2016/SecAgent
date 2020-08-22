@@ -3,7 +3,7 @@ package SecAsm.Stub;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.commons.AdviceAdapter;
-import utils.ParamsInfo;
+import SecAsm.utils.ParamsInfo;
 
 
 public class SerialStub extends AdviceAdapter implements Opcodes {
