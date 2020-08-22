@@ -1,4 +1,4 @@
-package SecAsm.utils;
+package SecAgent.utils;
 
 import java.util.HashMap;
 
@@ -6,7 +6,7 @@ public class ReqInfo {
   private String url;
   private String type;
   private HashMap<String, String> queries;
-  private HashMap<String, String>  headers;
+  private HashMap<String, String> headers;
 
   public String getUrl() {
     return url;
@@ -35,6 +35,6 @@ public class ReqInfo {
   @Override
   public String toString() {
     return String.format("{\"url\":\"%s\",\"type\":\"%s\",\"queries\":\"%s\"}",
-    url,type,queries);
+      url, type, queries);
   }
 }

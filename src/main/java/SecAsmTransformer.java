@@ -1,4 +1,4 @@
-import SecAsm.Common.CommonAdapter;
+import SecAgent.SecAsm.Common.CommonAdapter;
 
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassVisitor;
