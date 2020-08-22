@@ -1,41 +1,19 @@
 package SecAsm.Stub;
 
+import SecAsm.Common.CommonStub;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
-import org.objectweb.asm.Opcodes;
-import org.objectweb.asm.Type;
-import org.objectweb.asm.commons.AdviceAdapter;
-import utils.ParamsInfo;
+import SecAsm.utils.ParamsInfo;
 
-
-public class CmdStub extends AdviceAdapter implements Opcodes {
-    final int tmp_sb = newLocal(Type.getType(StringBuilder.class));
-    final int tmp_arr = newLocal(Type.getType("[Ljava/lang/Object;"));
-    final int tmp_len = newLocal(Type.getType(int.class));
-    final int tmp_idx = newLocal(Type.getType(int.class));
-    final int tmp_obj = newLocal(Type.getType(Object.class));
-    protected ParamsInfo paramsInfo;
+/**
+ * process.start run in another thread, cannot use ThreadLocal
+ */
+public class CmdStub extends CommonStub {
 
     public CmdStub(
             int api, MethodVisitor methodVisitor, int access, String name, String descriptor, ParamsInfo paramsInfo) {
-        super(api, methodVisitor, access, name, descriptor);
+        super(api, methodVisitor, access, name, descriptor, paramsInfo);
 
-        this.paramsInfo = paramsInfo;
-
-    }
-
-    public void debug_print_offline(String msg) {
-        mv.visitFieldInsn(GETSTATIC, "java/lang/System", "out", "Ljava/io/PrintStream;");
-        mv.visitLdcInsn(msg);
-        mv.visitMethodInsn(
-                INVOKEVIRTUAL, "java/io/PrintStream", "println", "(Ljava/lang/String;)V", false);
-    }
-
-    public void debug_print_online(int opcode, int idx) {
-        mv.visitFieldInsn(GETSTATIC, "java/lang/System", "out", "Ljava/io/PrintStream;");
-        mv.visitVarInsn(opcode, idx);
-        mv.visitMethodInsn(
-                INVOKEVIRTUAL, "java/io/PrintStream", "println", "(Ljava/lang/Object;)V", false);
     }
 
     private void process() {
@@ -48,10 +26,7 @@ public class CmdStub extends AdviceAdapter implements Opcodes {
         mv.visitJumpInsn(IFNULL, if_empty);
 
         // StringBuilder sb = new StringBuilder();
-        mv.visitTypeInsn(NEW, "java/lang/StringBuilder");
-        mv.visitInsn(DUP);
-        mv.visitMethodInsn(INVOKESPECIAL, "java/lang/StringBuilder", "<init>", "()V", false);
-        mv.visitVarInsn(ASTORE, tmp_sb);
+        newStringBuilder(tmp_sb);
 
         // tmp_arr = args[]
         // tmp_len = tmp_arr.length
@@ -134,6 +109,9 @@ public class CmdStub extends AdviceAdapter implements Opcodes {
     protected void onMethodExit(int opcode) {
         super.onMethodExit(opcode);
         process();
+
+//        ReqTest();
+
     }
 
     @Override

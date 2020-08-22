@@ -13,6 +13,7 @@ public class AgentDemo {
 //          "java.io.File",
 //          "java.lang.SecurityManager",
           "java.io.ObjectInputStream",
+          "SecAsm.utils.ReqLocal",
         };
   }
 
@@ -26,7 +27,7 @@ public class AgentDemo {
     //    instrumentation.retransformClasses(File.class);
     //    instrumentation.retransformClasses(SecurityManager.class);
     for (String cls : TARGET_CLASSES) {
-      System.out.println(String.format("reload %s", cls));
+//      System.out.println(String.format("reload %s", cls));
       instrumentation.retransformClasses(Class.forName(cls));
     }
 

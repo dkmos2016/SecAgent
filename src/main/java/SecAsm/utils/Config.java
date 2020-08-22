@@ -1,4 +1,4 @@
-package utils;
+package SecAsm.utils;
 
 public class Config {
 
@@ -48,6 +48,7 @@ public class Config {
 //                "org.springframework.web.servlet.DispatcherServlet",
 //                "org.apache.catalina.core.StandardEngineValve.invoke",
 //                "javax.servlet.http.HttpServlet.service",
+          "java.lang.Runtime.exec",
         };
     }
 

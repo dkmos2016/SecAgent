@@ -5,8 +5,8 @@ import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
-import utils.Config;
-import utils.ParamsInfo;
+import SecAsm.utils.Config;
+import SecAsm.utils.ParamsInfo;
 
 public class CommonAdapter extends ClassVisitor implements Opcodes {
     private String CLASSNAME;
