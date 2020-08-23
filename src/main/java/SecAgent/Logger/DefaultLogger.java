@@ -10,7 +10,7 @@ public class DefaultLogger {
     setLevel(Level.INFO);
   }
 
-  public static void setLevel(Level level){
+  public static void setLevel(Level level) {
     logger.setLevel(level);
   }
 

@@ -9,6 +9,10 @@ import org.objectweb.asm.commons.AdviceAdapter;
 
 import java.lang.reflect.Modifier;
 
+
+/**
+ * origin asm bytecode
+ */
 public class TrackStub extends AdviceAdapter implements Opcodes {
   final int sb_idx = newLocal(Type.getType(StringBuilder.class));
   final int tmp_sb = newLocal(Type.getType(StringBuilder.class));

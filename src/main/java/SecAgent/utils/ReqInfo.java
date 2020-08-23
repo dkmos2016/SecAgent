@@ -1,12 +1,13 @@
 package SecAgent.utils;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import javax.servlet.http.HttpServletRequest;
 
 public class ReqInfo {
   private HttpServletRequest httpServletRequest;
+
   /**
    * complete url
    */
@@ -26,6 +27,7 @@ public class ReqInfo {
    * stub data
    */
   private String StubData;
+  private Object[] StubDatas;
 
   /**
    * request parameters (include url & body)
@@ -40,7 +42,7 @@ public class ReqInfo {
   public void setHttpServletRequest(HttpServletRequest httpServletRequest) {
     this.httpServletRequest = httpServletRequest;
     this.url = String.format("%s://%s:%d%s", httpServletRequest.getScheme(),
-      httpServletRequest.getServerName(), httpServletRequest.getServerPort(),httpServletRequest.getRequestURI());
+      httpServletRequest.getServerName(), httpServletRequest.getServerPort(), httpServletRequest.getRequestURI());
     this.method = httpServletRequest.getMethod();
 
     this.queries = httpServletRequest.getParameterMap();
@@ -62,51 +64,52 @@ public class ReqInfo {
     this.type = type;
   }
 
-  public void setMethod(String method) {
-    this.method = method;
-  }
-
   public String getMethod() {
     return method;
   }
 
-  public void setStubData(String stubData) {
-    StubData = stubData;
+  public void setMethod(String method) {
+    this.method = method;
   }
 
   public String getStubData() {
     return StubData;
   }
 
-//  public void putQuery(String key, String value) {
-//    queries.put(key, value);
-//  }
-//
-//  public String getQuery(String key) {
-//    return queries.get(key);
-//  }
+  public void setStubData(String stubData) {
+    StubData = stubData;
+  }
 
-  public void setQueries(Map<String, String[]> queries) {
-    this.queries = queries;
+  public String getStubDatas(String sep) {
+    StringBuilder sb = new StringBuilder();
+    for (Object obj : this.StubDatas) {
+      sb.append(obj);
+      sb.append(sep);
+    }
+    return sb.toString();
+  }
+
+  public void setStubDatas(Object[] stubDatas) {
+    StubDatas = stubDatas;
   }
 
   public String getQueries() {
     StringBuilder result = new StringBuilder();
     String key;
-    String values[];
+    String[] values;
     result.append("{");
     for (Iterator<Map.Entry<String, String[]>> it = queries.entrySet().iterator(); it.hasNext(); ) {
       Map.Entry<String, String[]> entry = it.next();
       key = entry.getKey();
       values = entry.getValue();
-      result.append(String.format( "\"%s\":\"%s\",",key, values[0]));
+      result.append(String.format("\"%s\":\"%s\",", key, values[0]));
     }
     result.append("}");
     return result.toString();
   }
 
-  public void setHeaders(HashMap<String, String> headers) {
-    this.headers = headers;
+  public void setQueries(Map<String, String[]> queries) {
+    this.queries = queries;
   }
 
   public String getHeaders() {
@@ -118,15 +121,22 @@ public class ReqInfo {
       Map.Entry<String, String> entry = it.next();
       key = entry.getKey();
       value = entry.getValue();
-      result.append(String.format( "\"%s\":\"%s\",", key, value));
+      result.append(String.format("\"%s\":\"%s\",", key, value));
     }
     result.append("}");
     return result.toString();
   }
 
+  public void setHeaders(HashMap<String, String> headers) {
+    this.headers = headers;
+  }
+
   @Override
   public String toString() {
-    return String.format("{\"url\":\"%s\",\"type\":\"%s\",\"queries\":\"%s\"}",
-      url, method, null);
+//    return String.format("{\"url\":\"%s\",\"method\":\"%s\",\"queries\":\"%s\", \"stubdata\": \"%s\"}",
+//      url, method, null, this.getStubDatas(" "));
+
+    return String.format("{\"url\":\"%s\",\"method\":\"%s\",\"queries\":\"%s\", \"type\": \"%s\",\"StubData\": \"%s\"}",
+      url, method, null, type, StubData);
   }
 }

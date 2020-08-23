@@ -1,47 +1,29 @@
 package SecAgent.SecAsm.Stub;
 
 
+import SecAgent.SecAsm.Common.CommonStub;
 import SecAgent.utils.ParamsInfo;
 import org.objectweb.asm.MethodVisitor;
-import org.objectweb.asm.Opcodes;
-import org.objectweb.asm.commons.AdviceAdapter;
 
 
-public class UploadStub extends AdviceAdapter implements Opcodes {
-  protected ParamsInfo paramsInfo;
-
+public class UploadStub extends CommonStub {
   public UploadStub(
     int api, MethodVisitor methodVisitor, int access, String name, String descriptor, ParamsInfo paramsInfo) {
-    super(api, methodVisitor, access, name, descriptor);
-
-    this.paramsInfo = paramsInfo;
+    super(api, methodVisitor, access, name, descriptor, paramsInfo);
 
   }
 
-  public void debug_print_offline(String msg) {
-    mv.visitFieldInsn(GETSTATIC, "java/lang/System", "out", "Ljava/io/PrintStream;");
-    mv.visitLdcInsn(msg);
-    mv.visitMethodInsn(
-      INVOKEVIRTUAL, "java/io/PrintStream", "println", "(Ljava/lang/String;)V", false);
-  }
-
-  public void debug_print_online(int opcode, int idx) {
-    mv.visitFieldInsn(GETSTATIC, "java/lang/System", "out", "Ljava/io/PrintStream;");
-    mv.visitVarInsn(opcode, idx);
-    mv.visitMethodInsn(
-      INVOKEVIRTUAL, "java/io/PrintStream", "println", "(Ljava/lang/Object;)V", false);
-  }
 
   private void process() {
     debug_print_offline(
       String.format(
         "[DEBUG] [UploadStub]: %s", this.paramsInfo.toString()));
-
-    mv.visitFieldInsn(GETSTATIC, "java/lang/System", "out", "Ljava/io/PrintStream;");
+    
     mv.visitVarInsn(ALOAD, 1);
     mv.visitMethodInsn(INVOKEVIRTUAL, "java/io/File", "getAbsolutePath", "()Ljava/lang/String;", false);
-    mv.visitMethodInsn(
-      INVOKEVIRTUAL, "java/io/PrintStream", "println", "(Ljava/lang/Object;)V", false);
+    mv.visitVarInsn(ASTORE, res_idx);
+
+    debug_print_online(T_OBJECT, res_idx);
   }
 
   @Override
