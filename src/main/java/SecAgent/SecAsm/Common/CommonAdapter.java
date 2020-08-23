@@ -22,21 +22,6 @@ public class CommonAdapter extends ClassVisitor implements Opcodes {
     MethodVisitor mv = super.visitMethod(access, name, descriptor, signature, exceptions);
     ParamsInfo paramsInfo = new ParamsInfo(CLASSNAME, access, name, Type.getArgumentTypes(descriptor), descriptor, signature);
 
-//        try {
-//            File file = new File("./logxxx.txt");
-//            FileOutputStream fout = new FileOutputStream(file, true);
-//
-//            fout.write(String.format("%s %s\n", CLASSNAME, name).getBytes());
-//            fout.close();
-//        } catch (FileNotFoundException e) {
-//
-//        } catch (IOException e) {
-//
-//        }
-
-//        if (paramsInfo.toString().startsWith("java.lang.S")) {
-//            System.out.println(paramsInfo.toString());
-//        }
     switch (paramsInfo.toString()) {
       case Config.SQL_STUB:
         return new SqlStub(this.api, mv, access, name, descriptor, paramsInfo);

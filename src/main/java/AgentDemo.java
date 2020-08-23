@@ -7,17 +7,17 @@ public class AgentDemo {
 
   static {
     TARGET_CLASSES =
-        new String[] {
-          "java.io.FileOutputStream",
-          "java.io.FileInputStream",
+      new String[]{
+        "java.io.FileOutputStream",
+        "java.io.FileInputStream",
 //          "java.io.File",
 //          "java.lang.SecurityManager",
-          "java.io.ObjectInputStream",
-        };
+        "java.io.ObjectInputStream",
+      };
   }
 
   public static void premain(String args, Instrumentation instrumentation)
-      throws UnmodifiableClassException, ClassNotFoundException {
+    throws UnmodifiableClassException, ClassNotFoundException {
     System.out.println("run in premain");
     INST = instrumentation;
 

@@ -1,6 +1,7 @@
 package SecAgent.SecAsm.Stub;
 
 import SecAgent.SecAsm.Common.CommonStub;
+import SecAgent.SecAsm.utils.AsmReqLocalOp;
 import SecAgent.utils.ParamsInfo;
 import org.objectweb.asm.MethodVisitor;
 
@@ -21,7 +22,7 @@ public class SpringUrlStub extends CommonStub {
 //  }
 
   @Deprecated
-  private void genFullUrl(int dst_idx){
+  private void genFullUrl(int dst_idx) {
     newStringBuilder(tmp_sb);
 
     // scheme
@@ -93,35 +94,10 @@ public class SpringUrlStub extends CommonStub {
 
     getGlobalReqInfo(reqinfo_idx);
     setHttpServletRequest(reqinfo_idx, 1);
-    req2str(reqinfo_idx, res_idx);
-    info(res_idx);
-
-//    debug_print_online(T_OBJECT, res_idx);
-
-    stackTrack();
-  }
-
-  private void process1() {
-    debug_print_offline(String.format("[DEBUG] [SpringUrlStub]: %s", this.paramsInfo.toString()));
-    getGlobalReqInfo(reqinfo_idx);
-    genFullUrl(tmp_obj);
-    setUrl(reqinfo_idx, tmp_obj);
-
-    getMethod(tmp_obj);
-    setMethod(reqinfo_idx, tmp_obj);
-
-
-    // TODO: 2020/8/23 need to fix IncompatibleClass (String to HashMap)
-    // get query string (include body & POST)
-    getQueries(hmap_idx);
-    setQueries(reqinfo_idx, hmap_idx);
-
-    req2str(reqinfo_idx, res_idx);
-    info(res_idx);
-
-//    debug_print_online(T_OBJECT, res_idx);
-
-    stackTrack();
+//    req2str(reqinfo_idx, res_idx);
+//    info(res_idx);
+//
+//    stackTrack();
   }
 
   @Override
@@ -135,7 +111,8 @@ public class SpringUrlStub extends CommonStub {
   protected void onMethodExit(int opcode) {
     super.onMethodExit(opcode);
 
-
+    // TODO remove ThreadLocal
+    AsmReqLocalOp.clearReqInfo(mv);
   }
 
   @Override

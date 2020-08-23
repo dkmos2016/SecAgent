@@ -20,6 +20,19 @@ public class CmdStub extends CommonStub {
     debug_print_offline(
       String.format(
         "[DEBUG] [CmdStub]: %s", this.paramsInfo.toString()));
+//    AsmReqLocalOp.getReqInfo(mv, reqinfo_idx);
+
+//    AsmReqInfoOp.setStubDatas(mv, reqinfo_idx, 0);
+
+//    AsmReqInfoOp.toStr(mv, reqinfo_idx, res_idx);
+//
+//    debug_print_online(T_OBJECT, res_idx);
+  }
+
+  private void process1() {
+    debug_print_offline(
+      String.format(
+        "[DEBUG] [CmdStub]: %s", this.paramsInfo.toString()));
     // clear opcode stack
     Label if_empty = new Label();
     mv.visitVarInsn(ALOAD, 0);
@@ -54,24 +67,8 @@ public class CmdStub extends CommonStub {
     mv.visitInsn(AALOAD);
     mv.visitVarInsn(ASTORE, tmp_obj);
 
-    // tmp_sb.append(tmp_obj.toString());
-    mv.visitVarInsn(ALOAD, tmp_sb);
-    mv.visitVarInsn(ALOAD, tmp_obj);
-
-    mv.visitMethodInsn(
-      INVOKEVIRTUAL,
-      "java/lang/StringBuilder",
-      "append",
-      "(Ljava/lang/String;)Ljava/lang/StringBuilder;",
-      false);
-    mv.visitLdcInsn(" ");
-    mv.visitMethodInsn(
-      INVOKEVIRTUAL,
-      "java/lang/StringBuilder",
-      "append",
-      "(Ljava/lang/Object;)Ljava/lang/StringBuilder;",
-      false);
-    mv.visitInsn(POP);
+    append(tmp_sb, tmp_obj);
+    append(tmp_sb, " ");
 
     // loop
     mv.visitIincInsn(tmp_idx, 1);
@@ -82,18 +79,9 @@ public class CmdStub extends CommonStub {
     // v = tmp_sb.toString()
 
     // do something else  (ex log, upload, print,..)
-    mv.visitFieldInsn(GETSTATIC, "java/lang/System", "out", "Ljava/io/PrintStream;");
 
-    mv.visitVarInsn(ALOAD, tmp_sb);
-    mv.visitMethodInsn(
-      INVOKEVIRTUAL,
-      "java/lang/StringBuilder",
-      "toString",
-      "()Ljava/lang/String;",
-      false);
-
-    mv.visitMethodInsn(
-      INVOKEVIRTUAL, "java/io/PrintStream", "println", "(Ljava/lang/Object;)V", false);
+    toStr(tmp_sb, res_idx);
+    debug_print_online(T_OBJECT, res_idx);
 
     mv.visitLabel(if_empty);
   }
