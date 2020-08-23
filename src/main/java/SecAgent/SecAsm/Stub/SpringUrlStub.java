@@ -16,10 +16,12 @@ public class SpringUrlStub extends CommonStub {
 
   }
 
+//  private void genReqInfo() {
+//
+//  }
 
-  private void process() {
-    debug_print_offline(String.format("[DEBUG] [SpringUrlStub]: %s", this.paramsInfo.toString()));
-
+  @Deprecated
+  private void genFullUrl(int dst_idx){
     newStringBuilder(tmp_sb);
 
     // scheme
@@ -58,14 +60,68 @@ public class SpringUrlStub extends CommonStub {
 
     append(tmp_sb, tmp_obj);
 
+    toStr(tmp_sb, dst_idx);
+  }
 
-    toStr(tmp_sb, res_idx);
+  @Deprecated
+  private void getMethod(int dst_idx) {
+    mv.visitVarInsn(ALOAD, 1);
+    mv.visitMethodInsn(
+      INVOKEINTERFACE, "javax/servlet/http/HttpServletRequest", "getMethod", "()Ljava/lang/String;", true);
+    mv.visitVarInsn(ASTORE, dst_idx);
+  }
 
-    debug_print_online(T_OBJECT, res_idx);
+  @Deprecated
+  private void getQuery(int dst_idx) {
+    mv.visitVarInsn(ALOAD, 1);
+    mv.visitMethodInsn(
+      INVOKEINTERFACE, "javax/servlet/http/HttpServletRequest", "getQueryString", "()Ljava/lang/String;", true);
+    mv.visitVarInsn(ASTORE, dst_idx);
+  }
+
+  @Deprecated
+  private void getQueries(int dst_idx) {
+    mv.visitVarInsn(ALOAD, 1);
+    mv.visitMethodInsn(
+      INVOKEINTERFACE, "javax/servlet/http/HttpServletRequest", "getParameterMap", "()Ljava/util/Map;", true);
+    mv.visitVarInsn(ASTORE, dst_idx);
+  }
+
+
+  private void process() {
+    debug_print_offline(String.format("[DEBUG] [SpringUrlStub]: %s", this.paramsInfo.toString()));
+
+    getGlobalReqInfo(reqinfo_idx);
+    setHttpServletRequest(reqinfo_idx, 1);
+    req2str(reqinfo_idx, res_idx);
+    info(res_idx);
+
+//    debug_print_online(T_OBJECT, res_idx);
 
     stackTrack();
+  }
 
-    ReqTest();
+  private void process1() {
+    debug_print_offline(String.format("[DEBUG] [SpringUrlStub]: %s", this.paramsInfo.toString()));
+    getGlobalReqInfo(reqinfo_idx);
+    genFullUrl(tmp_obj);
+    setUrl(reqinfo_idx, tmp_obj);
+
+    getMethod(tmp_obj);
+    setMethod(reqinfo_idx, tmp_obj);
+
+
+    // TODO: 2020/8/23 need to fix IncompatibleClass (String to HashMap)
+    // get query string (include body & POST)
+    getQueries(hmap_idx);
+    setQueries(reqinfo_idx, hmap_idx);
+
+    req2str(reqinfo_idx, res_idx);
+    info(res_idx);
+
+//    debug_print_online(T_OBJECT, res_idx);
+
+    stackTrack();
   }
 
   @Override

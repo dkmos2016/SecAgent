@@ -24,11 +24,12 @@ public class SqlStub extends CommonStub {
     //    mv.visitVarInsn(ALOAD, sb_idx);
     //    mv.visitVarInsn();
 //    debug_print_online(ALOAD, 0);
+
+
     info(0);
 
-    ReqTest4Sql();
-
-
+//    stackTrack();
+//    ReqTest4Sql();
   }
 
   @Override
