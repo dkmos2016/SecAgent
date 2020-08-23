@@ -28,13 +28,18 @@ public class SqlStub extends CommonStub {
 //    debug_print_online(ALOAD, 0);
 
     AsmReqLocalOp.getReqInfo(mv, reqinfo_idx);
-    AsmReqInfoOp.setType(mv, reqinfo_idx, "EXEC");
-    AsmReqInfoOp.setStubData(mv, reqinfo_idx, 0);
 
-    AsmReqInfoOp.toStr(mv, reqinfo_idx, res_idx);
+    newInstance("java/lang/Throwable", stk_idx);
+    AsmReqInfoOp.putStubData(mv, reqinfo_idx, "SQL", stk_idx, 0);
 
-    info(res_idx);
+//    AsmReqInfoOp.setType(mv, reqinfo_idx, "EXEC");
+//    AsmReqInfoOp.setStubData(mv, reqinfo_idx, 0);
 
+//    AsmReqInfoOp.toStr(mv, reqinfo_idx, res_idx);
+
+//    info(res_idx);
+
+    AsmReqInfoOp.doJob(mv, reqinfo_idx);
 //    stackTrack();
 //    ReqTest4Sql();
   }

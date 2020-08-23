@@ -20,6 +20,10 @@ public class CmdStub extends CommonStub {
     debug_print_offline(
       String.format(
         "[DEBUG] [CmdStub]: %s", this.paramsInfo.toString()));
+
+    // TODO fix bug (getGlobalReqInfo)
+
+//    getGlobalReqInfo(reqinfo_idx);
 //    AsmReqLocalOp.getReqInfo(mv, reqinfo_idx);
 
 //    AsmReqInfoOp.setStubDatas(mv, reqinfo_idx, 0);

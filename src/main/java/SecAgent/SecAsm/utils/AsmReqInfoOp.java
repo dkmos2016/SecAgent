@@ -31,6 +31,13 @@ public class AsmReqInfoOp {
     mv.visitVarInsn(Opcodes.ASTORE, dst_idx);
   }
 
+  public static void putStubData(MethodVisitor mv, int reqinfo_idx, String type, int stk_idx, int src_idx) {
+    mv.visitVarInsn(Opcodes.ALOAD, reqinfo_idx);
+    mv.visitLdcInsn(type);
+    mv.visitVarInsn(Opcodes.ALOAD, stk_idx);
+    mv.visitVarInsn(Opcodes.ALOAD, src_idx);
+    mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "SecAgent/utils/ReqInfo", "putStubData", "(Ljava/lang/String;Ljava/lang/Throwable;Ljava/lang/Object;)V", false);
+  }
 
   public static void setStubDatas(MethodVisitor mv, int reqinfo_idx, int src_idx) {
     mv.visitVarInsn(Opcodes.ALOAD, reqinfo_idx);
@@ -61,6 +68,11 @@ public class AsmReqInfoOp {
     mv.visitVarInsn(Opcodes.ALOAD, reqinfo_idx);
     mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "SecAgent/utils/ReqInfo", "toString", "()Ljava/lang/String;", false);
     mv.visitVarInsn(Opcodes.ASTORE, dst_src);
+  }
+
+  public static void doJob(MethodVisitor mv, int reqinfo_idx) {
+    mv.visitVarInsn(Opcodes.ALOAD, reqinfo_idx);
+    mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "SecAgent/utils/ReqInfo", "doJob", "()V", false);
   }
 
 }

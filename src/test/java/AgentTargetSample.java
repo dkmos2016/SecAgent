@@ -65,10 +65,7 @@ public class AgentTargetSample {
 
     Object f = new File("test.log");
 
-
-    if (f instanceof File) {
-      System.out.println("File instance");
-    }
+    System.out.println(f.getClass());
   }
 
   public String getName(String s) {
