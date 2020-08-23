@@ -22,6 +22,10 @@ public class ReqLocal {
   }
 
   public static void clear() {
+
+    System.out.println(
+      String.format("tid: %d, destroy saved ReqInfo", Thread.currentThread().getId())
+    );
     reqLocal.remove();
   }
 

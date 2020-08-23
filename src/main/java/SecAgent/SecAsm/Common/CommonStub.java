@@ -12,8 +12,6 @@ import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
 import org.objectweb.asm.commons.AdviceAdapter;
 
-import java.util.HashMap;
-
 
 public class CommonStub extends AdviceAdapter implements Opcodes {
   protected final static int T_OBJECT = 1111111;
@@ -23,8 +21,10 @@ public class CommonStub extends AdviceAdapter implements Opcodes {
   protected final int tmp_len = newLocal(Type.getType(int.class));
   protected final int tmp_idx = newLocal(Type.getType(int.class));
   protected final int tmp_obj = newLocal(Type.getType(Object.class));
+
+  // new Throwable()
+  protected final int stk_idx = newLocal(Type.getType(Throwable.class));
   protected final int res_idx = newLocal(Type.getType(Object.class));
-  protected final int hmap_idx = newLocal(Type.getType(HashMap.class));
   protected final int reqinfo_idx = newLocal(Type.getType(ReqInfo.class));
   protected final ParamsInfo paramsInfo;
 
@@ -335,30 +335,22 @@ public class CommonStub extends AdviceAdapter implements Opcodes {
   }
 
 
+  /**
+   * get ReqInfo from ThreadLocal
+   *
+   * @param reqinfo_idx
+   */
   protected void getGlobalReqInfo(int reqinfo_idx) {
     AsmReqLocalOp.getReqInfo(mv, reqinfo_idx);
   }
 
-  @Deprecated
-  protected void setType(int reqinfo_idx, String src) {
-    AsmReqInfoOp.setType(mv, reqinfo_idx, src);
-  }
 
-
-  @Deprecated
-  protected void setStubData(int reqinfo_idx, int src_idx) {
-    AsmReqInfoOp.setStubData(mv, reqinfo_idx, src_idx);
-  }
-
-
+  /**
+   * @param reqinfo_idx
+   * @param src_idx
+   */
   protected void setHttpServletRequest(int reqinfo_idx, int src_idx) {
     AsmReqInfoOp.setHttpServletRequest(mv, reqinfo_idx, src_idx);
-  }
-
-
-  @Deprecated
-  protected void req2str(int reqinfo_idx, int dst_src) {
-    AsmReqInfoOp.toStr(mv, reqinfo_idx, dst_src);
   }
 
   /**
