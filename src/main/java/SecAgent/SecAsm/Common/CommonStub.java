@@ -258,9 +258,50 @@ public class CommonStub extends AdviceAdapter implements Opcodes {
     debug_print_online(ALOAD, tmp_obj);
   }
 
-//    protected void getGlobalReqInfo() {
-//
-//    }
+    protected void getGlobalReqInfo(int reqinfo_idx) {
+      ASMReqOp.getReqInfo(mv, reqinfo_idx);
+    }
+
+  @Deprecated
+  protected void setUrl(int reqinfo_idx, int src_idx) {
+    ASMReqOp.setUrl(mv, reqinfo_idx, src_idx);
+  }
+
+  protected void setType(int reqinfo_idx, int src_idx) {
+    ASMReqOp.setType(mv, reqinfo_idx, src_idx);
+  }
+
+  @Deprecated
+  protected void setMethod(int reqinfo_idx, int src_idx) {
+    ASMReqOp.setMethod(mv, reqinfo_idx, src_idx);
+  }
+
+  protected void setStubData(int reqinfo_idx, int src_idx) {
+    ASMReqOp.setStubData(mv, reqinfo_idx, src_idx);
+  }
+
+  @Deprecated
+  protected void putQuery(int reqinfo_idx, int key_idx, int value_idx) {
+    ASMReqOp.putQuery(mv, reqinfo_idx, key_idx, value_idx);
+  }
+
+  @Deprecated
+  protected void setQueries(int reqinfo_idx, int hmap_idx) {
+    ASMReqOp.setQueries(mv, reqinfo_idx, hmap_idx);
+  }
+
+  @Deprecated
+  protected void setHeaders(int reqinfo_idx, int hmap_idx) {
+    ASMReqOp.setHeaders(mv, reqinfo_idx, hmap_idx);
+  }
+
+  protected void setHttpServletRequest(int reqinfo_idx, int src_idx) {
+    ASMReqOp.setHttpServletRequest(mv, reqinfo_idx, src_idx);
+  }
+
+  protected void req2str(int reqinfo_idx, int dst_src) {
+    ASMReqOp.toStr(mv, reqinfo_idx, dst_src);
+  }
 
   public void ReqTest4Sql() {
     debug_print_offline("====ReqTest====");
@@ -270,11 +311,27 @@ public class CommonStub extends AdviceAdapter implements Opcodes {
     debug_print_online(ALOAD, tmp_obj);
   }
 
+
+
   /**
    * for operate ReqInfo (ex: getUrl, setUrl, toString...)
    */
   public static class ASMReqOp {
+
     /**
+     * get saved ReqInfo from global ThreadLocal, just store in stack
+     *
+     * @param mv: MethodVisitor
+     */
+    static void setHttpServletRequest(MethodVisitor mv, int reqinfo_idx, int src_idx) {
+      mv.visitVarInsn(ALOAD, reqinfo_idx);
+      mv.visitVarInsn(ALOAD, src_idx);
+      mv.visitMethodInsn(INVOKEVIRTUAL, "SecAgent/utils/ReqInfo", "setHttpServletRequest", "(Ljavax/servlet/http/HttpServletRequest;)V", false);
+    }
+
+    /**
+     *
+     * todo not belong ASMReqInfo
      * get saved ReqInfo from global ThreadLocal, just store in stack
      *
      * @param mv: MethodVisitor
@@ -285,6 +342,8 @@ public class CommonStub extends AdviceAdapter implements Opcodes {
 
 
     /**
+     *
+     * todo not belong ASMReqInfo
      * get saved ReqInfo from global ThreadLocal, store in dst_idx
      *
      * @param mv
@@ -295,17 +354,109 @@ public class CommonStub extends AdviceAdapter implements Opcodes {
       mv.visitVarInsn(ASTORE, dst_idx);
     }
 
+
+    @Deprecated
     static void setUrl(MethodVisitor mv, int reqinfo_idx, int src_idx) {
       mv.visitVarInsn(ALOAD, reqinfo_idx);
       mv.visitVarInsn(ALOAD, src_idx);
       mv.visitMethodInsn(INVOKEVIRTUAL, "SecAgent/utils/ReqInfo", "setUrl", "(Ljava/lang/String;)V", false);
     }
 
+    @Deprecated
     static void getUrl(MethodVisitor mv, int reqinfo_idx, int dst_idx) {
       mv.visitVarInsn(ALOAD, reqinfo_idx);
       mv.visitMethodInsn(INVOKEVIRTUAL, "SecAgent/utils/ReqInfo", "getUrl", "()Ljava/lang/String;", false);
       mv.visitVarInsn(ASTORE, dst_idx);
     }
+
+    @Deprecated
+    static void setMethod(MethodVisitor mv, int reqinfo_idx, int src_idx) {
+      mv.visitVarInsn(ALOAD, reqinfo_idx);
+      mv.visitVarInsn(ALOAD, src_idx);
+      mv.visitMethodInsn(INVOKEVIRTUAL, "SecAgent/utils/ReqInfo", "setMethod", "(Ljava/lang/String;)V", false);
+    }
+
+    @Deprecated
+    static void getMethod(MethodVisitor mv, int reqinfo_idx, int dst_idx) {
+      mv.visitVarInsn(ALOAD, reqinfo_idx);
+      mv.visitMethodInsn(INVOKEVIRTUAL, "SecAgent/utils/ReqInfo", "getMethod", "()Ljava/lang/String;", false);
+      mv.visitVarInsn(ASTORE, dst_idx);
+    }
+
+    static void setStubData(MethodVisitor mv, int reqinfo_idx, int src_idx) {
+      mv.visitVarInsn(ALOAD, reqinfo_idx);
+      mv.visitVarInsn(ALOAD, src_idx);
+      mv.visitMethodInsn(INVOKEVIRTUAL, "SecAgent/utils/ReqInfo", "setStubData", "(Ljava/lang/String;)V", false);
+    }
+
+    static void getStubData(MethodVisitor mv, int reqinfo_idx, int dst_idx) {
+      mv.visitVarInsn(ALOAD, reqinfo_idx);
+      mv.visitMethodInsn(INVOKEVIRTUAL, "SecAgent/utils/ReqInfo", "getStubData", "()Ljava/lang/String;", false);
+      mv.visitVarInsn(ASTORE, dst_idx);
+    }
+
+    static void setType(MethodVisitor mv, int reqinfo_idx, int src_idx) {
+      mv.visitVarInsn(ALOAD, reqinfo_idx);
+      mv.visitVarInsn(ALOAD, src_idx);
+      mv.visitMethodInsn(INVOKEVIRTUAL, "SecAgent/utils/ReqInfo", "setType", "(Ljava/lang/String;)V", false);
+    }
+
+    static void getType(MethodVisitor mv, int reqinfo_idx, int dst_idx) {
+      mv.visitVarInsn(ALOAD, reqinfo_idx);
+      mv.visitMethodInsn(INVOKEVIRTUAL, "SecAgent/utils/ReqInfo", "getType", "()Ljava/lang/String;", false);
+      mv.visitVarInsn(ASTORE, dst_idx);
+    }
+
+    @Deprecated
+    static void putQuery(MethodVisitor mv, int reqinfo_idx, int key_idx, int value_idx) {
+      mv.visitVarInsn(ALOAD, reqinfo_idx);
+      mv.visitVarInsn(ALOAD, key_idx);
+      mv.visitVarInsn(ALOAD, value_idx);
+      mv.visitMethodInsn(INVOKEVIRTUAL, "SecAgent/utils/ReqInfo", "setQuery", "(Ljava/lang/String;Ljava/lang/String;)V", false);
+    }
+
+    @Deprecated
+    static void getQuery(MethodVisitor mv, int reqinfo_idx, int key_idx, int dst_idx) {
+      mv.visitVarInsn(ALOAD, reqinfo_idx);
+      mv.visitVarInsn(ALOAD, key_idx);
+      mv.visitMethodInsn(INVOKEVIRTUAL, "SecAgent/utils/ReqInfo", "getQuery", "(Ljava/lang/String;)Ljava/lang/String;", false);
+      mv.visitVarInsn(ASTORE, dst_idx);
+    }
+
+    @Deprecated
+    static void setQueries(MethodVisitor mv, int reqinfo_idx, int hmap_idx) {
+      mv.visitVarInsn(ALOAD, reqinfo_idx);
+      mv.visitVarInsn(ALOAD, hmap_idx);
+      mv.visitMethodInsn(INVOKEVIRTUAL, "SecAgent/utils/ReqInfo", "setQueries", "(Ljava/util/HashMap;)V", false);
+    }
+
+    @Deprecated
+    static void getQueries(MethodVisitor mv, int reqinfo_idx, int dst_idx) {
+      mv.visitVarInsn(ALOAD, reqinfo_idx);
+      mv.visitMethodInsn(INVOKEVIRTUAL, "SecAgent/utils/ReqInfo", "getQueries", "()Ljava/util/HashMap;", false);
+      mv.visitVarInsn(ASTORE, dst_idx);
+    }
+
+    @Deprecated
+    static void setHeaders(MethodVisitor mv, int reqinfo_idx, int hmap_idx) {
+      mv.visitVarInsn(ALOAD, reqinfo_idx);
+      mv.visitVarInsn(ALOAD, hmap_idx);
+      mv.visitMethodInsn(INVOKEVIRTUAL, "SecAgent/utils/ReqInfo", "setHeaders", "(Ljava/util/HashMap;)V", false);
+    }
+
+    @Deprecated
+    static void getHeaders(MethodVisitor mv, int reqinfo_idx, int dst_idx) {
+      mv.visitVarInsn(ALOAD, reqinfo_idx);
+      mv.visitMethodInsn(INVOKEVIRTUAL, "SecAgent/utils/ReqInfo", "getHeaders", "()Ljava/lang/String;", false);
+      mv.visitVarInsn(ASTORE, dst_idx);
+    }
+
+    static void toStr(MethodVisitor mv, int reqinfo_idx, int dst_src){
+      mv.visitVarInsn(ALOAD, reqinfo_idx);
+      mv.visitMethodInsn(INVOKEVIRTUAL, "SecAgent/utils/ReqInfo", "toString", "()Ljava/lang/String;", false);
+      mv.visitVarInsn(ASTORE, dst_src);
+    }
+
   }
 
   /**

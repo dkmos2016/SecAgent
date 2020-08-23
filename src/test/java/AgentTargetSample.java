@@ -8,8 +8,11 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.HashMap;
+import javax.servlet.http.HttpServletRequest;
 
 public class AgentTargetSample {
+    private HttpServletRequest httpServletRequest;
+
     private int id;
     private String name;
     public AgentTargetSample(int id, String name) {
@@ -29,6 +32,8 @@ public class AgentTargetSample {
     public static class test {
         private int id;
         private String desc;
+
+
 
         public  test(int id) {
             this(id, "test");
@@ -111,8 +116,8 @@ public class AgentTargetSample {
 
         }
 
-        HashMap<String, String> result = new HashMap<>();
+        HashMap<String, String[]> result = new HashMap<>();
 
-        result.put("hello", "world");
+        result.put("hello", null);
     }
 }
