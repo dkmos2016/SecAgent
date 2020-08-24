@@ -5,7 +5,10 @@ import SecAgent.SecAsm.Common.CommonStub;
 import SecAgent.utils.ParamsInfo;
 import org.objectweb.asm.MethodVisitor;
 
-
+/**
+ * cannot use AsmReq*, use invoke instead
+ * for Arbitrary_File_Read
+ */
 public class DownStub extends CommonStub {
 
   public DownStub(

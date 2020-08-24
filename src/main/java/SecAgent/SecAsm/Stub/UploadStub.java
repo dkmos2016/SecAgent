@@ -5,7 +5,10 @@ import SecAgent.SecAsm.Common.CommonStub;
 import SecAgent.utils.ParamsInfo;
 import org.objectweb.asm.MethodVisitor;
 
-
+/**
+ * cannot use AsmReq*, use invoke instead
+ * stub for upload file test
+ */
 public class UploadStub extends CommonStub {
   public UploadStub(
     int api, MethodVisitor methodVisitor, int access, String name, String descriptor, ParamsInfo paramsInfo) {

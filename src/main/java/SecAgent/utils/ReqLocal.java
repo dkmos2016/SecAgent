@@ -4,7 +4,6 @@ public class ReqLocal {
   private final static ThreadLocal<ReqInfo> reqLocal = new ThreadLocal<ReqInfo>();
 
   public static ReqInfo getReqInfo() {
-
     ReqInfo reqInfo = reqLocal.get();
     if (reqInfo == null) {
       System.out.println(
@@ -19,6 +18,10 @@ public class ReqLocal {
     }
 
     return reqInfo;
+  }
+
+  public static void setReqLocal(ReqLocal reqLocal) {
+    reqLocal = reqLocal;
   }
 
   public static void clear() {

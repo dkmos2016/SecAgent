@@ -4,6 +4,7 @@ import SecAgent.SecAsm.Common.CommonStub;
 import SecAgent.SecAsm.utils.AsmReqInfoOp;
 import SecAgent.SecAsm.utils.AsmReqLocalOp;
 import SecAgent.utils.ParamsInfo;
+import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 
 public class SqlStub extends CommonStub {
@@ -38,10 +39,13 @@ public class SqlStub extends CommonStub {
 //    AsmReqInfoOp.toStr(mv, reqinfo_idx, res_idx);
 
 //    info(res_idx);
+//    AsmReqInfoOp.doJob(mv, reqinfo_idx);
 
-    AsmReqInfoOp.doJob(mv, reqinfo_idx);
+
+
+
 //    stackTrack();
-//    ReqTest4Sql();
+
   }
 
   @Override
