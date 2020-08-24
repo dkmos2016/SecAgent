@@ -380,6 +380,101 @@ public class CommonStub extends AdviceAdapter implements Opcodes {
   }
 
 
+  protected void putStubData(String type, int src_idx) {
+    getGlobalReqInfo(reqinfo_idx);
+    newInstance("java/lang/Throwable", stk_idx);
+    AsmReqInfoOp.putStubData(mv, reqinfo_idx , type, stk_idx, src_idx);
+  }
+
+  protected void invoke(String classname, String methodname, Class[] classes, Object[] params, int dst_idx) {
+    Label try_start = new Label();
+    Label try_end = new Label();
+    Label try_excep1 = new Label();
+    mv.visitTryCatchBlock(try_start, try_end, try_excep1, "java/lang/ClassNotFoundException");
+    Label try_excep2 = new Label();
+    mv.visitTryCatchBlock(try_start, try_end, try_excep2, "java/lang/NoSuchMethodException");
+    Label try_excep3 = new Label();
+    mv.visitTryCatchBlock(try_start, try_end, try_excep3, "java/lang/IllegalAccessException");
+    Label try_excep4 = new Label();
+    mv.visitTryCatchBlock(try_start, try_end, try_excep4, "java/lang/reflect/InvocationTargetException");
+    mv.visitLabel(try_start);
+    mv.visitMethodInsn(INVOKESTATIC, "java/lang/Thread", "currentThread", "()Ljava/lang/Thread;", false);
+    mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Thread", "getContextClassLoader", "()Ljava/lang/ClassLoader;", false);
+    mv.visitLdcInsn(classname);
+    mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/ClassLoader", "loadClass", "(Ljava/lang/String;)Ljava/lang/Class;", false);
+    mv.visitLdcInsn(methodname);
+    // todo complete
+    mv.visitInsn(ICONST_3);
+    mv.visitTypeInsn(ANEWARRAY, "java/lang/Class");
+    mv.visitInsn(DUP);
+    mv.visitInsn(ICONST_0);
+    mv.visitLdcInsn(Type.getType("Ljava/lang/String;"));
+    mv.visitInsn(AASTORE);
+    mv.visitInsn(DUP);
+    mv.visitInsn(ICONST_1);
+    mv.visitLdcInsn(Type.getType("Ljava/lang/Throwable;"));
+    mv.visitInsn(AASTORE);
+    mv.visitInsn(DUP);
+    mv.visitInsn(ICONST_2);
+    mv.visitLdcInsn(Type.getType("Ljava/lang/Object;"));
+    mv.visitInsn(AASTORE);
+    mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Class", "getDeclaredMethod", "(Ljava/lang/String;[Ljava/lang/Class;)Ljava/lang/reflect/Method;", false);
+
+    mv.visitInsn(ACONST_NULL);
+    mv.visitInsn(ICONST_3);
+    mv.visitTypeInsn(ANEWARRAY, "java/lang/Object");
+    mv.visitInsn(DUP);
+    mv.visitInsn(ICONST_0);
+    mv.visitLdcInsn(type);
+    mv.visitInsn(AASTORE);
+    mv.visitInsn(DUP);
+    mv.visitInsn(ICONST_1);
+    mv.visitVarInsn(ALOAD, stk_idx);
+    mv.visitInsn(AASTORE);
+    mv.visitInsn(DUP);
+    mv.visitInsn(ICONST_2);
+    mv.visitVarInsn(ALOAD, src_idx);
+    mv.visitInsn(AASTORE);
+
+    mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/reflect/Method", "invoke", "(Ljava/lang/Object;[Ljava/lang/Object;)Ljava/lang/Object;", false);
+    mv.visitInsn(POP);
+
+    mv.visitLabel(try_end);
+    Label RET = new Label();
+    mv.visitJumpInsn(GOTO, RET);
+
+    mv.visitLabel(try_excep1);
+    mv.visitFrame(F_SAME1, 0, null, 1, new Object[]{"java/lang/ClassNotFoundException"});
+    mv.visitVarInsn(ASTORE, 1);
+    mv.visitVarInsn(ALOAD, 1);
+    mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/ClassNotFoundException", "printStackTrace", "()V", false);
+    mv.visitJumpInsn(GOTO, RET);
+    mv.visitLabel(try_excep2);
+
+    mv.visitFrame(F_SAME1, 0, null, 1, new Object[]{"java/lang/NoSuchMethodException"});
+    mv.visitVarInsn(ASTORE, 1);
+    mv.visitVarInsn(ALOAD, 1);
+    mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/NoSuchMethodException", "printStackTrace", "()V", false);
+    mv.visitJumpInsn(GOTO, RET);
+    mv.visitLabel(try_excep3);
+
+    mv.visitFrame(F_SAME1, 0, null, 1, new Object[]{"java/lang/IllegalAccessException"});
+    mv.visitVarInsn(ASTORE, 1);
+    mv.visitVarInsn(ALOAD, 1);
+    mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/IllegalAccessException", "printStackTrace", "()V", false);
+    mv.visitJumpInsn(GOTO, RET);
+    mv.visitLabel(try_excep4);
+
+    mv.visitFrame(F_SAME1, 0, null, 1, new Object[]{"java/lang/reflect/InvocationTargetException"});
+    mv.visitVarInsn(ASTORE, 1);
+    mv.visitVarInsn(ALOAD, 1);
+    mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/reflect/InvocationTargetException", "printStackTrace", "()V", false);
+
+    mv.visitLabel(RET);
+    mv.visitFrame(F_SAME, 0, null, 0, null);
+  }
+
+
   /**
    * @param reqinfo_idx
    * @param src_idx
