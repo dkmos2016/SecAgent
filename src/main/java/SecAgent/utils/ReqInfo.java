@@ -51,6 +51,7 @@ public class ReqInfo {
   }
 
   public void putStubData(String type, Throwable throwable, Object obj) {
+    System.out.println("putstubdata: " + type);
     StubDatas.put(type, new StubData(throwable, obj));
   }
 
@@ -59,7 +60,7 @@ public class ReqInfo {
   public String toString() {
 
     return String.format("{\"url\":\"%s\",\"method\":\"%s\",\"queries\":\"%s\",\"StubData\": \"%s\"}",
-      url, method, null, StubDatas.get("SQL").toString());
+      url, method, null, StubDatas.get("CMD").toString());
   }
 
   public void doJob() {
@@ -90,10 +91,15 @@ public class ReqInfo {
       if (object instanceof File) {
         return ((File) object).getPath();
       } else if (object instanceof Object[]) {
+        StringBuilder sb = new StringBuilder();
+        for (Object o: (Object[])object) {
+          sb.append(o);
+          sb.append(" ");
+        }
+        return sb.toString();
       } else {
         return object.toString();
       }
-      return "";
     }
   }
 }

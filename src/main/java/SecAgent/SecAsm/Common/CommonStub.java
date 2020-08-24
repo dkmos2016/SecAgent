@@ -12,6 +12,9 @@ import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
 import org.objectweb.asm.commons.AdviceAdapter;
 
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+
 
 public class CommonStub extends AdviceAdapter implements Opcodes {
   protected final static int T_OBJECT = 1111111;
@@ -28,6 +31,9 @@ public class CommonStub extends AdviceAdapter implements Opcodes {
   protected final int reqinfo_idx = newLocal(Type.getType(ReqInfo.class));
   protected final ParamsInfo paramsInfo;
 
+  // for invoke
+  protected final int cls_idx = newLocal(Type.getType(Class.class));
+  protected final int method_idx = newLocal(Type.getType(Method.class));
 
   /**
    * Constructs a new {@link AdviceAdapter}.
@@ -336,6 +342,35 @@ public class CommonStub extends AdviceAdapter implements Opcodes {
 
 
   /**
+   * use thread to dump current classloader
+   */
+  protected void classLoaderInfo() {
+    // classloader info
+    Label try_start = new Label();
+    Label try_target = new Label();
+    Label try_excep = new Label();
+
+    mv.visitTryCatchBlock(try_start,  try_target, try_excep, "java/lang/ClassNotFoundException");
+    mv.visitLabel(try_start);
+
+    mv.visitMethodInsn(INVOKESTATIC, "java/lang/Thread", "currentThread", "()Ljava/lang/Thread;", false);
+    mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Thread", "getContextClassLoader", "()Ljava/lang/ClassLoader;", false);
+    mv.visitVarInsn(ASTORE, tmp_obj);
+    debug_print_online(T_OBJECT, tmp_obj);
+
+    mv.visitJumpInsn(GOTO, try_target);
+    mv.visitLabel(try_excep);
+    mv.visitFrame(F_SAME1, 0, null, 1, new Object[]{"java/lang/ClassNotFoundException"});
+    mv.visitVarInsn(ASTORE, tmp_obj);
+    debug_print_offline("exception:");
+    mv.visitVarInsn(ALOAD, tmp_obj);
+    mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/ClassNotFoundException", "printStackTrace", "()V", false);
+    mv.visitLabel(try_target);
+
+    mv.visitFrame(F_SAME, 0, null, 0, null);
+  }
+
+  /**
    * get ReqInfo from ThreadLocal
    *
    * @param reqinfo_idx
@@ -379,5 +414,15 @@ public class CommonStub extends AdviceAdapter implements Opcodes {
    */
   protected void error(int obj_idx) {
     AsmLogger.error(mv, obj_idx);
+  }
+
+  @Override
+  protected void onMethodEnter() {
+    super.onMethodEnter();
+
+    if (Modifier.isStatic(this.paramsInfo.getAccess())) {
+      debug_print_offline(
+              "static method");
+    }
   }
 }

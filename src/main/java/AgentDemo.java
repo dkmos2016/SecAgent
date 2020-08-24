@@ -13,6 +13,7 @@ public class AgentDemo {
 //          "java.io.File",
 //          "java.lang.SecurityManager",
         "java.io.ObjectInputStream",
+              "SecAgent.utils.ReqLocal",
       };
   }
 
