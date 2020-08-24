@@ -19,32 +19,9 @@ public class SqlStub extends CommonStub {
     debug_print_offline(
       String.format(
         "[DEBUG] [SqlStub]: %s", this.paramsInfo.toString()));
-    //    mv.visitTypeInsn(NEW, "java/lang/StringBuilder");
-    //    mv.visitInsn(DUP);
-    //    mv.visitMethodInsn(INVOKESPECIAL, "java/lang/StringBuilder", "<init>", "()V", false);
-    //    mv.visitVarInsn(ASTORE, sb_idx);
-    //
-    //    mv.visitVarInsn(ALOAD, sb_idx);
-    //    mv.visitVarInsn();
-//    debug_print_online(ALOAD, 0);
-
-    AsmReqLocalOp.getReqInfo(mv, reqinfo_idx);
-
-    newInstance("java/lang/Throwable", stk_idx);
-    AsmReqInfoOp.putStubData(mv, reqinfo_idx, "SQL", stk_idx, 0);
-
-//    AsmReqInfoOp.setType(mv, reqinfo_idx, "EXEC");
-//    AsmReqInfoOp.setStubData(mv, reqinfo_idx, 0);
-
-//    AsmReqInfoOp.toStr(mv, reqinfo_idx, res_idx);
-
-//    info(res_idx);
-//    AsmReqInfoOp.doJob(mv, reqinfo_idx);
 
 
-
-
-//    stackTrack();
+    putStubData("SQL", 0);
 
   }
 

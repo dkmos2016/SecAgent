@@ -34,10 +34,7 @@ public class CmdStub extends CommonStub {
     debug_print_online(T_LONG, tid_idx);
 
 
-//    getGlobalReqInfo(reqinfo_idx);
-    AsmReqLocalOp.getReqInfo(mv, reqinfo_idx);
-    newInstance("java/lang/Throwable", stk_idx);
-    AsmReqInfoOp.putStubData(mv, reqinfo_idx , "CMD", stk_idx, 0);
+    putStubData("CMD", 0);
 
 
 //    AsmReqInfoOp.setStubDatas(mv, reqinfo_idx, 0);
