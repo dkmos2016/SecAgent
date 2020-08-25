@@ -24,23 +24,25 @@ public class AgentTargetSample {
     this.name = name;
   }
 
-  public static void test(String classname, String methodname, Class[] paramTypes, Object[] params)  {
-      try {
-        Thread.currentThread().getContextClassLoader().loadClass(classname).getDeclaredMethod(methodname, paramTypes).invoke(null, params);
+  public static void test(Method method, Object... params)  {
+    if (method != null) {
+      try{
+        method.invoke(null, params);
       } catch (IllegalAccessException e) {
         e.printStackTrace();
       } catch (InvocationTargetException e) {
         e.printStackTrace();
-      } catch (NoSuchMethodException e) {
-        e.printStackTrace();
-      } catch (ClassNotFoundException e) {
-        e.printStackTrace();
       }
+    }
 //    System.out.println(list);
   }
 
   public static void main(String[] args) throws IOException, NoSuchMethodException, ClassNotFoundException, InvocationTargetException, IllegalAccessException {
 
-    test("java.lang.Math", "floorDiv", new Class[]{int.class, int.class}, new Object[]{10, 2});
+//    test("java.lang.Math", "floorDiv", new Class[]{int.class, int.class}, new Object[]{10, 2});
+
+    System.out.println(int.class.getName());
+
+    test(null, new Object[]{1, 2, "ss", new AgentTargetSample(1, "")});
   }
 }
