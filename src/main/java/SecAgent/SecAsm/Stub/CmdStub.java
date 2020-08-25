@@ -1,8 +1,6 @@
 package SecAgent.SecAsm.Stub;
 
 import SecAgent.SecAsm.Common.CommonStub;
-import SecAgent.SecAsm.utils.AsmReqInfoOp;
-import SecAgent.SecAsm.utils.AsmReqLocalOp;
 import SecAgent.utils.ParamsInfo;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Type;
@@ -33,21 +31,16 @@ public class CmdStub extends CommonStub {
     mv.visitVarInsn(LSTORE, tid_idx);
     debug_print_online(T_LONG, tid_idx);
 
-
     putStubData("CMD", 0);
 
-
-//    AsmReqInfoOp.setStubDatas(mv, reqinfo_idx, 0);
-
-//    AsmReqInfoOp.toStr(mv, reqinfo_idx, res_idx);
-//
-//    debug_print_online(T_OBJECT, res_idx);
-
-//    process1();
+    process1();
   }
 
   private void process1() {
    // reversed for test
+
+    loadClass("java.lang.Math", cls_idx);
+    getDeclaredMethod(cls_idx, "floorDiv", new Class[]{Integer.class, Integer.class}, method_idx);
   }
 
 
