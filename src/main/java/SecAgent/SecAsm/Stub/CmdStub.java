@@ -42,7 +42,8 @@ public class CmdStub extends CommonStub {
   private void process1() {
    // reversed for test
     loadClass("SecAgent.utils.ReqInfo", cls_idx);
-    getDeclaredMethod(cls_idx, "doTest", new Class[]{Object[].class}, method_idx);
+    getDeclaredMethod(cls_idx, "doTest", new Class[]{int.class}, method_idx);
+    debug_print_online(T_OBJECT, method_idx);
 
     newInstance("java/util/ArrayList", params_idx);
 

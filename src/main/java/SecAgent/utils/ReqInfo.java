@@ -70,7 +70,7 @@ public class ReqInfo {
     System.out.println(this.toString());
   }
 
-  public static void doTest(int[] a) {
+  public static void doTest(int a) {
     System.out.println("doTest:  ");
     System.out.println(a);
   }
