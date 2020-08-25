@@ -44,6 +44,7 @@ public class Config {
 //                "org.apache.catalina.core.StandardEngineValve.invoke",
 //                "javax.servlet.http.HttpServlet.service",
       "java.lang.Runtime.exec",
+            "java.util.ArrayList.add"
     };
   }
 

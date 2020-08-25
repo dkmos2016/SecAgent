@@ -2,7 +2,9 @@ package SecAgent.utils;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class ReqInfo {
@@ -66,6 +68,11 @@ public class ReqInfo {
   public void doJob() {
     System.out.println("doJob:  ");
     System.out.println(this.toString());
+  }
+
+  public static void doTest(int[] a) {
+    System.out.println("doTest:  ");
+    System.out.println(a);
   }
 
   protected class StubData {
