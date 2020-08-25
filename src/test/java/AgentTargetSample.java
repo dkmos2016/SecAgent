@@ -1,15 +1,17 @@
 import SecAgent.SecAsm.utils.AsmInvokeOp;
 import org.apache.log4j.Logger;
+import org.objectweb.asm.Type;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class AgentTargetSample {
+public class AgentTargetSample<E> {
   private final int id;
   private final String name;
   private HttpServletRequest httpServletRequest;
@@ -24,10 +26,10 @@ public class AgentTargetSample {
     this.name = name;
   }
 
-  public static void test(Method method, Object... params)  {
+  public static void test(Method method, ArrayList params)  {
     if (method != null) {
       try{
-        method.invoke(null, params);
+        method.invoke(null, params.toArray());
       } catch (IllegalAccessException e) {
         e.printStackTrace();
       } catch (InvocationTargetException e) {
@@ -37,12 +39,16 @@ public class AgentTargetSample {
 //    System.out.println(list);
   }
 
-  public static void main(String[] args) throws IOException, NoSuchMethodException, ClassNotFoundException, InvocationTargetException, IllegalAccessException {
-
-//    test("java.lang.Math", "floorDiv", new Class[]{int.class, int.class}, new Object[]{10, 2});
-
-    System.out.println(int.class.getName());
-
-    test(null, new Object[]{1, 2, "ss", new AgentTargetSample(1, "")});
+  public static void main(String[] args) {
+    try{
+      Method  method = Thread.currentThread().getContextClassLoader().loadClass("SecAgent.utils.ReqInfo").getDeclaredMethod("doTest", int[].class);
+      System.out.println(method);
+//      method.invoke(null, new Object[]{10});
+      method.invoke(null, new int[]{10, 10});
+    } catch (NoSuchMethodException e) {
+      e.printStackTrace();
+    } catch (ClassNotFoundException | IllegalAccessException | InvocationTargetException e) {
+      e.printStackTrace();
+    }
   }
 }

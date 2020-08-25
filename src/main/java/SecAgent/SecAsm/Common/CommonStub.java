@@ -14,6 +14,8 @@ import org.objectweb.asm.commons.AdviceAdapter;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class CommonStub extends AdviceAdapter implements Opcodes {
@@ -34,6 +36,7 @@ public class CommonStub extends AdviceAdapter implements Opcodes {
   // for invoke
   protected final int cls_idx = newLocal(Type.getType(Class.class));
   protected final int method_idx = newLocal(Type.getType(Method.class));
+  protected final int params_idx = newLocal(Type.getType(Object[].class));
 
   /**
    * Constructs a new {@link AdviceAdapter}.
@@ -426,7 +429,8 @@ public class CommonStub extends AdviceAdapter implements Opcodes {
     for (int i=0; i < paramTypes.length; i++) {
       mv.visitInsn(DUP);
       mv.visitLdcInsn(i);
-      mv.visitFieldInsn(GETSTATIC, paramTypes[i].getName().replace('.', '/'), "TYPE", "Ljava/lang/Class;");
+      mv.visitLdcInsn(Type.getType(paramTypes[i]));
+//      mv.visitFieldInsn(GETSTATIC, paramTypes[i].getName().replace('.', '/'), "TYPE", "Ljava/lang/Class;");
       mv.visitInsn(AASTORE);
     }
 
@@ -442,7 +446,62 @@ public class CommonStub extends AdviceAdapter implements Opcodes {
     mv.visitLabel(if_empty);
   }
 
-  protected  void invokestatic(int method_idx, int dst_idx) {
+  protected void addListElement(int list_idx, int type,  int obj_idx) {
+    mv.visitVarInsn(ALOAD, list_idx);
+
+    switch (type) {
+      case T_BYTE:
+        mv.visitVarInsn(ILOAD, obj_idx);
+        mv.visitMethodInsn(INVOKESTATIC, "java/lang/Byte", "valueOf", "(B)Ljava/lang/Byte;", false);
+        break;
+
+      case T_SHORT:
+        mv.visitVarInsn(ILOAD, obj_idx);
+        mv.visitMethodInsn(INVOKESTATIC, "java/lang/Short", "valueOf", "(S)Ljava/lang/Short;", false);
+        break;
+
+      case T_INT:
+        mv.visitVarInsn(ILOAD, obj_idx);
+        mv.visitMethodInsn(INVOKESTATIC, "java/lang/Integer", "valueOf", "(I)Ljava/lang/Integer;", false);
+        break;
+
+      case T_BOOLEAN:
+        mv.visitVarInsn(ILOAD, obj_idx);
+        mv.visitMethodInsn(INVOKESTATIC, "java/lang/Boolean", "valueOf", "(Z)Ljava/lang/Boolean;", false);
+        break;
+
+      case T_CHAR:
+        mv.visitVarInsn(ILOAD, obj_idx);
+        mv.visitMethodInsn(INVOKESTATIC, "java/lang/Char", "valueOf", "(C)Ljava/lang/Char;", false);
+        break;
+
+      case T_LONG:
+        mv.visitVarInsn(LLOAD, obj_idx);
+        mv.visitMethodInsn(INVOKESTATIC, "java/lang/Long", "valueOf", "(J)Ljava/lang/Long;", false);
+        break;
+
+      case T_DOUBLE:
+        mv.visitVarInsn(DLOAD, obj_idx);
+        mv.visitMethodInsn(INVOKESTATIC, "java/lang/Double", "valueOf", "(D)Ljava/lang/Double;", false);
+        break;
+
+      case T_FLOAT:
+        mv.visitVarInsn(FLOAD, obj_idx);
+        mv.visitMethodInsn(INVOKESTATIC, "java/lang/Float", "valueOf", "(F)Ljava/lang/Float;", false);
+        break;
+
+      case T_OBJECT:
+      default:
+        mv.visitVarInsn(ALOAD, obj_idx);
+        break;
+    }
+
+    mv.visitMethodInsn(INVOKEVIRTUAL, "java/util/ArrayList", "add", "(Ljava/lang/Object;)Z", false);
+    mv.visitInsn(POP);
+    mv.visitInsn(POP);
+}
+
+  protected void invokestatic(int method_idx, int params_idx, int dst_idx) {
     Label try_start = new Label();
     Label l1 = new Label();
     Label try_exp1 = new Label();
@@ -450,15 +509,29 @@ public class CommonStub extends AdviceAdapter implements Opcodes {
     Label try_exp2 = new Label();
     mv.visitTryCatchBlock(try_start, l1, try_exp2, "java/lang/reflect/InvocationTargetException");
 
-    mv.visitVarInsn(ALOAD, method_idx);
     Label if_empty = new Label();
+
+    mv.visitVarInsn(ALOAD, method_idx);
     mv.visitJumpInsn(IFNULL, if_empty);
     mv.visitLabel(try_start);
+
     mv.visitVarInsn(ALOAD, method_idx);
     mv.visitInsn(ACONST_NULL);
-    mv.visitVarInsn(ALOAD, 1);
+    mv.visitVarInsn(ALOAD, params_idx);
+
+    mv.visitMethodInsn(INVOKEVIRTUAL, "java/util/ArrayList", "toArray", "()[Ljava/lang/Object;", false);
+    debug_print_online(T_OBJECT, method_idx);
+
+    // TODO fix bug
     mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/reflect/Method", "invoke", "(Ljava/lang/Object;[Ljava/lang/Object;)Ljava/lang/Object;", false);
+    debug_print_online(T_OBJECT, method_idx);
+
     mv.visitInsn(POP);
+
+
+
+//    mv.visitInsn(POP);
+//    mv.visitVarInsn(ASTORE, dst_idx);
     mv.visitLabel(l1);
 
     mv.visitJumpInsn(GOTO, if_empty);
@@ -477,6 +550,9 @@ public class CommonStub extends AdviceAdapter implements Opcodes {
 
   }
 
+  protected void invoke(int method_idx, List list) {
+
+  }
   /**
    * @param reqinfo_idx
    * @param src_idx

@@ -12,7 +12,6 @@ public class AsmInvokeOp {
 
          result = method.invoke(null, params);
 
-
         } catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
             e.printStackTrace();
             result = "";

@@ -19,6 +19,7 @@ repositories {
 }
 
 dependencies {
+    implementation 'org.jetbrains:annotations:19.0.0'
     compile fileTree(dir: "libs", includes: ["*.jar"], excludes: ["asm*9.0*.jar"])
     compile group: 'org.ow2.asm', name: 'asm', version: '9.0-beta'
     compile group: 'org.ow2.asm', name: 'asm-commons', version: '9.0-beta'
