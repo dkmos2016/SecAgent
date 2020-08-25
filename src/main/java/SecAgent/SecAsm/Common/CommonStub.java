@@ -429,7 +429,45 @@ public class CommonStub extends AdviceAdapter implements Opcodes {
     for (int i=0; i < paramTypes.length; i++) {
       mv.visitInsn(DUP);
       mv.visitLdcInsn(i);
-      mv.visitLdcInsn(Type.getType(paramTypes[i]));
+      switch (paramTypes[i].getName()) {
+        case "byte":
+          mv.visitFieldInsn(GETSTATIC, "java/lang/Byte", "TYPE", "Ljava/lang/Class;");
+          break;
+
+        case "short":
+          mv.visitFieldInsn(GETSTATIC, "java/lang/Short", "TYPE", "Ljava/lang/Class;");
+          break;
+
+        case "int":
+          mv.visitFieldInsn(GETSTATIC, "java/lang/Integer", "TYPE", "Ljava/lang/Class;");
+          break;
+
+        case "boolean":
+          mv.visitFieldInsn(GETSTATIC, "java/lang/Boolean", "TYPE", "Ljava/lang/Class;");
+          break;
+
+        case "char":
+          mv.visitFieldInsn(GETSTATIC, "java/lang/Char", "TYPE", "Ljava/lang/Class;");
+          break;
+
+        case "long":
+          mv.visitFieldInsn(GETSTATIC, "java/lang/Long", "TYPE", "Ljava/lang/Class;");
+          break;
+
+        case "double":
+          mv.visitFieldInsn(GETSTATIC, "java/lang/Double", "TYPE", "Ljava/lang/Class;");
+          break;
+
+        case "float":
+          mv.visitFieldInsn(GETSTATIC, "java/lang/Float", "TYPE", "Ljava/lang/Class;");
+          break;
+
+        default:
+          mv.visitLdcInsn(Type.getType(paramTypes[i]));
+          break;
+      }
+
+
 //      mv.visitFieldInsn(GETSTATIC, paramTypes[i].getName().replace('.', '/'), "TYPE", "Ljava/lang/Class;");
       mv.visitInsn(AASTORE);
     }

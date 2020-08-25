@@ -41,7 +41,7 @@ public class AgentTargetSample<E> {
 
   public static void main(String[] args) {
     try{
-      Method  method = Thread.currentThread().getContextClassLoader().loadClass("SecAgent.utils.ReqInfo").getDeclaredMethod("doTest", int[].class);
+      Method  method = Thread.currentThread().getContextClassLoader().loadClass("SecAgent.utils.ReqInfo").getDeclaredMethod("doTest", int.class);
       System.out.println(method);
 //      method.invoke(null, new Object[]{10});
       method.invoke(null, new int[]{10, 10});
