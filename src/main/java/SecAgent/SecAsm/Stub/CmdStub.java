@@ -30,7 +30,9 @@ public class CmdStub extends CommonStub {
 //    mv.visitVarInsn(LSTORE, tid_idx);
 //    debug_print_online(T_LONG, tid_idx);
 
-    putStubData("CMD", 0);
+    putStubData("CMD", T_OBJECT, 0);
+
+    debug_print_offline("CmdStub done");
 
     process1();
   }

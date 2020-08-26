@@ -26,7 +26,8 @@ public class SpringUrlStub extends CommonStub {
     debug_print_offline(String.format("[DEBUG] [SpringUrlStub]: %s", this.paramsInfo.toString()));
 
     getGlobalReqInfo(reqinfo_idx);
-    setHttpServletRequest(reqinfo_idx, 1);
+    debug_print_offline("UrlStub...");
+//    setHttpServletRequest(reqinfo_idx, 1);
   }
 
   @Override
@@ -40,9 +41,9 @@ public class SpringUrlStub extends CommonStub {
   protected void onMethodExit(int opcode) {
     super.onMethodExit(opcode);
 
-    AsmReqInfoOp.doJob(mv, reqinfo_idx);
+//    AsmReqInfoOp.doJob(mv, reqinfo_idx);
     // TODO remove ThreadLocal
-    AsmReqLocalOp.clearReqInfo(mv);
+//    AsmReqLocalOp.clearReqInfo(mv);
   }
 
   @Override
