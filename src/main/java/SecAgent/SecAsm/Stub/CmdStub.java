@@ -25,12 +25,10 @@ public class CmdStub extends CommonStub {
       String.format(
         "[DEBUG] [CmdStub]: %s", this.paramsInfo.toString()));
 
-    // TODO fix bug (getGlobalReqInfo)
-
-    mv.visitMethodInsn(INVOKESTATIC, "java/lang/Thread", "currentThread", "()Ljava/lang/Thread;", false);
-    mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Thread", "getId", "()J", false);
-    mv.visitVarInsn(LSTORE, tid_idx);
-    debug_print_online(T_LONG, tid_idx);
+//    mv.visitMethodInsn(INVOKESTATIC, "java/lang/Thread", "currentThread", "()Ljava/lang/Thread;", false);
+//    mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Thread", "getId", "()J", false);
+//    mv.visitVarInsn(LSTORE, tid_idx);
+//    debug_print_online(T_LONG, tid_idx);
 
     putStubData("CMD", 0);
 

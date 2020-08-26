@@ -21,12 +21,12 @@ public class UploadStub extends CommonStub {
     debug_print_offline(
       String.format(
         "[DEBUG] [UploadStub]: %s", this.paramsInfo.toString()));
-    
-    mv.visitVarInsn(ALOAD, 1);
-    mv.visitMethodInsn(INVOKEVIRTUAL, "java/io/File", "getAbsolutePath", "()Ljava/lang/String;", false);
-    mv.visitVarInsn(ASTORE, res_idx);
 
-    putStubData("UPLOAD", res_idx);
+//    mv.visitVarInsn(ALOAD, 1);
+//    mv.visitMethodInsn(INVOKEVIRTUAL, "java/io/File", "getAbsolutePath", "()Ljava/lang/String;", false);
+//    mv.visitVarInsn(ASTORE, res_idx);
+
+    putStubData("UPLOAD", 1);
   }
 
   @Override
