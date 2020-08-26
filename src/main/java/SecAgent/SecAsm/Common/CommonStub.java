@@ -14,7 +14,6 @@ import org.objectweb.asm.commons.AdviceAdapter;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -34,6 +33,10 @@ public class CommonStub extends AdviceAdapter implements Opcodes {
   protected final ParamsInfo paramsInfo;
 
   // for invoke
+  /**
+   * for invoke (nonestatic)
+   */
+  protected final int inst_idx = newLocal(Type.getType(Object.class));
   protected final int cls_idx = newLocal(Type.getType(Class.class));
   protected final int method_idx = newLocal(Type.getType(Method.class));
   protected final int params_idx = newLocal(Type.getType(Object[].class));
@@ -118,13 +121,6 @@ public class CommonStub extends AdviceAdapter implements Opcodes {
     mv.visitVarInsn(ASTORE, target);
   }
 
-  protected void newHashMap(int obj_idx) {
-//        mv.visitTypeInsn(NEW, "java/lang/HashMap");
-//        mv.visitInsn(DUP);
-//        mv.visitMethodInsn(INVOKESPECIAL, "java/lang/HashMap", "<init>", "()V", false);
-//        mv.visitVarInsn(ASTORE, obj_idx);
-    newInstance("java/lang/HashMap", obj_idx);
-  }
 
   /**
    * new StringBuilder()
@@ -182,6 +178,7 @@ public class CommonStub extends AdviceAdapter implements Opcodes {
    * @param type
    * @param obj_idx
    */
+  @Deprecated
   protected void append(int sb_idx, int type, int obj_idx) {
     mv.visitVarInsn(ALOAD, sb_idx);
 
@@ -237,6 +234,7 @@ public class CommonStub extends AdviceAdapter implements Opcodes {
    * @param type
    * @param obj_idx
    */
+  @Deprecated
   protected void setValue(int tar_idx, int type, Object obj_idx) {
     mv.visitLdcInsn(obj_idx);
     switch (type) {
@@ -274,6 +272,7 @@ public class CommonStub extends AdviceAdapter implements Opcodes {
    * @param sb_idx
    * @param dst_idx
    */
+  @Deprecated
   protected void toStr(int sb_idx, int dst_idx) {
     mv.visitVarInsn(ALOAD, sb_idx);
     mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/StringBuilder", "toString", "()Ljava/lang/String;", false);
@@ -284,6 +283,7 @@ public class CommonStub extends AdviceAdapter implements Opcodes {
   /**
    * print trace stack
    */
+  @Deprecated
   protected void stackTrack() {
     debug_print_offline(
       String.format(
@@ -347,6 +347,7 @@ public class CommonStub extends AdviceAdapter implements Opcodes {
   /**
    * use thread to dump current classloader
    */
+  @Deprecated
   protected void classLoaderInfo() {
     // classloader info
     Label try_start = new Label();
@@ -383,42 +384,78 @@ public class CommonStub extends AdviceAdapter implements Opcodes {
   }
 
 
+  /**
+   * save log data to ReqInfo
+   * @param type
+   * @param src_idx
+   */
   protected void putStubData(String type, int src_idx) {
-    getGlobalReqInfo(reqinfo_idx);
-    newInstance("java/lang/Throwable", stk_idx);
-    AsmReqInfoOp.putStubData(mv, reqinfo_idx , type, stk_idx, src_idx);
-  }
-
-  protected void loadClass(String classname, int dst_idx) {
     Label try_start = new Label();
     Label try_end = new Label();
-    Label try_exp = new Label();
-    mv.visitTryCatchBlock(try_start, try_end, try_exp, "java/lang/ClassNotFoundException");
+    Label try_excep = new Label();
+    mv.visitTryCatchBlock(try_start, try_end, try_excep, "java/lnag/Exception");
     mv.visitLabel(try_start);
+
+    getGlobalReqInfo(reqinfo_idx);
+    newInstance("java/lang/Throwable", stk_idx);
+    debug_print_offline("test putStubData ...");
+    AsmReqInfoOp.putStubData(mv, reqinfo_idx , type, stk_idx, src_idx);
+    debug_print_offline("test putStubData done");
+    mv.visitJumpInsn(GOTO,try_end);
+    mv.visitLabel(try_excep);
+    mv.visitFrame(F_SAME1, 0, null, 1, new Object[]{"java/lang/Exception"});
+    mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Exception", "printStackTrace", "()V", false);
+    mv.visitLabel(try_end);
+  }
+
+  /**
+   * find method with paramTypes, and execute
+   * @param classname: class'name, ex: java.lang.Math
+   * @param methodname: method name
+   * @param paramTypes: method parameters' type, int.class, Object.class...
+   * @param inst_idx: instance of object
+   * @param params_idx: params index of real stack, ArrayList
+   * @param dst_idx: save result to dst_idx
+   */
+  protected void findAndExecute(String classname, String methodname, Class[] paramTypes, int inst_idx, int params_idx, int dst_idx) {
+    Label try_start = new Label();
+    Label try_end = new Label();
+    Label try_excep = new Label();
+
+    mv.visitTryCatchBlock(try_start, try_end, try_excep, "java/lang/Exception");
+    mv.visitLabel(try_start);
+    loadClass(classname, cls_idx);
+    getDeclaredMethod(cls_idx, methodname, paramTypes, method_idx);
+    invoke(method_idx, inst_idx, params_idx, dst_idx);
+    mv.visitJumpInsn(GOTO, try_end);
+    mv.visitLabel(try_excep);
+    mv.visitFrame(F_SAME1, 0, null, 1, new Object[]{"java/lang/Exception"});
+    mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Exception", "printStackTrace", "()V", false);
+    mv.visitLabel(try_end);
+    mv.visitFrame(F_SAME, 0, null, 0, null);
+  }
+
+  /**
+   * load class
+   * @param classname
+   * @param dst_idx
+   */
+  private void loadClass(String classname, int dst_idx) {
     mv.visitMethodInsn(INVOKESTATIC, "java/lang/Thread", "currentThread", "()Ljava/lang/Thread;", false);
     mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Thread", "getContextClassLoader", "()Ljava/lang/ClassLoader;", false);
     mv.visitLdcInsn(classname);
     mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/ClassLoader", "loadClass", "(Ljava/lang/String;)Ljava/lang/Class;", false);
     mv.visitVarInsn(ASTORE, dst_idx);
-
-    mv.visitJumpInsn(GOTO, try_end);
-    mv.visitLabel(try_exp);
-    mv.visitFrame(F_SAME1, 0, null, 1, new Object[]{"java/lang/ClassNotFoundException"});
-    mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/ClassNotFoundException", "printStackTrace", "()V", false);
-    mv.visitLabel(try_end);
   }
 
-  protected void getDeclaredMethod(int cls_idx, String methodname, Class[] paramTypes, int dst_idx) {
-    Label if_empty = new Label();
-    Label try_start = new Label();
-    Label try_end = new Label();
-    Label try_exp = new Label();
-    mv.visitVarInsn(ALOAD, cls_idx);
-    mv.visitJumpInsn(IFNULL, if_empty);
-    mv.visitTryCatchBlock(try_start, try_end, try_exp, "java/lang/NoSuchMethodException");
-    mv.visitLabel(try_start);
-
-    mv.visitFrame(Opcodes.F_SAME1, 0, null, 0, null);
+  /**
+   * getDeclaredMethod
+   * @param cls_idx
+   * @param methodname
+   * @param paramTypes
+   * @param dst_idx
+   */
+  private void getDeclaredMethod(int cls_idx, String methodname, Class[] paramTypes, int dst_idx) {
 
     mv.visitVarInsn(ALOAD, cls_idx);
     mv.visitLdcInsn(methodname);
@@ -467,22 +504,37 @@ public class CommonStub extends AdviceAdapter implements Opcodes {
           break;
       }
 
-
 //      mv.visitFieldInsn(GETSTATIC, paramTypes[i].getName().replace('.', '/'), "TYPE", "Ljava/lang/Class;");
       mv.visitInsn(AASTORE);
     }
 
     mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Class", "getDeclaredMethod", "(Ljava/lang/String;[Ljava/lang/Class;)Ljava/lang/reflect/Method;", false);
     mv.visitVarInsn(ASTORE, dst_idx);
-
-    mv.visitJumpInsn(GOTO, try_end);
-    mv.visitLabel(try_exp);
-    mv.visitFrame(F_SAME1, 0, null, 1, new Object[]{"java/lang/NoSuchMethodException"});
-    mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/NoSuchMethodException", "printStackTrace", "()V", false);
-    mv.visitLabel(try_end);
-
-    mv.visitLabel(if_empty);
   }
+
+  /**
+   * invoke method
+   * @param method_idx
+   * @param inst_idx
+   * @param params_idx
+   * @param dst_idx
+   */
+  private void invoke(int method_idx, int inst_idx, int params_idx, int dst_idx) {
+    mv.visitVarInsn(ALOAD, method_idx);
+//    mv.visitInsn(ACONST_NULL);
+    mv.visitVarInsn(ALOAD, inst_idx);
+    mv.visitVarInsn(ALOAD, params_idx);
+
+    mv.visitMethodInsn(INVOKEVIRTUAL, "java/util/ArrayList", "toArray", "()[Ljava/lang/Object;", false);
+//    debug_print_online(T_OBJECT, method_idx);
+
+    mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/reflect/Method", "invoke", "(Ljava/lang/Object;[Ljava/lang/Object;)Ljava/lang/Object;", false);
+//    debug_print_online(T_OBJECT, method_idx);
+
+//    mv.visitInsn(POP);
+    mv.visitVarInsn(ASTORE, dst_idx);
+  }
+
 
   protected void addListElement(int list_idx, int type,  int obj_idx) {
     mv.visitVarInsn(ALOAD, list_idx);
@@ -536,57 +588,8 @@ public class CommonStub extends AdviceAdapter implements Opcodes {
 
     mv.visitMethodInsn(INVOKEVIRTUAL, "java/util/ArrayList", "add", "(Ljava/lang/Object;)Z", false);
     mv.visitInsn(POP);
-    mv.visitInsn(POP);
 }
 
-  protected void invokestatic(int method_idx, int params_idx, int dst_idx) {
-    Label try_start = new Label();
-    Label l1 = new Label();
-    Label try_exp1 = new Label();
-    mv.visitTryCatchBlock(try_start, l1, try_exp1, "java/lang/IllegalAccessException");
-    Label try_exp2 = new Label();
-    mv.visitTryCatchBlock(try_start, l1, try_exp2, "java/lang/reflect/InvocationTargetException");
-
-    Label if_empty = new Label();
-
-    mv.visitVarInsn(ALOAD, method_idx);
-    mv.visitJumpInsn(IFNULL, if_empty);
-    mv.visitLabel(try_start);
-
-    mv.visitVarInsn(ALOAD, method_idx);
-    mv.visitInsn(ACONST_NULL);
-    mv.visitVarInsn(ALOAD, params_idx);
-
-    mv.visitMethodInsn(INVOKEVIRTUAL, "java/util/ArrayList", "toArray", "()[Ljava/lang/Object;", false);
-    debug_print_online(T_OBJECT, method_idx);
-
-    // TODO fix bug
-    mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/reflect/Method", "invoke", "(Ljava/lang/Object;[Ljava/lang/Object;)Ljava/lang/Object;", false);
-    debug_print_online(T_OBJECT, method_idx);
-
-    mv.visitInsn(POP);
-
-
-
-//    mv.visitInsn(POP);
-//    mv.visitVarInsn(ASTORE, dst_idx);
-    mv.visitLabel(l1);
-
-    mv.visitJumpInsn(GOTO, if_empty);
-
-    mv.visitLabel(try_exp1);
-    mv.visitFrame(Opcodes.F_SAME1, 0, null, 1, new Object[]{"java/lang/IllegalAccessException"});
-    mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/IllegalAccessException", "printStackTrace", "()V", false);
-
-    mv.visitJumpInsn(GOTO, if_empty);
-
-    mv.visitLabel(try_exp2);
-    mv.visitFrame(Opcodes.F_SAME1, 0, null, 1, new Object[]{"java/lang/reflect/InvocationTargetException"});
-    mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/reflect/InvocationTargetException", "printStackTrace", "()V", false);
-
-    mv.visitLabel(if_empty);
-
-  }
 
   protected void invoke(int method_idx, List list) {
 

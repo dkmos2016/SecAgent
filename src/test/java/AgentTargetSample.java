@@ -45,9 +45,7 @@ public class AgentTargetSample<E> {
       System.out.println(method);
 //      method.invoke(null, new Object[]{10});
       method.invoke(null, new int[]{10, 10});
-    } catch (NoSuchMethodException e) {
-      e.printStackTrace();
-    } catch (ClassNotFoundException | IllegalAccessException | InvocationTargetException e) {
+    } catch (Exception e) {
       e.printStackTrace();
     }
   }

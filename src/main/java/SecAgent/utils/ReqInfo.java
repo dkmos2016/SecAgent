@@ -1,5 +1,7 @@
 package SecAgent.utils;
 
+import com.google.protobuf.MapEntry;
+
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.util.ArrayList;
@@ -57,9 +59,19 @@ public class ReqInfo {
     StubDatas.put(type, new StubData(throwable, obj));
   }
 
+  public void processStubData() {
+    StringBuilder sb = new StringBuilder();
+    for (Map.Entry<String, StubData> entry: StubDatas.entrySet()) {
+      String type = entry.getKey();
+      StubData stubData = entry.getValue();
+      sb.append(type +" " + stubData+"\r\n\r\n");
+    }
+    System.out.println(sb.toString());
+  }
 
   @Override
   public String toString() {
+    processStubData();
 
     return String.format("{\"url\":\"%s\",\"method\":\"%s\",\"queries\":\"%s\",\"StubData\": \"%s\"}",
       url, method, null, StubDatas.get("CMD").toString());
@@ -70,7 +82,7 @@ public class ReqInfo {
     System.out.println(this.toString());
   }
 
-  public static void doTest(int a) {
+  public void doTest(int a) {
     System.out.println("doTest:  ");
     System.out.println(a);
   }

@@ -5,8 +5,6 @@ import SecAgent.utils.ParamsInfo;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Type;
 
-import java.util.ArrayList;
-import java.util.List;
 
 
 /**
@@ -40,22 +38,15 @@ public class CmdStub extends CommonStub {
   }
 
   private void process1() {
-   // reversed for test
-    loadClass("SecAgent.utils.ReqInfo", cls_idx);
-    getDeclaredMethod(cls_idx, "doTest", new Class[]{int.class}, method_idx);
+    // reversed for test
     debug_print_online(T_OBJECT, method_idx);
 
     newInstance("java/util/ArrayList", params_idx);
-
     mv.visitLdcInsn(10);
     mv.visitVarInsn(ISTORE, tmp_idx);
     addListElement(params_idx, T_INT, tmp_idx);
-//    mv.visitVarInsn(ALOAD, params_idx);
-//    mv.visitMethodInsn(INVOKEVIRTUAL, "java/util/ArrayList", "toArray", "()[Ljava/lang/Object;", false);
-//    mv.visitVarInsn(ASTORE, res_idx);
-//    debug_print_online(T_OBJECT, res_idx);
 
-    invokestatic(method_idx, params_idx, res_idx);
+    findAndExecute("SecAgent.utils.ReqInfo", "doTest", new Class[]{int.class}, reqinfo_idx, params_idx, res_idx);
   }
 
 
@@ -69,9 +60,6 @@ public class CmdStub extends CommonStub {
   protected void onMethodExit(int opcode) {
     super.onMethodExit(opcode);
     process();
-
-//        ReqTest();
-
   }
 
   @Override
