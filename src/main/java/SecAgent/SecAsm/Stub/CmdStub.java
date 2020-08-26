@@ -25,12 +25,8 @@ public class CmdStub extends CommonStub {
       String.format(
         "[DEBUG] [CmdStub]: %s", this.paramsInfo.toString()));
 
-//    mv.visitMethodInsn(INVOKESTATIC, "java/lang/Thread", "currentThread", "()Ljava/lang/Thread;", false);
-//    mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Thread", "getId", "()J", false);
-//    mv.visitVarInsn(LSTORE, tid_idx);
-//    debug_print_online(T_LONG, tid_idx);
 
-    putStubData("CMD", T_OBJECT, 0);
+//    putStubData("CMD", T_OBJECT, 0);
 
     debug_print_offline("CmdStub done");
 
@@ -43,12 +39,16 @@ public class CmdStub extends CommonStub {
 
     newInstance("java/util/ArrayList", params_idx);
     mv.visitLdcInsn(10);
-    mv.visitVarInsn(ISTORE, tmp_idx);
-    addListElement(params_idx, T_INT, tmp_idx);
+    mv.visitVarInsn(ISTORE, tmp_obj);
+    addListElement(params_idx, T_INT, tmp_obj);
 
-    findAndExecute("SecAgent.utils.ReqInfo", "doTest", new Class[]{int.class}, reqinfo_idx, params_idx, res_idx);
+    mv.visitLdcInsn(20);
+    mv.visitVarInsn(ISTORE, tmp_obj);
+    addListElement(params_idx, T_INT, tmp_obj);
 
-    findAndExecute("SecAgent.utils.ReqLocal", "getReqInfo", new Class[]{}, null_idx, null_idx, reqinfo_idx);
+    findAndExecute("SecAgent.utils.ReqInfo", "doTest", new Class[]{int.class, int.class}, reqinfo_idx, params_idx, res_idx);
+
+//    findAndExecute("SecAgent.utils.ReqLocal", "getReqInfo", new Class[]{}, null_idx, null_idx, reqinfo_idx);
   }
 
 

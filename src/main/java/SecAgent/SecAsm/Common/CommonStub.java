@@ -381,9 +381,9 @@ public class CommonStub extends AdviceAdapter implements Opcodes {
    * @param reqinfo_idx
    */
   protected void getGlobalReqInfo(int reqinfo_idx) {
-//    AsmReqLocalOp.getReqInfo(mv, reqinfo_idx);
-    debug_print_offline("hello");
-    findAndExecute("SecAgent.utils.ReqLocal", "getReqInfo", null, null_idx, null_idx, reqinfo_idx);
+    AsmReqLocalOp.getReqInfo(mv, reqinfo_idx);
+//    debug_print_offline("hello");
+//    findAndExecute("SecAgent.utils.ReqLocal", "getReqInfo", null, null_idx, null_idx, reqinfo_idx);
   }
 
 
@@ -416,7 +416,7 @@ public class CommonStub extends AdviceAdapter implements Opcodes {
    * @param dst_idx: save result to dst_idx
    */
   protected void findAndExecute(String classname, String methodname, Class[] paramTypes, int inst_idx, int params_idx, int dst_idx) {
-    debug_print_offline("findAndExecute 1");
+    debug_print_offline("findAndExecute 1" + classname + "." + methodname);
     Label try_start = new Label();
     Label try_end = new Label();
     Label try_excep = new Label();
@@ -424,9 +424,9 @@ public class CommonStub extends AdviceAdapter implements Opcodes {
     mv.visitTryCatchBlock(try_start, try_end, try_excep, "java/lang/Exception");
     mv.visitLabel(try_start);
     loadClass(classname, cls_idx);
-//    getDeclaredMethod(cls_idx, methodname, paramTypes, method_idx);
+    getDeclaredMethod(cls_idx, methodname, paramTypes, method_idx);
 //    invoke(method_idx, inst_idx, params_idx, dst_idx);
-    debug_print_offline("findAndExecute 1");
+    debug_print_offline("findAndExecute 2" + classname + "." + methodname);
 
     mv.visitJumpInsn(GOTO, try_end);
     mv.visitLabel(try_excep);
@@ -458,8 +458,8 @@ public class CommonStub extends AdviceAdapter implements Opcodes {
    * @param dst_idx
    */
   private void getDeclaredMethod(int cls_idx, String methodname, Class[] paramTypes, int dst_idx) {
-    mv.visitVarInsn(ALOAD, cls_idx);
-    mv.visitLdcInsn(methodname);
+//    mv.visitVarInsn(ALOAD, cls_idx);
+//    mv.visitLdcInsn(methodname);
 
     if (paramTypes == null || paramTypes.length == 0) {
       mv.visitInsn(ACONST_NULL);
@@ -488,7 +488,7 @@ public class CommonStub extends AdviceAdapter implements Opcodes {
             break;
 
           case "char":
-            mv.visitFieldInsn(GETSTATIC, "java/lang/Char", "TYPE", "Ljava/lang/Class;");
+            mv.visitFieldInsn(GETSTATIC, "java/lang/Character", "TYPE", "Ljava/lang/Class;");
             break;
 
           case "long":
@@ -504,21 +504,22 @@ public class CommonStub extends AdviceAdapter implements Opcodes {
             break;
 
           default:
+
             mv.visitLdcInsn(Type.getType(paramTypes[i]));
             break;
         }
-
-        //      mv.visitFieldInsn(GETSTATIC, paramTypes[i].getName().replace('.', '/'), "TYPE",
-        // "Ljava/lang/Class;");
         mv.visitInsn(AASTORE);
+
+
+//        mv.visitInsn(AASTORE);
       }
+      mv.visitVarInsn(ASTORE, tmp_obj);
+      debug_print_online(T_OBJECT, tmp_obj);
     }
 
-    mv.visitVarInsn(ASTORE, tmp_obj);
-    debug_print_online(T_OBJECT, tmp_obj);
 
-    mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Class", "getDeclaredMethod", "(Ljava/lang/String;[Ljava/lang/Class;)Ljava/lang/reflect/Method;", false);
-    mv.visitVarInsn(ASTORE, dst_idx);
+//    mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Class", "getDeclaredMethod", "(Ljava/lang/String;[Ljava/lang/Class;)Ljava/lang/reflect/Method;", false);
+//    mv.visitVarInsn(ASTORE, dst_idx);
   }
 
   /**
