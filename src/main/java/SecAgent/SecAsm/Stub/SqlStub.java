@@ -21,7 +21,7 @@ public class SqlStub extends CommonStub {
         "[DEBUG] [SqlStub]: %s", this.paramsInfo.toString()));
 
 
-    putStubData("SQL", 0);
+    putStubData("SQL", T_OBJECT, 0);
   }
 
   @Override

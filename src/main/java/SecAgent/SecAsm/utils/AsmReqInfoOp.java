@@ -16,9 +16,23 @@ public class AsmReqInfoOp implements Opcodes {
    * @param mv: MethodVisitor
    */
   public static void setHttpServletRequest(MethodVisitor mv, int reqinfo_idx, int src_idx) {
+    Label try_start = new Label();
+    Label try_end = new Label();
+    Label try_excep = new Label();
+    mv.visitTryCatchBlock(try_start, try_end, try_excep, "java/lang/Exception");
+    mv.visitLabel(try_start);
+
     mv.visitVarInsn(Opcodes.ALOAD, reqinfo_idx);
     mv.visitVarInsn(Opcodes.ALOAD, src_idx);
     mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "SecAgent/utils/ReqInfo", "setHttpServletRequest", "(Ljavax/servlet/http/HttpServletRequest;)V", false);
+    mv.visitJumpInsn(GOTO, try_end);
+    
+    mv.visitLabel(try_excep);
+    mv.visitFrame(F_SAME1, 0, null, 1, new Object[]{"java/lang/Exception"});
+    mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Exception", "printStackTrace", "()V", false);
+
+    mv.visitLabel(try_end);
+
   }
 
   public static void putStubData(MethodVisitor mv, int reqinfo_idx, String type, int stk_idx, int src_idx) {

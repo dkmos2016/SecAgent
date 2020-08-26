@@ -27,7 +27,7 @@ public class DownStub extends CommonStub {
 //    mv.visitMethodInsn(INVOKEVIRTUAL, "java/io/File", "getAbsolutePath", "()Ljava/lang/String;", false);
 //    mv.visitVarInsn(ASTORE, res_idx);
 
-    putStubData("DOWN", 1);
+    putStubData("DOWN", T_OBJECT, 1);
 //    debug_print_online(T_OBJECT, res_idx);
 
   }
