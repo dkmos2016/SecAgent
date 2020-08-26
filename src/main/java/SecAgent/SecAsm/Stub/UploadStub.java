@@ -26,7 +26,7 @@ public class UploadStub extends CommonStub {
     mv.visitMethodInsn(INVOKEVIRTUAL, "java/io/File", "getAbsolutePath", "()Ljava/lang/String;", false);
     mv.visitVarInsn(ASTORE, res_idx);
 
-    debug_print_online(T_OBJECT, res_idx);
+    putStubData("UPLOAD", res_idx);
   }
 
   @Override

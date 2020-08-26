@@ -27,12 +27,6 @@ public class SpringUrlStub extends CommonStub {
 
     getGlobalReqInfo(reqinfo_idx);
     setHttpServletRequest(reqinfo_idx, 1);
-//    req2str(reqinfo_idx, res_idx);
-//    info(res_idx);
-//
-//    stackTrack();
-
-//    AsmReqInfoOp.doJob(mv, reqinfo_idx);
   }
 
   @Override

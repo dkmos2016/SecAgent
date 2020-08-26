@@ -23,11 +23,13 @@ public class DownStub extends CommonStub {
       String.format(
         "[DEBUG] [DownStub]: %s", this.paramsInfo.toString()));
 
-    mv.visitVarInsn(ALOAD, 1);
-    mv.visitMethodInsn(INVOKEVIRTUAL, "java/io/File", "getAbsolutePath", "()Ljava/lang/String;", false);
-    mv.visitVarInsn(ASTORE, res_idx);
+//    mv.visitVarInsn(ALOAD, 1);
+//    mv.visitMethodInsn(INVOKEVIRTUAL, "java/io/File", "getAbsolutePath", "()Ljava/lang/String;", false);
+//    mv.visitVarInsn(ASTORE, res_idx);
 
-    debug_print_online(T_OBJECT, res_idx);
+    putStubData("DOWN", 1);
+//    debug_print_online(T_OBJECT, res_idx);
+
   }
 
   @Override

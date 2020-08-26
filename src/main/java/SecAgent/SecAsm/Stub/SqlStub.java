@@ -22,7 +22,6 @@ public class SqlStub extends CommonStub {
 
 
     putStubData("SQL", 0);
-
   }
 
   @Override
