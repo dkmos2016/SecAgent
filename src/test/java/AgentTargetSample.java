@@ -1,16 +1,9 @@
-import SecAgent.SecAsm.utils.AsmInvokeOp;
-import SecAgent.utils.ParamsInfo;
-import org.apache.log4j.Logger;
-import org.objectweb.asm.Type;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.File;
-import java.io.IOException;
-import java.lang.reflect.Array;
+import java.io.*;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class AgentTargetSample<E> {
   private final int id;
@@ -27,23 +20,12 @@ public class AgentTargetSample<E> {
     this.name = name;
   }
 
-  public static void test(Method method, ArrayList params)  {
-    if (method != null) {
-      try{
-        method.invoke(null, params.toArray());
-      } catch (IllegalAccessException e) {
-        e.printStackTrace();
-      } catch (InvocationTargetException e) {
-        e.printStackTrace();
-      }
-    }
-//    System.out.println(list);
+  public static void test(Method method, Object []params)  {
+
   }
 
-  public static void main(String[] args) {
-    int a = 1;
-    if (args == null || args.length == 0) {
-    } else {
-    }
+  public static void main(String[] args) throws IOException {
+    test(null, new Object[]{int.class, byte.class, char.class,
+    boolean.class, short.class, long.class,double.class,float.class});
  }
 }
