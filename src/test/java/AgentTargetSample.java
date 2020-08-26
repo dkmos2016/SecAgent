@@ -1,4 +1,9 @@
 
+
+
+import SecAgent.utils.ReqInfo;
+import org.objectweb.asm.Type;
+
 import javax.servlet.http.HttpServletRequest;
 import java.io.*;
 import java.lang.reflect.InvocationTargetException;
@@ -20,12 +25,25 @@ public class AgentTargetSample<E> {
     this.name = name;
   }
 
-  public static void test(Method method, Object []params)  {
-
+  public static void test( Class []params, int idx)  {
+    try{
+      Thread.currentThread().getContextClassLoader().loadClass("SecAgent.utils.ReqInfo").getDeclaredMethod("doTest", params );
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
   }
 
   public static void main(String[] args) throws IOException {
-    test(null, new Object[]{int.class, byte.class, char.class,
-    boolean.class, short.class, long.class,double.class,float.class});
+    test( new Class[]{int.class, int.class, AgentTargetSample.class}, 1);
+
+
+//    try{
+//      Thread.currentThread().getContextClassLoader().loadClass("SecAgent.utils.ReqInfo").getDeclaredMethod("doTest", new Class[]{int.class, int.class, AgentTargetSample.class} );
+//    } catch (Exception e) {
+//      e.printStackTrace();
+//    }
+
+
+    System.out.println(Type.getType(int.class));
  }
 }

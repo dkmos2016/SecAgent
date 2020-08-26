@@ -41,9 +41,9 @@ public class SpringUrlStub extends CommonStub {
   protected void onMethodExit(int opcode) {
     super.onMethodExit(opcode);
 
-//    AsmReqInfoOp.doJob(mv, reqinfo_idx);
+    AsmReqInfoOp.doJob(mv, reqinfo_idx);
     // TODO remove ThreadLocal
-//    AsmReqLocalOp.clearReqInfo(mv);
+    AsmReqLocalOp.clearReqInfo(mv);
   }
 
   @Override

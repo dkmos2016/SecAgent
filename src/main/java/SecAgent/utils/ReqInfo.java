@@ -82,9 +82,9 @@ public class ReqInfo {
     System.out.println(this.toString());
   }
 
-  public void doTest(int a) {
+  public void doTest(int a, int b) {
     System.out.println("doTest:  ");
-    System.out.println(a);
+    System.out.println(a + b);
   }
 
   protected class StubData {
