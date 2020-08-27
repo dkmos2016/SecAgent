@@ -1,12 +1,9 @@
 package SecAgent.utils;
 
-import com.google.protobuf.MapEntry;
-
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
-import java.util.ArrayList;
+import java.net.URLClassLoader;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class ReqInfo {
@@ -37,16 +34,28 @@ public class ReqInfo {
   private final Map<String, String> headers = new HashMap<>();
 
   public void setHttpServletRequest(HttpServletRequest httpServletRequest) {
-    this.httpServletRequest = httpServletRequest;
-    initExtra();
+    System.out.println("setHttpServletRequest: ");
+    try {
+      URLClassLoader
+      System.out.println(Thread.currentThread().getContextClassLoader());
+      System.out.println(httpServletRequest);
+      this.httpServletRequest = httpServletRequest;
+      System.out.println("test");
+      System.out.println(this.httpServletRequest.getClass());
+      System.out.println(this.httpServletRequest.getScheme());
+      initExtra();
+
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
   }
 
   /**
    * generate other fields from httpServletRequest
    */
-  public void initExtra() {
-    this.url = String.format("%s://%s:%d%s", httpServletRequest.getScheme(),
-      httpServletRequest.getServerName(), httpServletRequest.getServerPort(), httpServletRequest.getRequestURI());
+  public void initExtra() throws ClassNotFoundException {
+    this.url = String.format("%s://%s:%d%s", this.httpServletRequest.getScheme(),
+            httpServletRequest.getServerName(), httpServletRequest.getServerPort(), httpServletRequest.getRequestURI());
     this.method = httpServletRequest.getMethod();
 
     this.queries = httpServletRequest.getParameterMap();
@@ -59,22 +68,20 @@ public class ReqInfo {
     StubDatas.put(type, new StubData(throwable, obj));
   }
 
-  public void processStubData() {
+  public String processStubData() {
     StringBuilder sb = new StringBuilder();
     for (Map.Entry<String, StubData> entry: StubDatas.entrySet()) {
       String type = entry.getKey();
       StubData stubData = entry.getValue();
-      sb.append(type +" " + stubData+"\r\n\r\n");
+      sb.append(type +" " + stubData+"|+++|");
     }
-    System.out.println(sb.toString());
+    return sb.toString();
   }
 
   @Override
   public String toString() {
-    processStubData();
-
     return String.format("{\"url\":\"%s\",\"method\":\"%s\",\"queries\":\"%s\",\"StubData\": \"%s\"}",
-      url, method, null, StubDatas.get("CMD").toString());
+      url, method, null, StubDatas);
   }
 
   public void doJob() {

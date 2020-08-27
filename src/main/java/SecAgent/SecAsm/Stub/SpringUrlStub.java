@@ -4,6 +4,7 @@ import SecAgent.SecAsm.Common.CommonStub;
 import SecAgent.SecAsm.utils.AsmReqInfoOp;
 import SecAgent.SecAsm.utils.AsmReqLocalOp;
 import SecAgent.utils.ParamsInfo;
+import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 
 /**
@@ -23,11 +24,24 @@ public class SpringUrlStub extends CommonStub {
 
 
   private void process() {
+//    debug_print_tid();
+
     debug_print_offline(String.format("[DEBUG] [SpringUrlStub]: %s", this.paramsInfo.toString()));
 
     getGlobalReqInfo(reqinfo_idx);
-    debug_print_offline("UrlStub...");
-//    setHttpServletRequest(reqinfo_idx, 1);
+
+//    debug_print_offline("invoke done");
+    debug_print_online(T_OBJECT, reqinfo_idx);
+
+
+    classLoaderInfo();
+//     TODO fix bug
+
+    setHttpServletRequest(reqinfo_idx, 1);
+
+//    findAndExecute("SecAgent.utils.ReqInfo", "doTest", new Class[]{int.class, int.class}, reqinfo_idx, params_idx, res_idx);
+
+    debug_print_offline("process done..");
   }
 
   @Override
@@ -41,9 +55,10 @@ public class SpringUrlStub extends CommonStub {
   protected void onMethodExit(int opcode) {
     super.onMethodExit(opcode);
 
-    AsmReqInfoOp.doJob(mv, reqinfo_idx);
+
+//    AsmReqInfoOp.doJob(mv, reqinfo_idx);
     // TODO remove ThreadLocal
-    AsmReqLocalOp.clearReqInfo(mv);
+//    AsmReqLocalOp.clearReqInfo(mv);
   }
 
   @Override

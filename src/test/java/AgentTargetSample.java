@@ -25,25 +25,16 @@ public class AgentTargetSample<E> {
     this.name = name;
   }
 
-  public static void test( Class []params, int idx)  {
+  public static void test( Class []params)  {
+    ReqInfo res;
     try{
-      Thread.currentThread().getContextClassLoader().loadClass("SecAgent.utils.ReqInfo").getDeclaredMethod("doTest", params );
+      res = (ReqInfo) Thread.currentThread().getContextClassLoader().loadClass("SecAgent.utils.ReqInfo").getDeclaredMethod("doTest", params ).invoke(null,1, 2);
     } catch (Exception e) {
       e.printStackTrace();
     }
   }
 
-  public static void main(String[] args) throws IOException {
-    test( new Class[]{int.class, int.class, AgentTargetSample.class}, 1);
-
-
-//    try{
-//      Thread.currentThread().getContextClassLoader().loadClass("SecAgent.utils.ReqInfo").getDeclaredMethod("doTest", new Class[]{int.class, int.class, AgentTargetSample.class} );
-//    } catch (Exception e) {
-//      e.printStackTrace();
-//    }
-
-
-    System.out.println(Type.getType(int.class));
+  public static void main(String[] args) {
+    System.out.println(Type.getType(HttpServletRequest.class));
  }
 }
