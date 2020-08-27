@@ -16,23 +16,25 @@ public class AsmReqInfoOp implements Opcodes {
    * @param mv: MethodVisitor
    */
   public static void setHttpServletRequest(MethodVisitor mv, int reqinfo_idx, int src_idx) {
-    Label try_start = new Label();
-    Label try_end = new Label();
-    Label try_excep = new Label();
-    mv.visitTryCatchBlock(try_start, try_end, try_excep, "java/lang/Exception");
-    mv.visitLabel(try_start);
+    Label try_start1 = new Label();
+    Label try_end1 = new Label();
+    Label try_excep1 = new Label();
+
+    mv.visitTryCatchBlock(try_start1, try_end1, try_excep1, "java/lang/Exception");
+    mv.visitLabel(try_start1);
 
     mv.visitVarInsn(Opcodes.ALOAD, reqinfo_idx);
+    mv.visitTypeInsn(CHECKCAST, "SecAgent/utils/ReqInfo");
+
     mv.visitVarInsn(Opcodes.ALOAD, src_idx);
     mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "SecAgent/utils/ReqInfo", "setHttpServletRequest", "(Ljavax/servlet/http/HttpServletRequest;)V", false);
-    mv.visitJumpInsn(GOTO, try_end);
+    mv.visitJumpInsn(GOTO, try_end1);
     
-    mv.visitLabel(try_excep);
+    mv.visitLabel(try_excep1);
     mv.visitFrame(F_SAME1, 0, null, 1, new Object[]{"java/lang/Exception"});
     mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Exception", "printStackTrace", "()V", false);
 
-    mv.visitLabel(try_end);
-
+    mv.visitLabel(try_end1);
   }
 
   public static void putStubData(MethodVisitor mv, int reqinfo_idx, String type, int stk_idx, int src_idx) {
