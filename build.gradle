@@ -24,7 +24,7 @@ dependencies {
     compile group: 'org.ow2.asm', name: 'asm', version: '9.0-beta'
     compile group: 'org.ow2.asm', name: 'asm-commons', version: '9.0-beta'
 
-
+    implementation group: 'org.apache.tomcat', name: 'tomcat-catalina', version: '10.0.0-M7'
     implementation group: 'javax.servlet', name: 'javax.servlet-api', version: '4.0.1'
     implementation group: 'org.springframework', name: 'spring-jdbc', version: '5.2.8.RELEASE'
     implementation group: 'mysql', name: 'mysql-connector-java', version: '8.0.21'

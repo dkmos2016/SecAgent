@@ -3,7 +3,6 @@ package SecAgent.SecAsm.Common;
 
 import SecAgent.SecAsm.utils.AsmLogger;
 import SecAgent.SecAsm.utils.AsmReqInfoOp;
-import SecAgent.SecAsm.utils.AsmReqLocalOp;
 import SecAgent.utils.ParamsInfo;
 import SecAgent.utils.ReqInfo;
 import org.objectweb.asm.Label;
@@ -12,10 +11,8 @@ import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
 import org.objectweb.asm.commons.AdviceAdapter;
 
-import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.util.List;
 
 
 public class CommonStub extends AdviceAdapter implements Opcodes {
@@ -29,19 +26,19 @@ public class CommonStub extends AdviceAdapter implements Opcodes {
 
   // new Throwable()
   protected int stk_idx = newLocal(Type.getType(Throwable.class));
-  protected  int res_idx = newLocal(Type.getType(Object.class));
-  protected  int reqinfo_idx = newLocal(Type.getType(ReqInfo.class));
-  protected  ParamsInfo paramsInfo;
+  protected int res_idx = newLocal(Type.getType(Object.class));
+  protected int reqinfo_idx = newLocal(Type.getType(ReqInfo.class));
+  protected ParamsInfo paramsInfo;
 
   // for invoke
   /**
    * for invoke (nonestatic)
    */
-  protected  int inst_idx = newLocal(Type.getType(Object.class));
-  protected  int cls_idx = newLocal(Type.getType(Class.class));
-  protected  int method_idx = newLocal(Type.getType(Method.class));
-  protected  int params_idx = newLocal(Type.getType(Object[].class));
-  protected  int null_idx = newLocal(Type.getType(Object[].class));
+  protected int inst_idx = newLocal(Type.getType(Object.class));
+  protected int cls_idx = newLocal(Type.getType(Class.class));
+  protected int method_idx = newLocal(Type.getType(Method.class));
+  protected int params_idx = newLocal(Type.getType(Object[].class));
+  protected int null_idx = newLocal(Type.getType(Object[].class));
 
   /**
    * Constructs a new {@link AdviceAdapter}.
@@ -465,10 +462,13 @@ public class CommonStub extends AdviceAdapter implements Opcodes {
 
     mv.visitTryCatchBlock(try_start, try_end, try_excep, "java/lang/Exception");
     mv.visitLabel(try_start);
+
+    debug_print_offline("to load: " + classname);
     loadClass(classname, cls_idx);
     debug_print_online(T_OBJECT, cls_idx);
 
-    getDeclaredMethod(cls_idx, methodname, paramTypes, method_idx);
+    debug_print_offline("find: " + methodname);
+    getMethod(cls_idx, methodname, paramTypes, method_idx);
     debug_print_online(T_OBJECT, method_idx);
 
     invoke(method_idx, inst_idx, params_idx, dst_idx);
@@ -493,6 +493,8 @@ public class CommonStub extends AdviceAdapter implements Opcodes {
     mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Exception", "printStackTrace", "()V", false);
 
     mv.visitLabel(try_end);
+
+
     mv.visitFrame(F_SAME, 0, null, 0,null);
   }
 
@@ -516,16 +518,14 @@ public class CommonStub extends AdviceAdapter implements Opcodes {
    * @param paramTypes
    * @param dst_idx
    */
-  private void getDeclaredMethod(int cls_idx, String methodname, Class[] paramTypes, int dst_idx) {
+  private void getMethod(int cls_idx, String methodname, Class[] paramTypes, int dst_idx) {
     debug_print_offline("getDeclaredMethod");
-    mv.visitVarInsn(ALOAD, cls_idx);
-    mv.visitLdcInsn(methodname);
 
     if (paramTypes == null || paramTypes.length == 0) {
       debug_print_offline("no paramTypes");
       mv.visitInsn(ACONST_NULL);
     } else {
-
+      debug_print_offline("more paramTypes");
       mv.visitIntInsn(BIPUSH, paramTypes.length);
       mv.visitTypeInsn(ANEWARRAY, "java/lang/Class");
 
@@ -571,11 +571,18 @@ public class CommonStub extends AdviceAdapter implements Opcodes {
             break;
         }
         mv.visitInsn(AASTORE);
-
       }
-    }
 
-    mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Class", "getDeclaredMethod", "(Ljava/lang/String;[Ljava/lang/Class;)Ljava/lang/reflect/Method;", false);
+    }
+    mv.visitVarInsn(ASTORE, tmp_obj);
+
+    debug_print_offline("prepare parameter types done");
+    mv.visitVarInsn(ALOAD, cls_idx);
+    mv.visitLdcInsn(methodname);
+    mv.visitVarInsn(ALOAD, tmp_obj);
+
+    debug_print_offline("to getMethod...");
+    mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Class", "getMethod", "(Ljava/lang/String;[Ljava/lang/Class;)Ljava/lang/reflect/Method;", false);
     mv.visitVarInsn(ASTORE, dst_idx);
 
     debug_print_offline("getDeclaredMethod done");

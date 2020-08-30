@@ -25,13 +25,12 @@ public class CmdStub extends CommonStub {
       String.format(
         "[DEBUG] [CmdStub]: %s", this.paramsInfo.toString()));
 
-    mv.visitFrame(F_SAME1, 0, null, 0, null);
 
     putStubData("CMD", T_OBJECT, 0);
 
     debug_print_offline("CmdStub done");
 
-    process1();
+//    process1();
   }
 
   private void process1() {
