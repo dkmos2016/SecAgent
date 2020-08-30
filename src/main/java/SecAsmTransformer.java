@@ -23,6 +23,13 @@ public class SecAsmTransformer implements ClassFileTransformer {
       return classfileBuffer;
     }
 
+    if (className.contains("HttpServletRequest")) {
+      System.out.println("loaded HttpServletRequest: ");
+      System.out.println(loader);
+      System.out.println(className);
+
+    }
+
     ClassReader cr = new ClassReader(classfileBuffer);
 
 

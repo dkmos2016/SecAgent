@@ -23,11 +23,11 @@ public class CommonAdapter extends ClassVisitor implements Opcodes {
     ParamsInfo paramsInfo = new ParamsInfo(CLASSNAME, access, name, Type.getArgumentTypes(descriptor), descriptor, signature);
 
     switch (paramsInfo.toString()) {
-//      case Config.SQL_STUB:
-//        return new SqlStub(this.api, mv, access, name, descriptor, paramsInfo);
+      case Config.SQL_STUB:
+        return new SqlStub(this.api, mv, access, name, descriptor, paramsInfo);
 
-//      case Config.EXEC_STUB:
-//        return new CmdStub(this.api, mv, access, name, descriptor, paramsInfo);
+      case Config.EXEC_STUB:
+        return new CmdStub(this.api, mv, access, name, descriptor, paramsInfo);
 //
 //      case Config.DOWN_STUB:
 //        return new DownStub(this.api, mv, access, name, descriptor, paramsInfo);
