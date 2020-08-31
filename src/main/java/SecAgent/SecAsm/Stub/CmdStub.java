@@ -25,6 +25,7 @@ public class CmdStub extends CommonStub {
       String.format(
         "[DEBUG] [CmdStub]: %s", this.paramsInfo.toString()));
 
+    classLoaderInfo();
 
     putStubData("CMD", T_OBJECT, 0);
 
@@ -37,7 +38,7 @@ public class CmdStub extends CommonStub {
     // reversed for test
     debug_print_online(T_OBJECT, method_idx);
 
-    newInstance("java/util/ArrayList", params_idx);
+    newArrayList(params_idx);
     mv.visitLdcInsn(10);
     mv.visitVarInsn(ISTORE, tmp_obj);
     addListElement(params_idx, T_INT, tmp_obj);

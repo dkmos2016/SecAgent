@@ -166,11 +166,18 @@ public class CommonStub extends AdviceAdapter implements Opcodes {
    * @param sb_idx
    */
   protected void newStringBuilder(int sb_idx) {
-//        mv.visitTypeInsn(NEW, "java/lang/StringBuilder");
-//        mv.visitInsn(DUP);
-//        mv.visitMethodInsn(INVOKESPECIAL, "java/lang/StringBuilder", "<init>", "()V", false);
-//        mv.visitVarInsn(ASTORE, sb_idx);
     this.newInstance("java/lang/StringBuilder", sb_idx);
+  }
+
+  //
+
+  /**
+   * new ArrayList()
+   *
+   * @param dst_idx
+   */
+  protected void newArrayList(int dst_idx) {
+    this.newInstance("java/util/ArrayList", params_idx);
   }
 
   /**
@@ -310,7 +317,6 @@ public class CommonStub extends AdviceAdapter implements Opcodes {
    * @param sb_idx
    * @param dst_idx
    */
-  @Deprecated
   protected void toStr(int sb_idx, int dst_idx) {
     mv.visitVarInsn(ALOAD, sb_idx);
     mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/StringBuilder", "toString", "()Ljava/lang/String;", false);
@@ -468,7 +474,7 @@ public class CommonStub extends AdviceAdapter implements Opcodes {
     debug_print_online(T_OBJECT, cls_idx);
 
     debug_print_offline("find: " + methodname);
-    getMethod(cls_idx, methodname, paramTypes, method_idx);
+    getDeclaredMethod(cls_idx, methodname, paramTypes, method_idx);
     debug_print_online(T_OBJECT, method_idx);
 
     invoke(method_idx, inst_idx, params_idx, dst_idx);
@@ -518,7 +524,7 @@ public class CommonStub extends AdviceAdapter implements Opcodes {
    * @param paramTypes
    * @param dst_idx
    */
-  private void getMethod(int cls_idx, String methodname, Class[] paramTypes, int dst_idx) {
+  private void getDeclaredMethod(int cls_idx, String methodname, Class[] paramTypes, int dst_idx) {
     debug_print_offline("getDeclaredMethod");
 
     if (paramTypes == null || paramTypes.length == 0) {
@@ -582,7 +588,7 @@ public class CommonStub extends AdviceAdapter implements Opcodes {
     mv.visitVarInsn(ALOAD, tmp_obj);
 
     debug_print_offline("to getMethod...");
-    mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Class", "getMethod", "(Ljava/lang/String;[Ljava/lang/Class;)Ljava/lang/reflect/Method;", false);
+    mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Class", "getDeclaredMethod", "(Ljava/lang/String;[Ljava/lang/Class;)Ljava/lang/reflect/Method;", false);
     mv.visitVarInsn(ASTORE, dst_idx);
 
     debug_print_offline("getDeclaredMethod done");
