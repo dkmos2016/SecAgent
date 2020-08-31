@@ -1,7 +1,7 @@
 package SecAgent.utils;
 
 public class ReqLocal {
-  private final static ThreadLocal<ReqInfo> reqLocal = new ThreadLocal<ReqInfo>();
+  private static ThreadLocal<ReqInfo> reqLocal = new ThreadLocal<ReqInfo>();
 
   public static ReqInfo getReqInfo() {
     ReqInfo reqInfo = reqLocal.get();
@@ -25,11 +25,9 @@ public class ReqLocal {
   }
 
   public static void clear() {
-
     System.out.println(
       String.format("tid: %d, destroy saved ReqInfo", Thread.currentThread().getId())
     );
     reqLocal.remove();
   }
-
 }
