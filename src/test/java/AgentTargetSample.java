@@ -36,13 +36,10 @@ public class AgentTargetSample<E> {
 
   public static void main(String[] args) {
 
-    Class cls = ReqInfo.class;
-    try {
-      Class.forName("SecAgent.utils.ReqInfo");
-      Method method = cls.getMethod("putStubData", new Class[]{String.class, Throwable.class, Object.class});
-      System.out.println(method);
-    } catch (NoSuchMethodException | ClassNotFoundException e) {
-      e.printStackTrace();
+    boolean flag = false;
+
+    if (flag) {
+      ;
     }
   }
 }

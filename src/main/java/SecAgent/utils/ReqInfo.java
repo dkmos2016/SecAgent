@@ -15,6 +15,11 @@ public class ReqInfo {
   private String url;
 
   /**
+   * with url
+   */
+  private boolean ALLOWED_PUT_STUB = false;
+
+  /**
    * http method, GET/POST...
    */
   private String method;
@@ -29,17 +34,36 @@ public class ReqInfo {
    */
   private final Map<String, String> headers = new HashMap<>();
 
+  /**
+   * is initialed url
+   * @return
+   */
+  public boolean isALLOWED_PUT_STUB() {
+    return ALLOWED_PUT_STUB;
+  }
+
   public ReqInfo(){
     System.out.println(this.getClass().getClassLoader());
   }
 
   public void setUrl(String url) {
     this.url = url;
+    if (url != null)
+      this.ALLOWED_PUT_STUB = true;
+  }
+
+  public void setQueries(Map queries) {
+    this.queries = queries;
   }
 
   public void putStubData(String type, Throwable throwable, Object obj) {
-      System.out.println("putstubdata: " + type + ", throwable: " + throwable + ", obj");
-      StubDatas.put(type, new StubData(throwable, obj));
+    if (url == null) {
+      System.out.println("skipped because of not setting url");
+      return;
+    }
+
+    System.out.println("putstubdata: " + type + ", throwable: " + throwable + ", obj");
+    StubDatas.put(type, new StubData(throwable, obj));
   }
 
   public String processStubData() {
@@ -60,7 +84,11 @@ public class ReqInfo {
 
   public void doJob() {
     System.out.println("doJob:  ");
-    System.out.println(this.toString());
+    try{
+      System.out.println(this.toString());
+    } catch (Exception e) {
+      System.out.println("not ready now!");
+    }
   }
 
   static public void doTest(int a, int b) {

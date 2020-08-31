@@ -14,7 +14,7 @@ version '1.0.0-SNAPSHOT-BEAT'
 
 repositories {
 //    google()
-//    mavenCentral()
+    mavenCentral()
     jcenter()
 }
 
@@ -23,6 +23,7 @@ dependencies {
     compile fileTree(dir: "libs", includes: ["*.jar"], excludes: ["asm*9.0*.jar"])
     compile group: 'org.ow2.asm', name: 'asm', version: '9.0-beta'
     compile group: 'org.ow2.asm', name: 'asm-commons', version: '9.0-beta'
+//    compile group: 'org.apache.logging.log4j', name: 'log4j', version: '2.13.3', ext: 'pom'
 
     implementation group: 'org.apache.tomcat', name: 'tomcat-catalina', version: '10.0.0-M7'
     implementation group: 'javax.servlet', name: 'javax.servlet-api', version: '4.0.1'

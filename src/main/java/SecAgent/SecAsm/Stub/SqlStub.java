@@ -1,10 +1,7 @@
 package SecAgent.SecAsm.Stub;
 
 import SecAgent.SecAsm.Common.CommonStub;
-import SecAgent.SecAsm.utils.AsmReqInfoOp;
-import SecAgent.SecAsm.utils.AsmReqLocalOp;
 import SecAgent.utils.ParamsInfo;
-import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 
 public class SqlStub extends CommonStub {
@@ -22,6 +19,8 @@ public class SqlStub extends CommonStub {
 
 
     putStubData("SQL", T_OBJECT, 0);
+
+    debug_print_offline("SqlStub done");
   }
 
   @Override
