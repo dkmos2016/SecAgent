@@ -52,12 +52,16 @@ public class ReqInfo {
       this.ALLOWED_PUT_STUB = true;
   }
 
+  public void setMethod(String method) {
+    this.method = method;
+  }
+
   public void setQueries(Map queries) {
     this.queries = queries;
   }
 
   public void putStubData(String type, Throwable throwable, Object obj) {
-    if (url == null) {
+    if (!ALLOWED_PUT_STUB) {
       System.out.println("skipped because of not setting url");
       return;
     }
@@ -116,6 +120,7 @@ public class ReqInfo {
 
     @Override
     public String toString() {
+      System.out.println("thorwable: "+ throwable);
       if (object instanceof File) {
         return ((File) object).getPath();
       } else if (object instanceof Object[]) {
