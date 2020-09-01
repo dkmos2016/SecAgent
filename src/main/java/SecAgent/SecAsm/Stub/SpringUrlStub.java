@@ -4,6 +4,8 @@ import SecAgent.SecAsm.Common.CommonStub;
 import SecAgent.utils.ParamsInfo;
 import org.objectweb.asm.MethodVisitor;
 
+import java.util.Map;
+
 /**
  * log url
  */
@@ -59,6 +61,19 @@ public class SpringUrlStub extends CommonStub {
     toStr(tmp_sb, dst_idx);
   }
 
+  private void getQueries(int dst_idx){
+    mv.visitVarInsn(ALOAD, 1);
+    mv.visitMethodInsn(
+            INVOKEINTERFACE, "javax/servlet/http/HttpServletRequest", "getParameterMap", "()Ljava/util/Map;", true);
+    mv.visitVarInsn(ASTORE, dst_idx);
+  }
+
+  private void getMethod(int dst_idx){
+    mv.visitVarInsn(ALOAD, 1);
+    mv.visitMethodInsn(
+            INVOKEINTERFACE, "javax/servlet/http/HttpServletRequest", "getMethod", "()Ljava/lang/String;", true);
+    mv.visitVarInsn(ASTORE, dst_idx);
+  }
 
   private void process() {
 //    debug_print_tid();
@@ -73,6 +88,21 @@ public class SpringUrlStub extends CommonStub {
     addListElement(params_idx, T_OBJECT, tmp_obj);
 
     findAndExecute("SecAgent.utils.ReqInfo", "setUrl", new Class[]{String.class}, reqinfo_idx, params_idx, tmp_obj);
+
+    newArrayList(params_idx);
+    getQueries(tmp_obj);
+    addListElement(params_idx, T_OBJECT, tmp_obj);
+
+    findAndExecute("SecAgent.utils.ReqInfo", "setQueries", new Class[]{Map.class}, reqinfo_idx, params_idx, tmp_obj);
+
+    newArrayList(params_idx);
+    getMethod(tmp_obj);
+    addListElement(params_idx, T_OBJECT, tmp_obj);
+
+    findAndExecute("SecAgent.utils.ReqInfo", "setMethod", new Class[]{String.class}, reqinfo_idx, params_idx, tmp_obj);
+
+//    debug_print_online(T_OBJECT,  tmp_obj);
+
 
 //    findAndExecute("SecAgent.utils.ReqInfo", "doTest", new Class[]{int.class, int.class}, reqinfo_idx, params_idx, res_idx);
 
