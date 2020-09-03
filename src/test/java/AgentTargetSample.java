@@ -9,6 +9,7 @@ import java.io.*;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class AgentTargetSample<E> {
   private final int id;
@@ -35,11 +36,8 @@ public class AgentTargetSample<E> {
   }
 
   public static void main(String[] args) {
+    HashMap hashMap = new HashMap();
+    ArrayList list = new ArrayList();
 
-    boolean flag = false;
-
-    if (flag) {
-      ;
-    }
   }
 }
