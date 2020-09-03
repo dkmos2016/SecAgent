@@ -4,13 +4,17 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
 public class DefaultLogger {
-  private final static Logger logger = Logger.getLogger("Default");
+  private final static Logger logger;
+  private final static Level level;
+
 
   static {
-    setLevel(Level.INFO);
+    logger = Logger.getLogger("DEFAULT");
+    level = Level.INFO;
+    setLevel(level);
   }
 
-  public static void setLevel(Level level) {
+  private static void setLevel(Level level) {
     logger.setLevel(level);
   }
 
