@@ -126,7 +126,7 @@ public class ReqInfo {
 //      System.out.println(this.toString());
       DefaultLogger.info(this.toString());
     } catch (Exception e) {
-//      System.out.println("not ready now!");
+      System.out.println("not ready now!");
       DefaultLogger.error("not ready now!");
     }
   }
