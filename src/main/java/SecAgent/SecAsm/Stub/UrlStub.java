@@ -4,13 +4,14 @@ import SecAgent.SecAsm.Common.CommonStub;
 import SecAgent.utils.ParamsInfo;
 import org.objectweb.asm.MethodVisitor;
 
+import java.io.InputStream;
 import java.util.Map;
 
 /**
  * log url
  */
-public class SpringUrlStub extends CommonStub {
-  public SpringUrlStub(
+public class UrlStub extends CommonStub {
+  public UrlStub(
     int api,
     MethodVisitor methodVisitor,
     int access,
@@ -75,6 +76,20 @@ public class SpringUrlStub extends CommonStub {
     mv.visitVarInsn(ASTORE, dst_idx);
   }
 
+  private void getInputStream(int dst_idx){
+    mv.visitVarInsn(ALOAD, 1);
+    mv.visitMethodInsn(
+            INVOKEINTERFACE, "javax/servlet/http/HttpServletRequest", "getInputStream", "()Ljavax/servlet/ServletInputStream;", true);
+    mv.visitVarInsn(ASTORE, dst_idx);
+  }
+
+  private void getQueryString(int dst_idx) {
+    mv.visitVarInsn(ALOAD, 1);
+    mv.visitMethodInsn(
+            INVOKEINTERFACE, "javax/servlet/http/HttpServletRequest", "getQueryString", "()Ljava/lang/String;", true);
+    mv.visitVarInsn(ASTORE, dst_idx);
+  }
+
   private void process() {
 //    debug_print_tid();
     debug_print_offline(String.format("[DEBUG] [SpringUrlStub]: %s", this.paramsInfo.toString()));
@@ -89,18 +104,42 @@ public class SpringUrlStub extends CommonStub {
 
     findAndExecute("SecAgent.utils.ReqInfo", "setUrl", new Class[]{String.class}, reqinfo_idx, params_idx, tmp_obj);
 
+    setNull(params_idx);
     newArrayList(params_idx);
     getQueries(tmp_obj);
     addListElement(params_idx, T_OBJECT, tmp_obj);
 
     findAndExecute("SecAgent.utils.ReqInfo", "setQueries", new Class[]{Map.class}, reqinfo_idx, params_idx, tmp_obj);
 
+    setNull(params_idx);
     newArrayList(params_idx);
     getMethod(tmp_obj);
     addListElement(params_idx, T_OBJECT, tmp_obj);
 
     findAndExecute("SecAgent.utils.ReqInfo", "setMethod", new Class[]{String.class}, reqinfo_idx, params_idx, tmp_obj);
 
+    setNull(params_idx);
+    newArrayList(params_idx);
+    getQueryString(tmp_obj);
+    addListElement(params_idx, T_OBJECT, tmp_obj);
+
+    findAndExecute("SecAgent.utils.ReqInfo", "setQueryString", new Class[]{String.class}, reqinfo_idx, params_idx, tmp_obj);
+
+    setNull(params_idx);
+    newArrayList(params_idx);
+    getQueryString(tmp_obj);
+    addListElement(params_idx, T_OBJECT, tmp_obj);
+
+    findAndExecute("SecAgent.utils.ReqInfo", "setInputStream", new Class[]{InputStream.class}, reqinfo_idx, params_idx, tmp_obj);
+
+    setNull(params_idx);
+    newArrayList(params_idx);
+    getQueryString(tmp_obj);
+    addListElement(params_idx, T_OBJECT, tmp_obj);
+
+    findAndExecute("SecAgent.utils.ReqInfo", "setQueryString", new Class[]{String.class}, reqinfo_idx, params_idx, tmp_obj);
+
+    setNull(params_idx);
 //    debug_print_online(T_OBJECT,  tmp_obj);
 
 

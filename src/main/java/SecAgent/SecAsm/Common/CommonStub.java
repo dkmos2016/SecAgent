@@ -77,7 +77,7 @@ public class CommonStub extends AdviceAdapter implements Opcodes {
    * Object o = null;
    * @param obj_idx
    */
-  private void setNull(int obj_idx) {
+  protected void setNull(int obj_idx) {
     mv.visitInsn(ACONST_NULL);
     mv.visitVarInsn(ASTORE, obj_idx);
   }
