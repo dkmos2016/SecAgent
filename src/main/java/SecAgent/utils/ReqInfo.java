@@ -4,6 +4,7 @@ package SecAgent.utils;
 import SecAgent.Logger.DefaultLogger;
 
 import java.io.File;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -28,9 +29,16 @@ public class ReqInfo {
   private String method;
 
   /**
+   * get queryString
+   */
+  private String queryString;
+
+  /**
    * request parameters (include url & body)
    */
   private Map<String, String[]> queries = new HashMap<>();
+
+  private InputStream inputStream;
 
   /**
    * reversed
@@ -68,11 +76,27 @@ public class ReqInfo {
   }
 
   /**
+   * for HttpServletRequest to invoke setting QueryString
+   * @param queryString
+   */
+  public void setQueryString(String queryString) {
+    this.queryString = queryString;
+  }
+
+  /**
    * for HttpServletRequest to invoke setting Queries
    * @param queries
    */
   public void setQueries(Map queries) {
     this.queries = queries;
+  }
+
+  /**
+   * for HttpServletRequest to invoke setting Queries
+   * @param inputStream
+   */
+  public void setInputStream(InputStream inputStream) {
+    this.inputStream = inputStream;
   }
 
   /**
