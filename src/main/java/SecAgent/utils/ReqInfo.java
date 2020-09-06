@@ -146,6 +146,8 @@ public class ReqInfo {
    */
   public void doJob() {
     System.out.println("doJob:  ");
+
+    System.out.println("SQL: " + Resources.getProperty("SQL"));
     try{
 //      System.out.println(this.toString());
       DefaultLogger.info(this.toString());
