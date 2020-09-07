@@ -1,6 +1,7 @@
 import SecAgent.utils.ReqInfo;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -34,8 +35,17 @@ public class AgentTargetSample<E> {
     }
   }
 
+  public void test(HttpServletRequest request) {
+    try {
+      System.out.println(request.getInputStream());
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
+
   public static void main(String[] args) {
     HashMap hashMap = new HashMap();
     ArrayList list = new ArrayList();
+
   }
 }
