@@ -49,7 +49,9 @@ public class Config {
           //                "org.apache.catalina.core.StandardEngineValve.invoke",
           //                "javax.servlet.http.HttpServlet.service",
           "java.lang.Runtime.exec",
-          "java.util.ArrayList.add"
+          "java.util.ArrayList.add",
+          "java.sql.Statement",
+          "java.lang.UNIXProcess"
         };
   }
 
@@ -82,7 +84,7 @@ public class Config {
 
   public static boolean isIncludedMethod(String src) {
     for (String method : include_methods) {
-      if (src.startsWith(method)) {
+      if (src.replace("/", ".").startsWith(method)) {
         return true;
       }
     }
