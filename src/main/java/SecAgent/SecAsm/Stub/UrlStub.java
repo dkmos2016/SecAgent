@@ -7,28 +7,29 @@ import org.objectweb.asm.MethodVisitor;
 import java.io.InputStream;
 import java.util.Map;
 
-/**
- * log url
- */
+/** log url */
 public class UrlStub extends CommonStub {
   public UrlStub(
-    int api,
-    MethodVisitor methodVisitor,
-    int access,
-    String name,
-    String descriptor,
-    ParamsInfo paramsInfo) {
+      int api,
+      MethodVisitor methodVisitor,
+      int access,
+      String name,
+      String descriptor,
+      ParamsInfo paramsInfo) {
     super(api, methodVisitor, access, name, descriptor, paramsInfo);
-
   }
 
-  private void genFullUrl(int dst_idx){
+  private void genFullUrl(int dst_idx) {
     newStringBuilder(tmp_sb);
 
     // scheme
     mv.visitVarInsn(ALOAD, 1);
     mv.visitMethodInsn(
-            INVOKEINTERFACE, "javax/servlet/http/HttpServletRequest", "getScheme", "()Ljava/lang/String;", true);
+        INVOKEINTERFACE,
+        "javax/servlet/http/HttpServletRequest",
+        "getScheme",
+        "()Ljava/lang/String;",
+        true);
     mv.visitVarInsn(ASTORE, tmp_obj);
 
     append(tmp_sb, tmp_obj);
@@ -37,7 +38,11 @@ public class UrlStub extends CommonStub {
     // host
     mv.visitVarInsn(ALOAD, 1);
     mv.visitMethodInsn(
-            INVOKEINTERFACE, "javax/servlet/http/HttpServletRequest", "getServerName", "()Ljava/lang/String;", true);
+        INVOKEINTERFACE,
+        "javax/servlet/http/HttpServletRequest",
+        "getServerName",
+        "()Ljava/lang/String;",
+        true);
     mv.visitVarInsn(ASTORE, tmp_obj);
 
     append(tmp_sb, tmp_obj);
@@ -47,14 +52,19 @@ public class UrlStub extends CommonStub {
     mv.visitVarInsn(ALOAD, tmp_sb);
     mv.visitVarInsn(ALOAD, 1);
     mv.visitMethodInsn(
-            INVOKEINTERFACE, "javax/servlet/http/HttpServletRequest", "getServerPort", "()I", true);
-    mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/StringBuilder", "append", "(I)Ljava/lang/StringBuilder;", false);
+        INVOKEINTERFACE, "javax/servlet/http/HttpServletRequest", "getServerPort", "()I", true);
+    mv.visitMethodInsn(
+        INVOKEVIRTUAL, "java/lang/StringBuilder", "append", "(I)Ljava/lang/StringBuilder;", false);
     mv.visitInsn(POP);
 
     // Uri
     mv.visitVarInsn(ALOAD, 1);
     mv.visitMethodInsn(
-            INVOKEINTERFACE, "javax/servlet/http/HttpServletRequest", "getRequestURI", "()Ljava/lang/String;", true);
+        INVOKEINTERFACE,
+        "javax/servlet/http/HttpServletRequest",
+        "getRequestURI",
+        "()Ljava/lang/String;",
+        true);
 
     mv.visitVarInsn(ASTORE, tmp_obj);
     append(tmp_sb, tmp_obj);
@@ -62,36 +72,52 @@ public class UrlStub extends CommonStub {
     toStr(tmp_sb, dst_idx);
   }
 
-  private void getQueries(int dst_idx){
+  private void getQueries(int dst_idx) {
     mv.visitVarInsn(ALOAD, 1);
     mv.visitMethodInsn(
-            INVOKEINTERFACE, "javax/servlet/http/HttpServletRequest", "getParameterMap", "()Ljava/util/Map;", true);
+        INVOKEINTERFACE,
+        "javax/servlet/http/HttpServletRequest",
+        "getParameterMap",
+        "()Ljava/util/Map;",
+        true);
     mv.visitVarInsn(ASTORE, dst_idx);
   }
 
-  private void getMethod(int dst_idx){
+  private void getMethod(int dst_idx) {
     mv.visitVarInsn(ALOAD, 1);
     mv.visitMethodInsn(
-            INVOKEINTERFACE, "javax/servlet/http/HttpServletRequest", "getMethod", "()Ljava/lang/String;", true);
+        INVOKEINTERFACE,
+        "javax/servlet/http/HttpServletRequest",
+        "getMethod",
+        "()Ljava/lang/String;",
+        true);
     mv.visitVarInsn(ASTORE, dst_idx);
   }
 
-  private void getInputStream(int dst_idx){
+  private void getInputStream(int dst_idx) {
     mv.visitVarInsn(ALOAD, 1);
     mv.visitMethodInsn(
-            INVOKEINTERFACE, "javax/servlet/http/HttpServletRequest", "getInputStream", "()Ljavax/servlet/ServletInputStream;", true);
+        INVOKEINTERFACE,
+        "javax/servlet/http/HttpServletRequest",
+        "getInputStream",
+        "()Ljavax/servlet/ServletInputStream;",
+        true);
     mv.visitVarInsn(ASTORE, dst_idx);
   }
 
   private void getQueryString(int dst_idx) {
     mv.visitVarInsn(ALOAD, 1);
     mv.visitMethodInsn(
-            INVOKEINTERFACE, "javax/servlet/http/HttpServletRequest", "getQueryString", "()Ljava/lang/String;", true);
+        INVOKEINTERFACE,
+        "javax/servlet/http/HttpServletRequest",
+        "getQueryString",
+        "()Ljava/lang/String;",
+        true);
     mv.visitVarInsn(ASTORE, dst_idx);
   }
 
   private void process() {
-//    debug_print_tid();
+    //    debug_print_tid();
     debug_print_offline(String.format("[DEBUG] [SpringUrlStub]: %s", this.paramsInfo.toString()));
 
     getGlobalReqInfo(reqinfo_idx);
@@ -102,48 +128,84 @@ public class UrlStub extends CommonStub {
     genFullUrl(tmp_obj);
     addListElement(params_idx, T_OBJECT, tmp_obj);
 
-    findAndExecute("SecAgent.utils.ReqInfo", "setUrl", new Class[]{String.class}, reqinfo_idx, params_idx, tmp_obj);
+    findAndExecute(
+        "SecAgent.utils.ReqInfo",
+        "setUrl",
+        new Class[] {String.class},
+        reqinfo_idx,
+        params_idx,
+        tmp_obj);
 
     setNull(params_idx);
     newArrayList(params_idx);
     getQueries(tmp_obj);
     addListElement(params_idx, T_OBJECT, tmp_obj);
 
-    findAndExecute("SecAgent.utils.ReqInfo", "setQueries", new Class[]{Map.class}, reqinfo_idx, params_idx, tmp_obj);
+    findAndExecute(
+        "SecAgent.utils.ReqInfo",
+        "setQueries",
+        new Class[] {Map.class},
+        reqinfo_idx,
+        params_idx,
+        tmp_obj);
 
     setNull(params_idx);
     newArrayList(params_idx);
     getMethod(tmp_obj);
     addListElement(params_idx, T_OBJECT, tmp_obj);
 
-    findAndExecute("SecAgent.utils.ReqInfo", "setMethod", new Class[]{String.class}, reqinfo_idx, params_idx, tmp_obj);
+    findAndExecute(
+        "SecAgent.utils.ReqInfo",
+        "setMethod",
+        new Class[] {String.class},
+        reqinfo_idx,
+        params_idx,
+        tmp_obj);
 
     setNull(params_idx);
     newArrayList(params_idx);
     getQueryString(tmp_obj);
     addListElement(params_idx, T_OBJECT, tmp_obj);
 
-    findAndExecute("SecAgent.utils.ReqInfo", "setQueryString", new Class[]{String.class}, reqinfo_idx, params_idx, tmp_obj);
+    findAndExecute(
+        "SecAgent.utils.ReqInfo",
+        "setQueryString",
+        new Class[] {String.class},
+        reqinfo_idx,
+        params_idx,
+        tmp_obj);
 
     setNull(params_idx);
     newArrayList(params_idx);
     getQueryString(tmp_obj);
     addListElement(params_idx, T_OBJECT, tmp_obj);
 
-    findAndExecute("SecAgent.utils.ReqInfo", "setInputStream", new Class[]{InputStream.class}, reqinfo_idx, params_idx, tmp_obj);
+    findAndExecute(
+        "SecAgent.utils.ReqInfo",
+        "setInputStream",
+        new Class[] {InputStream.class},
+        reqinfo_idx,
+        params_idx,
+        tmp_obj);
 
     setNull(params_idx);
     newArrayList(params_idx);
     getQueryString(tmp_obj);
     addListElement(params_idx, T_OBJECT, tmp_obj);
 
-    findAndExecute("SecAgent.utils.ReqInfo", "setQueryString", new Class[]{String.class}, reqinfo_idx, params_idx, tmp_obj);
+    findAndExecute(
+        "SecAgent.utils.ReqInfo",
+        "setQueryString",
+        new Class[] {String.class},
+        reqinfo_idx,
+        params_idx,
+        tmp_obj);
 
     setNull(params_idx);
-//    debug_print_online(T_OBJECT,  tmp_obj);
+    //    debug_print_online(T_OBJECT,  tmp_obj);
 
-
-//    findAndExecute("SecAgent.utils.ReqInfo", "doTest", new Class[]{int.class, int.class}, reqinfo_idx, params_idx, res_idx);
+    //    findAndExecute("SecAgent.utils.ReqInfo", "doTest", new Class[]{int.class, int.class},
+    // reqinfo_idx, params_idx, res_idx);
 
     debug_print_offline("process done..");
   }
@@ -160,11 +222,13 @@ public class UrlStub extends CommonStub {
     super.onMethodExit(opcode);
 
     newArrayList(params_idx);
-    findAndExecute("SecAgent.utils.ReqInfo", "doJob", new Class[]{}, reqinfo_idx, params_idx, tmp_obj);
+    findAndExecute(
+        "SecAgent.utils.ReqInfo", "doJob", new Class[] {}, reqinfo_idx, params_idx, tmp_obj);
     // TODO remove ThreadLocal
-//    AsmReqLocalOp.clearReqInfo(mv);
+    //    AsmReqLocalOp.clearReqInfo(mv);
 
-    findAndExecute("SecAgent.utils.ReqLocal", "clear", new Class[]{}, reqinfo_idx, params_idx, tmp_obj);
+    findAndExecute(
+        "SecAgent.utils.ReqLocal", "clear", new Class[] {}, reqinfo_idx, params_idx, tmp_obj);
   }
 
   @Override

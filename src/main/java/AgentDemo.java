@@ -7,18 +7,18 @@ public class AgentDemo {
 
   static {
     TARGET_CLASSES =
-      new String[]{
-        "java.io.FileOutputStream",
-        "java.io.FileInputStream",
-//          "java.io.File",
-//          "java.lang.SecurityManager",
-        "java.io.ObjectInputStream",
-//              "java.util.ArrayList"
-      };
+        new String[] {
+          "java.io.FileOutputStream",
+          "java.io.FileInputStream",
+          //          "java.io.File",
+          //          "java.lang.SecurityManager",
+          "java.io.ObjectInputStream",
+          //              "java.util.ArrayList"
+        };
   }
 
   public static void premain(String args, Instrumentation instrumentation)
-    throws UnmodifiableClassException, ClassNotFoundException {
+      throws UnmodifiableClassException, ClassNotFoundException {
     System.out.println("run in premain");
     INST = instrumentation;
 
@@ -27,7 +27,7 @@ public class AgentDemo {
     //    instrumentation.retransformClasses(File.class);
     //    instrumentation.retransformClasses(SecurityManager.class);
     for (String cls : TARGET_CLASSES) {
-//      System.out.println(String.format("reload %s", cls));
+      //      System.out.println(String.format("reload %s", cls));
       instrumentation.retransformClasses(Class.forName(cls));
     }
 

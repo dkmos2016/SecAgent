@@ -1,13 +1,6 @@
-
-
-
 import SecAgent.utils.ReqInfo;
-import org.objectweb.asm.Type;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.*;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -26,10 +19,16 @@ public class AgentTargetSample<E> {
     this.name = name;
   }
 
-  public static void test( Class []params)  {
+  public static void test(Class[] params) {
     ReqInfo res;
-    try{
-      res = (ReqInfo) Thread.currentThread().getContextClassLoader().loadClass("SecAgent.utils.ReqInfo").getDeclaredMethod("doTest", params ).invoke(null,1, 2);
+    try {
+      res =
+          (ReqInfo)
+              Thread.currentThread()
+                  .getContextClassLoader()
+                  .loadClass("SecAgent.utils.ReqInfo")
+                  .getDeclaredMethod("doTest", params)
+                  .invoke(null, 1, 2);
     } catch (Exception e) {
       e.printStackTrace();
     }
@@ -38,6 +37,5 @@ public class AgentTargetSample<E> {
   public static void main(String[] args) {
     HashMap hashMap = new HashMap();
     ArrayList list = new ArrayList();
-
   }
 }

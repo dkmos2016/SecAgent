@@ -4,9 +4,9 @@ import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.commons.AdviceAdapter;
 
-
 public class testStub extends AdviceAdapter implements Opcodes {
-  protected testStub(int api, MethodVisitor methodVisitor, int access, String name, String descriptor) {
+  protected testStub(
+      int api, MethodVisitor methodVisitor, int access, String name, String descriptor) {
     super(api, methodVisitor, access, name, descriptor);
   }
 
@@ -38,16 +38,19 @@ public class testStub extends AdviceAdapter implements Opcodes {
     mv.visitVarInsn(LLOAD, 3);
     mv.visitMethodInsn(INVOKESTATIC, "java/lang/Long", "valueOf", "(J)Ljava/lang/Long;", false);
     mv.visitInsn(AASTORE);
-    mv.visitMethodInsn(INVOKESTATIC, "java/lang/String", "format", "(Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;", false);
-    mv.visitMethodInsn(INVOKEVIRTUAL, "java/io/PrintStream", "println", "(Ljava/lang/String;)V", false);
+    mv.visitMethodInsn(
+        INVOKESTATIC,
+        "java/lang/String",
+        "format",
+        "(Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;",
+        false);
+    mv.visitMethodInsn(
+        INVOKEVIRTUAL, "java/io/PrintStream", "println", "(Ljava/lang/String;)V", false);
     mv.visitInsn(RETURN);
   }
-
 
   @Override
   public void visitEnd() {
     super.visitEnd();
   }
-
 }
-

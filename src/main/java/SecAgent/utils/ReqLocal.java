@@ -7,14 +7,12 @@ public class ReqLocal {
     ReqInfo reqInfo = reqLocal.get();
     if (reqInfo == null) {
       System.out.println(
-        String.format("tid: %d, create new ReqInfo", Thread.currentThread().getId())
-      );
+          String.format("tid: %d, create new ReqInfo", Thread.currentThread().getId()));
       reqInfo = new ReqInfo();
       reqLocal.set(reqInfo);
     } else {
       System.out.println(
-        String.format("tid: %d, return saved ReqInfo", Thread.currentThread().getId())
-      );
+          String.format("tid: %d, return saved ReqInfo", Thread.currentThread().getId()));
     }
 
     return reqInfo;
@@ -26,8 +24,7 @@ public class ReqLocal {
 
   public static void clear() {
     System.out.println(
-      String.format("tid: %d, destroy saved ReqInfo", Thread.currentThread().getId())
-    );
+        String.format("tid: %d, destroy saved ReqInfo", Thread.currentThread().getId()));
     reqLocal.remove();
   }
 }
