@@ -142,6 +142,8 @@ public class ReqInfo {
 
   @Override
   public String toString() {
+    System.out.println("toString: ");
+    System.out.println(this.inputStream);
     return String.format(
         "{\"url\":\"%s\",\"method\":\"%s\",\"queries\":\"%s\",\"StubData\": \"%s\"}",
         url, method, null, StubDatas);
