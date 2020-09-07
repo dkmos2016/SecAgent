@@ -7,16 +7,17 @@ import org.objectweb.asm.MethodVisitor;
 public class SqlStub extends CommonStub {
 
   public SqlStub(
-    int api, MethodVisitor methodVisitor, int access, String name, String descriptor, ParamsInfo paramsInfo) {
+      int api,
+      MethodVisitor methodVisitor,
+      int access,
+      String name,
+      String descriptor,
+      ParamsInfo paramsInfo) {
     super(api, methodVisitor, access, name, descriptor, paramsInfo);
-
   }
 
   private void process() {
-    debug_print_offline(
-      String.format(
-        "[DEBUG] [SqlStub]: %s", this.paramsInfo.toString()));
-
+    debug_print_offline(String.format("[DEBUG] [SqlStub]: %s", this.paramsInfo.toString()));
 
     putStubData("SQL", T_OBJECT, 0);
 

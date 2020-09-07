@@ -14,13 +14,15 @@ public class CommonAdapter extends ClassVisitor implements Opcodes {
   public CommonAdapter(final ClassVisitor cv, final String name) {
     super(Opcodes.ASM9, cv);
     CLASSNAME = name;
-
   }
 
   @Override
-  public MethodVisitor visitMethod(int access, String name, String descriptor, String signature, String[] exceptions) {
+  public MethodVisitor visitMethod(
+      int access, String name, String descriptor, String signature, String[] exceptions) {
     MethodVisitor mv = super.visitMethod(access, name, descriptor, signature, exceptions);
-    ParamsInfo paramsInfo = new ParamsInfo(CLASSNAME, access, name, Type.getArgumentTypes(descriptor), descriptor, signature);
+    ParamsInfo paramsInfo =
+        new ParamsInfo(
+            CLASSNAME, access, name, Type.getArgumentTypes(descriptor), descriptor, signature);
 
     switch (paramsInfo.toString()) {
       case Config.SQL_STUB:
@@ -44,7 +46,5 @@ public class CommonAdapter extends ClassVisitor implements Opcodes {
         }
     }
     return mv;
-
   }
-
 }

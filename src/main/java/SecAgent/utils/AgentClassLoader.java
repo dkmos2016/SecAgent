@@ -1,20 +1,11 @@
 package SecAgent.utils;
 
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.net.URL;
-import java.net.URLClassLoader;
-
-
 public class AgentClassLoader extends ClassLoader {
   protected ClassLoader parent;
 
   protected AgentClassLoader(ClassLoader parent) {
     super(parent);
-//    this.parent = parent;
+    //    this.parent = parent;
   }
 
   @Override

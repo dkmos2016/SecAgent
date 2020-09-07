@@ -1,16 +1,16 @@
 package SecAgent.utils;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
 public class Resources {
-  private final static Properties properties;
+  private static final Properties properties;
 
   static {
     properties = new Properties();
-    InputStream in = Resources.class.getClassLoader().getResourceAsStream("config/config.properties");
+    InputStream in =
+        Resources.class.getClassLoader().getResourceAsStream("config/config.properties");
     try {
       properties.load(in);
     } catch (IOException e) {

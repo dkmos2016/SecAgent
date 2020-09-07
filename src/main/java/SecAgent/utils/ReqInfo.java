@@ -1,6 +1,5 @@
 package SecAgent.utils;
 
-
 import SecAgent.Logger.DefaultLogger;
 
 import java.io.File;
@@ -12,63 +11,57 @@ import java.util.Map;
 public class ReqInfo {
   // store throwable & parameter
   private final Map<String, ArrayList<StubData>> StubDatas = new HashMap<>();
-
-  /**
-   * complete url
-   */
+  /** reversed */
+  private final Map<String, String> headers = new HashMap<>();
+  /** complete url */
   private String url;
-
-  /**
-   * with url
-   */
+  /** with url */
   private boolean ALLOWED_PUT_STUB = false;
-
-  /**
-   * http method, GET/POST...
-   */
+  /** http method, GET/POST... */
   private String method;
-
-  /**
-   * get queryString
-   */
+  /** get queryString */
   private String queryString;
-
-  /**
-   * request parameters (include url & body)
-   */
+  /** request parameters (include url & body) */
   private Map<String, String[]> queries = new HashMap<>();
-
   private InputStream inputStream;
 
+  public ReqInfo() {
+    System.out.println(this.getClass().getClassLoader());
+  }
+
   /**
-   * reversed
+   * just for test
+   *
+   * @param a
+   * @param b
    */
-  private final Map<String, String> headers = new HashMap<>();
+  public static void doTest(int a, int b) {
+    System.out.println("doTest:  ");
+    System.out.println(a + b);
+  }
 
   /**
    * is initialed url
+   *
    * @return
    */
   public boolean isALLOWED_PUT_STUB() {
     return ALLOWED_PUT_STUB;
   }
 
-  public ReqInfo(){
-    System.out.println(this.getClass().getClassLoader());
-  }
-
   /**
    * for HttpServletRequest to invoke setting url
+   *
    * @param url
    */
   public void setUrl(String url) {
     this.url = url;
-    if (url != null)
-      this.ALLOWED_PUT_STUB = true;
+    if (url != null) this.ALLOWED_PUT_STUB = true;
   }
 
   /**
    * for HttpServletRequest to invoke setting method
+   *
    * @param method
    */
   public void setMethod(String method) {
@@ -77,6 +70,7 @@ public class ReqInfo {
 
   /**
    * for HttpServletRequest to invoke setting QueryString
+   *
    * @param queryString
    */
   public void setQueryString(String queryString) {
@@ -85,6 +79,7 @@ public class ReqInfo {
 
   /**
    * for HttpServletRequest to invoke setting Queries
+   *
    * @param queries
    */
   public void setQueries(Map queries) {
@@ -93,6 +88,7 @@ public class ReqInfo {
 
   /**
    * for HttpServletRequest to invoke setting Queries
+   *
    * @param inputStream
    */
   public void setInputStream(InputStream inputStream) {
@@ -101,6 +97,7 @@ public class ReqInfo {
 
   /**
    * for all stub to invoke setting stack info and params
+   *
    * @param type
    * @param throwable
    * @param obj
@@ -121,15 +118,16 @@ public class ReqInfo {
 
   /**
    * process StubDatas to display/log
+   *
    * @return
    */
   private String processStubData() {
     StringBuilder sb = new StringBuilder();
-    for (Map.Entry<String, ArrayList<StubData>> entry: StubDatas.entrySet()) {
+    for (Map.Entry<String, ArrayList<StubData>> entry : StubDatas.entrySet()) {
       String type = entry.getKey();
 
       ArrayList stubDatas = entry.getValue();
-//      StubData stubData = entry.getValue();
+      //      StubData stubData = entry.getValue();
       sb.append(type + " " + stubDatas + "|+++|");
     }
     return sb.toString();
@@ -137,19 +135,18 @@ public class ReqInfo {
 
   @Override
   public String toString() {
-    return String.format("{\"url\":\"%s\",\"method\":\"%s\",\"queries\":\"%s\",\"StubData\": \"%s\"}",
-      url, method, null, StubDatas);
+    return String.format(
+        "{\"url\":\"%s\",\"method\":\"%s\",\"queries\":\"%s\",\"StubData\": \"%s\"}",
+        url, method, null, StubDatas);
   }
 
-  /**
-   * for SecAgent to do some other jobs
-   */
+  /** for SecAgent to do some other jobs */
   public void doJob() {
     System.out.println("doJob:  ");
 
     System.out.println("SQL: " + Resources.getProperty("SQL"));
-    try{
-//      System.out.println(this.toString());
+    try {
+      //      System.out.println(this.toString());
       DefaultLogger.info(this.toString());
     } catch (Exception e) {
       System.out.println("not ready now!");
@@ -157,19 +154,7 @@ public class ReqInfo {
     }
   }
 
-  /**
-   * just for test
-   * @param a
-   * @param b
-   */
-  static public void doTest(int a, int b) {
-    System.out.println("doTest:  ");
-    System.out.println(a + b);
-  }
-
-  /**
-   * StubData: Stack info and Parameters
-   */
+  /** StubData: Stack info and Parameters */
   protected class StubData {
     protected Throwable throwable;
     Object object;
@@ -190,12 +175,12 @@ public class ReqInfo {
 
     @Override
     public String toString() {
-      System.out.println("thorwable: "+ throwable);
+      System.out.println("thorwable: " + throwable);
       if (object instanceof File) {
         return ((File) object).getPath();
       } else if (object instanceof Object[]) {
         StringBuilder sb = new StringBuilder();
-        for (Object o: (Object[])object) {
+        for (Object o : (Object[]) object) {
           sb.append(o);
           sb.append(" ");
         }

@@ -11,7 +11,8 @@ public class ParamsInfo {
   private final int access;
   private int size;
 
-  public ParamsInfo(String clazz, int access, String method, Type[] types, String desc, String signature) {
+  public ParamsInfo(
+      String clazz, int access, String method, Type[] types, String desc, String signature) {
     this.in_types = types;
     this.method = method;
     this.clazz = clazz;

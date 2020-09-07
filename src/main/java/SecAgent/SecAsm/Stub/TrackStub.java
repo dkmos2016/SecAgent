@@ -9,10 +9,7 @@ import org.objectweb.asm.commons.AdviceAdapter;
 
 import java.lang.reflect.Modifier;
 
-
-/**
- * origin asm bytecode
- */
+/** origin asm bytecode */
 public class TrackStub extends AdviceAdapter implements Opcodes {
   final int sb_idx = newLocal(Type.getType(StringBuilder.class));
   final int tmp_sb = newLocal(Type.getType(StringBuilder.class));
@@ -23,12 +20,12 @@ public class TrackStub extends AdviceAdapter implements Opcodes {
   ParamsInfo paramsInfo;
 
   public TrackStub(
-    int api,
-    MethodVisitor methodVisitor,
-    int access,
-    String name,
-    String descriptor,
-    ParamsInfo paramsInfo) {
+      int api,
+      MethodVisitor methodVisitor,
+      int access,
+      String name,
+      String descriptor,
+      ParamsInfo paramsInfo) {
     super(api, methodVisitor, access, name, descriptor);
     this.paramsInfo = paramsInfo;
   }
@@ -46,7 +43,7 @@ public class TrackStub extends AdviceAdapter implements Opcodes {
     mv.visitFieldInsn(GETSTATIC, "java/lang/System", "out", "Ljava/io/PrintStream;");
     mv.visitLdcInsn(msg);
     mv.visitMethodInsn(
-      INVOKEVIRTUAL, "java/io/PrintStream", "println", "(Ljava/lang/String;)V", false);
+        INVOKEVIRTUAL, "java/io/PrintStream", "println", "(Ljava/lang/String;)V", false);
   }
 
   public void process() {
@@ -64,20 +61,20 @@ public class TrackStub extends AdviceAdapter implements Opcodes {
       size -= 1;
     }
 
-    mv.visitFrame(Opcodes.NEW, 10, new Object[]{}, 0, new Object[]{});
+    mv.visitFrame(Opcodes.NEW, 10, new Object[] {}, 0, new Object[] {});
 
     //    System.out.println(
     //        String.format(
     //            "sb_idx: %d, tmp_sb: %d, tmp_arr: %d, tmp_len: %d, tmp_idx: %d, tmp_obj: %d",
     //            sb_idx, tmp_sb, tmp_arr, tmp_len, tmp_idx, tmp_obj));
 
-
     for (Type type : this.paramsInfo.getIn_types()) {
       mv.visitVarInsn(ALOAD, sb_idx);
       String desc = String.format("(%s)Ljava/lang/StringBuilder;", type.toString());
       debug_print(
-        String.format(
-          "[DEBUG] [TrackStub]: %s %s %d", this.paramsInfo.toString(), type.toString(), param_idx));
+          String.format(
+              "[DEBUG] [TrackStub]: %s %s %d",
+              this.paramsInfo.toString(), type.toString(), param_idx));
 
       switch (type.toString()) {
         case "B":
@@ -110,10 +107,11 @@ public class TrackStub extends AdviceAdapter implements Opcodes {
           desc = "(Ljava/lang/Object;)Ljava/lang/StringBuilder;";
 
           if (type.toString().startsWith("[")
-            && !type.toString().startsWith("[[")
-            && type.toString().endsWith(";")) {
+              && !type.toString().startsWith("[[")
+              && type.toString().endsWith(";")) {
 
-            debug_print(param_idx + " reformat " + type.toString() + "   " + this.paramsInfo.toString());
+            debug_print(
+                param_idx + " reformat " + type.toString() + "   " + this.paramsInfo.toString());
 
             // clear opcode stack
             Label if_empty = new Label();
@@ -166,18 +164,18 @@ public class TrackStub extends AdviceAdapter implements Opcodes {
             // mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/StringBuilder", "append",
             // "(Ljava/lang/String;)Ljava/lang/StringBuilder;", false);
             mv.visitMethodInsn(
-              INVOKEVIRTUAL,
-              "java/lang/StringBuilder",
-              "append",
-              "(Ljava/lang/Object;)Ljava/lang/StringBuilder;",
-              false);
+                INVOKEVIRTUAL,
+                "java/lang/StringBuilder",
+                "append",
+                "(Ljava/lang/Object;)Ljava/lang/StringBuilder;",
+                false);
             mv.visitLdcInsn(" ");
             mv.visitMethodInsn(
-              INVOKEVIRTUAL,
-              "java/lang/StringBuilder",
-              "append",
-              "(Ljava/lang/Object;)Ljava/lang/StringBuilder;",
-              false);
+                INVOKEVIRTUAL,
+                "java/lang/StringBuilder",
+                "append",
+                "(Ljava/lang/Object;)Ljava/lang/StringBuilder;",
+                false);
             mv.visitInsn(POP);
 
             // loop
@@ -190,11 +188,11 @@ public class TrackStub extends AdviceAdapter implements Opcodes {
             mv.visitVarInsn(ALOAD, sb_idx);
             mv.visitVarInsn(ALOAD, tmp_sb);
             mv.visitMethodInsn(
-              INVOKEVIRTUAL,
-              "java/lang/StringBuilder",
-              "toString",
-              "()Ljava/lang/String;",
-              false);
+                INVOKEVIRTUAL,
+                "java/lang/StringBuilder",
+                "toString",
+                "()Ljava/lang/String;",
+                false);
             //            mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/StringBuilder", "append",
             // "(Ljava/lang/String;)Ljava/lang/StringBuilder;", false);
 
@@ -221,11 +219,11 @@ public class TrackStub extends AdviceAdapter implements Opcodes {
         mv.visitVarInsn(ALOAD, sb_idx);
         mv.visitIntInsn(BIPUSH, 124);
         mv.visitMethodInsn(
-          INVOKEVIRTUAL,
-          "java/lang/StringBuilder",
-          "append",
-          "(C)Ljava/lang/StringBuilder;",
-          false);
+            INVOKEVIRTUAL,
+            "java/lang/StringBuilder",
+            "append",
+            "(C)Ljava/lang/StringBuilder;",
+            false);
         mv.visitInsn(POP);
       }
     }
@@ -234,9 +232,9 @@ public class TrackStub extends AdviceAdapter implements Opcodes {
     mv.visitFieldInsn(GETSTATIC, "java/lang/System", "out", "Ljava/io/PrintStream;");
     mv.visitVarInsn(ALOAD, sb_idx);
     mv.visitMethodInsn(
-      INVOKEVIRTUAL, "java/lang/StringBuilder", "toString", "()Ljava/lang/String;", false);
+        INVOKEVIRTUAL, "java/lang/StringBuilder", "toString", "()Ljava/lang/String;", false);
     mv.visitMethodInsn(
-      INVOKEVIRTUAL, "java/io/PrintStream", "println", "(Ljava/lang/String;)V", false);
+        INVOKEVIRTUAL, "java/io/PrintStream", "println", "(Ljava/lang/String;)V", false);
   }
 
   @Override
