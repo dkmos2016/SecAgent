@@ -4,6 +4,8 @@ import SecAgent.Logger.DefaultLogger;
 
 import java.io.File;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.lang.String;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -103,8 +105,11 @@ public class ReqInfo {
    * @param obj
    */
   public void putStubData(String type, Throwable throwable, Object obj) {
+    String realType;
+    System.out.println("putStubData: ");
     if (!ALLOWED_PUT_STUB) {
-      System.out.println("skipped because of not setting url");
+      System.out.println(String.format("skipped %s because of not setting url.", type));
+      System.out.println(obj);
       return;
     }
 
@@ -113,7 +118,9 @@ public class ReqInfo {
     ArrayList list = StubDatas.getOrDefault(type, new ArrayList<StubData>());
     list.add(new StubData(throwable, obj));
 
-    StubDatas.put(type, list);
+    realType = (type.equals("DOWN") || type.equals("UPLOAD")) && obj.toString().endsWith(".xml")? "XXE": type;
+
+    StubDatas.put(realType, list);
   }
 
   /**

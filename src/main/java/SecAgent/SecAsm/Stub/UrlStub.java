@@ -95,14 +95,17 @@ public class UrlStub extends CommonStub {
   }
 
   private void getInputStream(int dst_idx) {
+    debug_print_offline("invoke getInputStream *******");
     mv.visitVarInsn(ALOAD, 1);
     mv.visitMethodInsn(
         INVOKEINTERFACE,
-        "javax/servlet/http/HttpServletRequest",
+//        "javax/servlet/http/HttpServletRequest",
+        "javax.servlet.ServletRequest",
         "getInputStream",
         "()Ljavax/servlet/ServletInputStream;",
         true);
     mv.visitVarInsn(ASTORE, dst_idx);
+    debug_print_online(T_OBJECT, dst_idx);
   }
 
   private void getQueryString(int dst_idx) {
@@ -177,31 +180,33 @@ public class UrlStub extends CommonStub {
 
     setNull(params_idx);
     newArrayList(params_idx);
-    getQueryString(tmp_obj);
+    getInputStream(tmp_obj);
     addListElement(params_idx, T_OBJECT, tmp_obj);
+//
+//    findAndExecute(
+//        "SecAgent.utils.ReqInfo",
+//        "setInputStream",
+//        new Class[] {InputStream.class},
+//        reqinfo_idx,
+//        params_idx,
+//        tmp_obj);
+//
+//    setNull(params_idx);
+//
 
-    findAndExecute(
-        "SecAgent.utils.ReqInfo",
-        "setInputStream",
-        new Class[] {InputStream.class},
-        reqinfo_idx,
-        params_idx,
-        tmp_obj);
-
-    setNull(params_idx);
-    newArrayList(params_idx);
-    getQueryString(tmp_obj);
-    addListElement(params_idx, T_OBJECT, tmp_obj);
-
-    findAndExecute(
-        "SecAgent.utils.ReqInfo",
-        "setQueryString",
-        new Class[] {String.class},
-        reqinfo_idx,
-        params_idx,
-        tmp_obj);
-
-    setNull(params_idx);
+//    newArrayList(params_idx);
+//    getQueryString(tmp_obj);
+//    addListElement(params_idx, T_OBJECT, tmp_obj);
+//
+//    findAndExecute(
+//        "SecAgent.utils.ReqInfo",
+//        "setQueryString",
+//        new Class[] {String.class},
+//        reqinfo_idx,
+//        params_idx,
+//        tmp_obj);
+//
+//    setNull(params_idx);
     //    debug_print_online(T_OBJECT,  tmp_obj);
 
     //    findAndExecute("SecAgent.utils.ReqInfo", "doTest", new Class[]{int.class, int.class},
