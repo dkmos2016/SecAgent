@@ -1,12 +1,9 @@
 package SecAgent.utils;
 
-import SecAgent.Conf.Config;
 import SecAgent.Logger.DefaultLogger;
-import com.sun.org.apache.xerces.internal.xni.parser.XMLInputSource;
 
 import java.io.File;
 import java.io.InputStream;
-import java.lang.String;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -26,8 +23,8 @@ public class ReqInfo {
   private String queryString;
   /** request parameters (include url & body) */
   private Map<String, String[]> queries = new HashMap<>();
+
   private InputStream inputStream;
-  private XMLInputSource xmlInputSource;
 
   public ReqInfo() {
     System.out.println(this.getClass().getClassLoader());
@@ -91,16 +88,13 @@ public class ReqInfo {
   }
 
   /**
-   * for XXE_STUB
-   * @Deprecated for HttpServletRequest to invoke setting Queries
+   * for XXE_STUB @Deprecated for HttpServletRequest to invoke setting Queries
    *
    * @param inputStream
    */
-
   public void setInputStream(InputStream inputStream) {
     this.inputStream = inputStream;
   }
-
 
   /**
    * for all stub to invoke setting stack info and params
@@ -110,7 +104,7 @@ public class ReqInfo {
    * @param obj
    */
   public void putStubData(String type, Throwable throwable, Object obj) {
-//    String realType;
+    //    String realType;
     System.out.println("putStubData: ");
     if (!ALLOWED_PUT_STUB) {
       System.out.println(String.format("skipped %s because of not setting url.", type));
@@ -124,7 +118,8 @@ public class ReqInfo {
     list.add(new StubData(throwable, obj));
 
     // may be not useful
-//    realType = (type.equals("DOWN") || type.equals("UPLOAD")) && obj.toString().endsWith(".xml")? "XXE": type;
+    //    realType = (type.equals("DOWN") || type.equals("UPLOAD")) &&
+    // obj.toString().endsWith(".xml")? "XXE": type;
 
     StubDatas.put(type, list);
   }

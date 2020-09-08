@@ -18,8 +18,10 @@ public class Config {
 
   // doing
 
-  public static final String XXE_STUB = "com.sun.org.apache.xerces.internal.impl.XMLEntityManager$RewindableInputStream.<init>(Lcom.sun.org.apache.xerces.internal.impl.XMLEntityManager;Ljava.io.InputStream;)V";
-//  public static final String XXE_STUB="com.sun.org.apache.xerces.internal.impl.XMLVersionDetector.determineDocVersion(Lcom.sun.org.apache.xerces.internal.xni.parser.XMLInputSource;)S";
+  public static final String XXE_STUB =
+      "com.sun.org.apache.xerces.internal.impl.XMLEntityManager$RewindableInputStream.<init>(Lcom.sun.org.apache.xerces.internal.impl.XMLEntityManager;Ljava.io.InputStream;)V";
+  //  public static final String
+  // XXE_STUB="com.sun.org.apache.xerces.internal.impl.XMLVersionDetector.determineDocVersion(Lcom.sun.org.apache.xerces.internal.xni.parser.XMLInputSource;)S";
 
   // todo
   public static final String SSRF_STUB = "java.io.FileOutputStream.<init>(Ljava.io.File;Z)V";
@@ -41,11 +43,12 @@ public class Config {
         new String[] {
           "len.test.show2",
           "java.lang.SecurityManager.checkWrite(Ljava.lang.String;)V",
-//          "java.lang.Runtime.exec",
-//          "java.sql.Statement",
+          //          "java.lang.Runtime.exec",
+          //          "java.sql.Statement",
           "java.lang.UNIXProcess",
-//          "com.sun.org.apache.xerces.internal.impl.XMLVersionDetector",
-//          "com.sun.org.apache.xerces.internal.impl.XMLEntityManager$RewindableInputStream.<init>",
+          //          "com.sun.org.apache.xerces.internal.impl.XMLVersionDetector",
+          //
+          // "com.sun.org.apache.xerces.internal.impl.XMLEntityManager$RewindableInputStream.<init>",
         };
   }
 

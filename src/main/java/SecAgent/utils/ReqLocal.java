@@ -1,7 +1,7 @@
 package SecAgent.utils;
 
 public class ReqLocal {
-  private static ThreadLocal<ReqInfo> reqLocal = new ThreadLocal<ReqInfo>();
+  private static final ThreadLocal<ReqInfo> reqLocal = new ThreadLocal<ReqInfo>();
 
   public static ReqInfo getReqInfo() {
     ReqInfo reqInfo = reqLocal.get();

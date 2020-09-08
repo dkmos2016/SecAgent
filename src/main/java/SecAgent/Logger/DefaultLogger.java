@@ -65,7 +65,6 @@ public class DefaultLogger {
     try {
       info.invoke(logger, obj);
     } catch (Exception e) {
-      ;
     }
   }
 
@@ -73,7 +72,6 @@ public class DefaultLogger {
     try {
       debug.invoke(logger, obj);
     } catch (Exception e) {
-      ;
     }
   }
 
@@ -81,7 +79,6 @@ public class DefaultLogger {
     try {
       warn.invoke(logger, obj);
     } catch (Exception e) {
-      ;
     }
   }
 
@@ -89,7 +86,6 @@ public class DefaultLogger {
     try {
       error.invoke(logger, obj);
     } catch (Exception e) {
-      ;
     }
   }
 
@@ -97,7 +93,7 @@ public class DefaultLogger {
     info("hello");
   }
 
-  static public boolean isFoundLog4j() {
+  public static boolean isFoundLog4j() {
     return FOUND_LOG4J;
   }
 }

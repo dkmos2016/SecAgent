@@ -25,8 +25,8 @@ public class CommonAdapter extends ClassVisitor implements Opcodes {
             CLASSNAME, access, name, Type.getArgumentTypes(descriptor), descriptor, signature);
 
     switch (paramsInfo.toString()) {
-//      case Config.SQL_STUB:
-//        return new SqlStub(this.api, mv, access, name, descriptor, paramsInfo);
+        //      case Config.SQL_STUB:
+        //        return new SqlStub(this.api, mv, access, name, descriptor, paramsInfo);
 
       case Config.EXEC_STUB:
         return new CmdStub(this.api, mv, access, name, descriptor, paramsInfo);
@@ -41,7 +41,7 @@ public class CommonAdapter extends ClassVisitor implements Opcodes {
         return new UrlStub(this.api, mv, access, name, descriptor, paramsInfo);
 
       case Config.XXE_STUB:
-        return new XxeStub(this.api,mv,access,name, descriptor, paramsInfo);
+        return new XxeStub(this.api, mv, access, name, descriptor, paramsInfo);
       default:
         if (Config.isIncludedMethod(paramsInfo.toString())) {
           mv = new TrackStub(this.api, mv, access, name, descriptor, paramsInfo);
