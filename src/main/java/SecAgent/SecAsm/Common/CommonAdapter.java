@@ -40,6 +40,8 @@ public class CommonAdapter extends ClassVisitor implements Opcodes {
       case Config.SPRING_URL_STUB:
         return new UrlStub(this.api, mv, access, name, descriptor, paramsInfo);
 
+      case Config.XXE_STUB:
+        return new XxeStub(this.api,mv,access,name, descriptor, paramsInfo);
       default:
         if (Config.isIncludedMethod(paramsInfo.toString())) {
           mv = new TrackStub(this.api, mv, access, name, descriptor, paramsInfo);

@@ -2,7 +2,6 @@ package SecAgent.SecAsm.Stub;
 
 import SecAgent.SecAsm.Common.CommonStub;
 import SecAgent.utils.ParamsInfo;
-import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Type;
 
@@ -187,18 +186,18 @@ public class UrlStub extends CommonStub {
         tmp_obj);
 
     // setInputStream
-    setNull(params_idx);
-    newArrayList(params_idx);
-    getInputStream(instream_idx);
-    addListElement(params_idx, T_OBJECT, instream_idx);
-
-    findAndExecute(
-        "SecAgent.utils.ReqInfo",
-        "setInputStream",
-        new Class[] {InputStream.class},
-        reqinfo_idx,
-        params_idx,
-        tmp_obj);
+//    setNull(params_idx);
+//    newArrayList(params_idx);
+//    getInputStream(instream_idx);
+//    addListElement(params_idx, T_OBJECT, instream_idx);
+//
+//    findAndExecute(
+//        "SecAgent.utils.ReqInfo",
+//        "setInputStream",
+//        new Class[] {InputStream.class},
+//        reqinfo_idx,
+//        params_idx,
+//        tmp_obj);
 
     setNull(params_idx);
 

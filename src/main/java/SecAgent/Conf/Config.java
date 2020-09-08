@@ -1,6 +1,7 @@
 package SecAgent.Conf;
 
 public class Config {
+  public static final boolean DEBUG = true;
 
   public static final String SQL_STUB =
       "com.mysql.cj.jdbc.EscapeProcessor.escapeSQL(Ljava.lang.String;Ljava.util.TimeZone;ZZLcom.mysql.cj.exceptions.ExceptionInterceptor;)Ljava.lang.Object;";
@@ -14,8 +15,15 @@ public class Config {
   // "org.springframework.web.servlet.DispatcherServlet.doService(Ljavax.servlet.http.HttpServletRequest;Ljavax.servlet.http.HttpServletResponse;)V";\
   public static final String SPRING_URL_STUB =
       "javax.servlet.http.HttpServlet.service(Ljavax.servlet.http.HttpServletRequest;Ljavax.servlet.http.HttpServletResponse;)V";
+
+  // doing
+
+  public static final String XXE_STUB = "com.sun.org.apache.xerces.internal.impl.XMLEntityManager$RewindableInputStream.<init>(Lcom.sun.org.apache.xerces.internal.impl.XMLEntityManager;Ljava.io.InputStream;)V";
+//  public static final String XXE_STUB="com.sun.org.apache.xerces.internal.impl.XMLVersionDetector.determineDocVersion(Lcom.sun.org.apache.xerces.internal.xni.parser.XMLInputSource;)S";
+
   // todo
   public static final String SSRF_STUB = "java.io.FileOutputStream.<init>(Ljava.io.File;Z)V";
+
   public static String[] exclude_classes;
   public static String[] exclude_methods;
   public static String[] include_classes;
@@ -33,25 +41,11 @@ public class Config {
         new String[] {
           "len.test.show2",
           "java.lang.SecurityManager.checkWrite(Ljava.lang.String;)V",
-          //                "java.lang.ProcessImpl.start",
-          //                "java.lang.ProcessImpl.createCommandLine",
-          //                "com.mysql.cj.jdbc.EscapeProcessor.escapeSQL",
-          //                "java.io.FileInputStream.<init>(Ljava.io.File;)V",
-          //                "java.io.FileOutputStream.<init>(Ljava.io.File;Z)V",
-          //
-          // "java.io.ObjectInputStream.resolveClass(Ljava.io.ObjectStreamClass;)Ljava.lang.Class;",
-
-          //                "java.io.File.renameTo",
-          //                "java.io.File.list",
-          //
-          // "org.springframework.web.servlet.DispatcherServlet.doService(Ljavax.servlet.http.HttpServletRequest;Ljavax.servlet.http.HttpServletResponse;)V",
-          //                "org.springframework.web.servlet.DispatcherServlet",
-          //                "org.apache.catalina.core.StandardEngineValve.invoke",
-          //                "javax.servlet.http.HttpServlet.service",
-          "java.lang.Runtime.exec",
-          "java.util.ArrayList.add",
-          "java.sql.Statement",
-          "java.lang.UNIXProcess"
+//          "java.lang.Runtime.exec",
+//          "java.sql.Statement",
+          "java.lang.UNIXProcess",
+//          "com.sun.org.apache.xerces.internal.impl.XMLVersionDetector",
+//          "com.sun.org.apache.xerces.internal.impl.XMLEntityManager$RewindableInputStream.<init>",
         };
   }
 

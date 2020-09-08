@@ -1,6 +1,8 @@
 package SecAgent.utils;
 
+import SecAgent.Conf.Config;
 import SecAgent.Logger.DefaultLogger;
+import com.sun.org.apache.xerces.internal.xni.parser.XMLInputSource;
 
 import java.io.File;
 import java.io.InputStream;
@@ -25,6 +27,7 @@ public class ReqInfo {
   /** request parameters (include url & body) */
   private Map<String, String[]> queries = new HashMap<>();
   private InputStream inputStream;
+  private XMLInputSource xmlInputSource;
 
   public ReqInfo() {
     System.out.println(this.getClass().getClassLoader());
@@ -88,13 +91,16 @@ public class ReqInfo {
   }
 
   /**
-   * for HttpServletRequest to invoke setting Queries
+   * for XXE_STUB
+   * @Deprecated for HttpServletRequest to invoke setting Queries
    *
    * @param inputStream
    */
+
   public void setInputStream(InputStream inputStream) {
     this.inputStream = inputStream;
   }
+
 
   /**
    * for all stub to invoke setting stack info and params
