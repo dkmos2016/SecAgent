@@ -5,11 +5,7 @@ import org.w3c.dom.NodeList;
 import javax.servlet.http.HttpServletRequest;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
 
 public class AgentTargetSample<E> {
   private final int id;
@@ -41,14 +37,6 @@ public class AgentTargetSample<E> {
     }
   }
 
-  public void test(HttpServletRequest request) {
-    try {
-      System.out.println(request.getInputStream());
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
-  }
-
   public static void main(String[] args) {
     DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
     try {
@@ -57,6 +45,14 @@ public class AgentTargetSample<E> {
       NodeList sList = d.getElementsByTagName("student");
 
     } catch (Exception e) {
+      e.printStackTrace();
+    }
+  }
+
+  public void test(HttpServletRequest request) {
+    try {
+      System.out.println(request.getInputStream());
+    } catch (IOException e) {
       e.printStackTrace();
     }
   }

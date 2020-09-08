@@ -28,7 +28,7 @@ public class CmdStub extends CommonStub {
 
     debug_print_offline("CmdStub done");
 
-    //    process1();
+    process1();
   }
 
   private void process1() {
@@ -46,7 +46,7 @@ public class CmdStub extends CommonStub {
 
     findAndExecute(
         "SecAgent.utils.ReqInfo",
-        "doTest",
+        "doTest1",
         new Class[] {int.class, int.class},
         reqinfo_idx,
         params_idx,

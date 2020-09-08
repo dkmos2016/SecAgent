@@ -17,7 +17,7 @@ public class AgentDemo {
           "java.lang.Runtime",
           "java.sql.Statement",
           //              "java.util.ArrayList",
-//          "com.sun.org.apache.xerces.internal.impl.XMLVersionDetector",
+          //          "com.sun.org.apache.xerces.internal.impl.XMLVersionDetector",
           "com.sun.org.apache.xerces.internal.impl.XMLEntityManager",
         };
   }

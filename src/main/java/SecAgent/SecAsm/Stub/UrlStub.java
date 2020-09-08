@@ -10,7 +10,7 @@ import java.util.Map;
 
 /** log url */
 public class UrlStub extends CommonStub {
-  private int instream_idx = newLocal(Type.getType(InputStream.class));
+  private final int instream_idx = newLocal(Type.getType(InputStream.class));
 
   public UrlStub(
       int api,
@@ -100,13 +100,19 @@ public class UrlStub extends CommonStub {
   private void getInputStream(int dst_idx) {
     debug_print_offline("invoke getInputStream *******");
 
-//    mv.visitFieldInsn(GETSTATIC, "java/lang/System", "out", "Ljava/io/PrintStream;");
+    //    mv.visitFieldInsn(GETSTATIC, "java/lang/System", "out", "Ljava/io/PrintStream;");
 
     mv.visitVarInsn(ALOAD, 1);
-    mv.visitMethodInsn(INVOKEINTERFACE, "javax/servlet/http/HttpServletRequest", "getInputStream", "()Ljavax/servlet/ServletInputStream;", true);
+    mv.visitMethodInsn(
+        INVOKEINTERFACE,
+        "javax/servlet/http/HttpServletRequest",
+        "getInputStream",
+        "()Ljavax/servlet/ServletInputStream;",
+        true);
     mv.visitVarInsn(ASTORE, dst_idx);
 
-//    mv.visitMethodInsn(INVOKEVIRTUAL, "java/io/PrintStream", "println", "(Ljava/lang/Object;)V", false);
+    //    mv.visitMethodInsn(INVOKEVIRTUAL, "java/io/PrintStream", "println",
+    // "(Ljava/lang/Object;)V", false);
 
     debug_print_online(T_OBJECT, dst_idx);
   }
@@ -186,34 +192,34 @@ public class UrlStub extends CommonStub {
         tmp_obj);
 
     // setInputStream
-//    setNull(params_idx);
-//    newArrayList(params_idx);
-//    getInputStream(instream_idx);
-//    addListElement(params_idx, T_OBJECT, instream_idx);
-//
-//    findAndExecute(
-//        "SecAgent.utils.ReqInfo",
-//        "setInputStream",
-//        new Class[] {InputStream.class},
-//        reqinfo_idx,
-//        params_idx,
-//        tmp_obj);
+    //    setNull(params_idx);
+    //    newArrayList(params_idx);
+    //    getInputStream(instream_idx);
+    //    addListElement(params_idx, T_OBJECT, instream_idx);
+    //
+    //    findAndExecute(
+    //        "SecAgent.utils.ReqInfo",
+    //        "setInputStream",
+    //        new Class[] {InputStream.class},
+    //        reqinfo_idx,
+    //        params_idx,
+    //        tmp_obj);
 
     setNull(params_idx);
 
-//    newArrayList(params_idx);
-//    getQueryString(tmp_obj);
-//    addListElement(params_idx, T_OBJECT, tmp_obj);
-//
-//    findAndExecute(
-//        "SecAgent.utils.ReqInfo",
-//        "setQueryString",
-//        new Class[] {String.class},
-//        reqinfo_idx,
-//        params_idx,
-//        tmp_obj);
-//
-//    setNull(params_idx);
+    //    newArrayList(params_idx);
+    //    getQueryString(tmp_obj);
+    //    addListElement(params_idx, T_OBJECT, tmp_obj);
+    //
+    //    findAndExecute(
+    //        "SecAgent.utils.ReqInfo",
+    //        "setQueryString",
+    //        new Class[] {String.class},
+    //        reqinfo_idx,
+    //        params_idx,
+    //        tmp_obj);
+    //
+    //    setNull(params_idx);
     //    debug_print_online(T_OBJECT,  tmp_obj);
 
     //    findAndExecute("SecAgent.utils.ReqInfo", "doTest", new Class[]{int.class, int.class},

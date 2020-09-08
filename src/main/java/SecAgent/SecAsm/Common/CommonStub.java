@@ -9,7 +9,6 @@ import org.objectweb.asm.Type;
 import org.objectweb.asm.commons.AdviceAdapter;
 
 import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
 
 public class CommonStub extends AdviceAdapter implements Opcodes {
   protected static final int T_OBJECT = 1111111;
@@ -410,11 +409,18 @@ public class CommonStub extends AdviceAdapter implements Opcodes {
     mv.visitJumpInsn(GOTO, try_target);
     mv.visitLabel(try_excep);
     mv.visitFrame(F_SAME1, 0, null, 1, new Object[] {"java/lang/ClassNotFoundException"});
-    mv.visitVarInsn(ASTORE, tmp_obj);
-    debug_print_offline("exception:");
-    mv.visitVarInsn(ALOAD, tmp_obj);
+    debug_print_offline("try to doExpLog");
+    //    mv.visitVarInsn(ASTORE, tmp_obj);
     mv.visitMethodInsn(
-        INVOKEVIRTUAL, "java/lang/ClassNotFoundException", "printStackTrace", "()V", false);
+        INVOKESTATIC,
+        "SecAgent/Logger/ExceptionLogger",
+        "doExpLogger",
+        "(Ljava/lang/Exception;)V",
+        false);
+
+    //    mv.visitVarInsn(ALOAD, tmp_obj);
+    //    mv.visitMethodInsn(
+    //        INVOKEVIRTUAL, "java/lang/ClassNotFoundException", "printStackTrace", "()V", false);
     mv.visitLabel(try_target);
 
     mv.visitFrame(F_SAME, 0, null, 0, null);
@@ -509,31 +515,28 @@ public class CommonStub extends AdviceAdapter implements Opcodes {
     //    debug_print_offline("to load: " + classname);
     loadClass(classname, cls_idx);
     //    debug_print_online(T_OBJECT, cls_idx);
-
     //    debug_print_offline("find: " + methodname);
     getDeclaredMethod(cls_idx, methodname, paramTypes, method_idx);
     //    debug_print_online(T_OBJECT, method_idx);
-
     invoke(method_idx, inst_idx, params_idx, dst_idx);
-
-    //    debug_print_tid();
-    //    mv.visitVarInsn(ALOAD, reqinfo_idx);
-    //    Label if_null1 = new Label();
-    //    Label if_end1 = new Label();
-    //    mv.visitJumpInsn(IFNULL, if_null1);
-    //    debug_print_offline("not null");
-    //    mv.visitJumpInsn(GOTO, if_end1);
-
-    //    mv.visitLabel(if_null1);
-    //    debug_print_offline(" null");
-    //    mv.visitLabel(if_end1);
 
     debug_print_offline("findAndExecute 2 " + classname + "." + methodname);
 
     mv.visitJumpInsn(GOTO, try_end);
     mv.visitLabel(try_excep);
     mv.visitFrame(F_SAME1, 0, null, 1, new Object[] {"java/lang/Exception"});
-    mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Exception", "printStackTrace", "()V", false);
+    mv.visitVarInsn(ASTORE, tmp_obj);
+    debug_print_offline("try to invoke ExceptionLogger.doExpLog");
+    //    mv.visitVarInsn(ALOAD, tmp_obj);
+    //    mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Exception", "printStackTrace", "()V", false);
+
+    newArrayList(params_idx);
+    addListElement(params_idx, T_OBJECT, tmp_obj);
+
+    //   ExceptionLogger.doExpLog(Exception e)
+    loadClass("SecAgent.Logger.ExceptionLogger", cls_idx);
+    getDeclaredMethod(cls_idx, "doExpLog", new Class[] {Exception.class}, method_idx);
+    invoke(method_idx, null_idx, params_idx, dst_idx);
 
     mv.visitLabel(try_end);
 

@@ -4,8 +4,8 @@ public class AgentClassLoader extends ClassLoader {
   protected ClassLoader parent;
 
   protected AgentClassLoader(ClassLoader parent) {
-    super(parent);
-    //    this.parent = parent;
+    //    super(parent);
+    this.parent = null;
   }
 
   @Override
