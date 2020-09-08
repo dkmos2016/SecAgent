@@ -4,7 +4,6 @@ import SecAgent.Logger.DefaultLogger;
 
 import java.io.File;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.lang.String;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -105,7 +104,7 @@ public class ReqInfo {
    * @param obj
    */
   public void putStubData(String type, Throwable throwable, Object obj) {
-    String realType;
+//    String realType;
     System.out.println("putStubData: ");
     if (!ALLOWED_PUT_STUB) {
       System.out.println(String.format("skipped %s because of not setting url.", type));
@@ -115,12 +114,13 @@ public class ReqInfo {
 
     System.out.println("putstubdata: " + type + ", throwable: " + throwable + ", obj");
 
-    ArrayList list = StubDatas.getOrDefault(type, new ArrayList<StubData>());
+    ArrayList list = StubDatas.getOrDefault(type, new ArrayList());
     list.add(new StubData(throwable, obj));
 
-    realType = (type.equals("DOWN") || type.equals("UPLOAD")) && obj.toString().endsWith(".xml")? "XXE": type;
+    // may be not useful
+//    realType = (type.equals("DOWN") || type.equals("UPLOAD")) && obj.toString().endsWith(".xml")? "XXE": type;
 
-    StubDatas.put(realType, list);
+    StubDatas.put(type, list);
   }
 
   /**
@@ -156,10 +156,15 @@ public class ReqInfo {
     System.out.println("SQL: " + Resources.getProperty("SQL"));
     try {
       //      System.out.println(this.toString());
-      DefaultLogger.info(this.toString());
+
+      if (DefaultLogger.isFoundLog4j()) {
+        DefaultLogger.info(this.toString());
+      } else {
+        System.out.println(this.toString());
+      }
+
     } catch (Exception e) {
       System.out.println("not ready now!");
-      DefaultLogger.error("not ready now!");
     }
   }
 

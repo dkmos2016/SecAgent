@@ -11,6 +11,8 @@ import java.lang.reflect.Method;
 
 public class DefaultLogger {
   private static final Pair[] LoggerClassNames;
+
+  private static boolean FOUND_LOG4J = false;
   private static Object logger;
 
   private static Method info;
@@ -50,6 +52,7 @@ public class DefaultLogger {
         warn = Logger.getMethod("warn", String.class);
         error = Logger.getMethod("error", String.class);
 
+        FOUND_LOG4J = true;
         break;
       } catch (Exception e) {
         //        continue;
@@ -92,5 +95,9 @@ public class DefaultLogger {
 
   static void test() {
     info("hello");
+  }
+
+  static public boolean isFoundLog4j() {
+    return FOUND_LOG4J;
   }
 }

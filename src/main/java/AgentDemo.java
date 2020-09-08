@@ -13,6 +13,7 @@ public class AgentDemo {
           //          "java.io.File",
           //          "java.lang.SecurityManager",
           "java.io.ObjectInputStream",
+          "java.io.InputStream",
 //          "java.sql.Statement.execute",
           //              "java.util.ArrayList"
         };
