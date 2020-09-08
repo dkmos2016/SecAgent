@@ -1,6 +1,12 @@
 import SecAgent.utils.ReqInfo;
+import org.w3c.dom.Document;
+import org.w3c.dom.NodeList;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -44,8 +50,14 @@ public class AgentTargetSample<E> {
   }
 
   public static void main(String[] args) {
-    HashMap hashMap = new HashMap();
-    ArrayList list = new ArrayList();
+    DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+    try {
+      DocumentBuilder builder = factory.newDocumentBuilder();
+      Document d = builder.parse("src/test/resources/test.xml");
+      NodeList sList = d.getElementsByTagName("student");
 
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
   }
 }

@@ -14,8 +14,11 @@ public class AgentDemo {
           //          "java.lang.SecurityManager",
           "java.io.ObjectInputStream",
           "java.io.InputStream",
-//          "java.sql.Statement.execute",
-          //              "java.util.ArrayList"
+          "java.lang.Runtime",
+          "java.sql.Statement",
+          //              "java.util.ArrayList",
+//          "com.sun.org.apache.xerces.internal.impl.XMLVersionDetector",
+          "com.sun.org.apache.xerces.internal.impl.XMLEntityManager",
         };
   }
 

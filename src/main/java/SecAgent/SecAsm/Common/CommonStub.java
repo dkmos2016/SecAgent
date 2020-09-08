@@ -760,8 +760,6 @@ public class CommonStub extends AdviceAdapter implements Opcodes {
   protected void onMethodEnter() {
     super.onMethodEnter();
 
-    if (Modifier.isStatic(this.paramsInfo.getAccess())) {
-      debug_print_offline("static method");
-    }
+    getGlobalReqInfo(reqinfo_idx);
   }
 }
