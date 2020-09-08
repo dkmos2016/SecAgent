@@ -4,12 +4,15 @@ import SecAgent.SecAsm.Common.CommonStub;
 import SecAgent.utils.ParamsInfo;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
+import org.objectweb.asm.Type;
 
 import java.io.InputStream;
 import java.util.Map;
 
 /** log url */
 public class UrlStub extends CommonStub {
+  private int instream_idx = newLocal(Type.getType(InputStream.class));
+
   public UrlStub(
       int api,
       MethodVisitor methodVisitor,
@@ -96,35 +99,17 @@ public class UrlStub extends CommonStub {
   }
 
   private void getInputStream(int dst_idx) {
-
-    Label try_start = new Label();
-    Label try_exp = new Label();
-    Label try_end = new Label();
     debug_print_offline("invoke getInputStream *******");
-    mv.visitTryCatchBlock(try_start, try_end, try_exp, "java/lang/Exception");
-    mv.visitLabel(try_start);
-
 
 //    mv.visitFieldInsn(GETSTATIC, "java/lang/System", "out", "Ljava/io/PrintStream;");
+
     mv.visitVarInsn(ALOAD, 1);
-    mv.visitMethodInsn(
-        INVOKEINTERFACE,
-        "javax/servlet/http/HttpServletRequest",
-        "getInputStream",
-        "()Ljavax/servlet/ServletInputStream;",
-        true);
+    mv.visitMethodInsn(INVOKEINTERFACE, "javax/servlet/http/HttpServletRequest", "getInputStream", "()Ljavax/servlet/ServletInputStream;", true);
     mv.visitVarInsn(ASTORE, dst_idx);
 
 //    mv.visitMethodInsn(INVOKEVIRTUAL, "java/io/PrintStream", "println", "(Ljava/lang/Object;)V", false);
 
     debug_print_online(T_OBJECT, dst_idx);
-    mv.visitJumpInsn(GOTO, try_end);
-
-    mv.visitLabel(try_exp);
-    mv.visitFrame(F_SAME1, 0, null,1, new Object[]{"java/lang/Exception"});
-    mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Exception", "printStackTrace", "()V", false);
-
-    mv.visitLabel(try_end);
   }
 
   private void getQueryString(int dst_idx) {
@@ -146,6 +131,7 @@ public class UrlStub extends CommonStub {
     debug_print_online(T_OBJECT, reqinfo_idx);
 
     // prepare parameters
+    // setUrl
     newArrayList(params_idx);
     genFullUrl(tmp_obj);
     addListElement(params_idx, T_OBJECT, tmp_obj);
@@ -158,6 +144,7 @@ public class UrlStub extends CommonStub {
         params_idx,
         tmp_obj);
 
+    // setQueries
     setNull(params_idx);
     newArrayList(params_idx);
     getQueries(tmp_obj);
@@ -171,6 +158,7 @@ public class UrlStub extends CommonStub {
         params_idx,
         tmp_obj);
 
+    // setMethod
     setNull(params_idx);
     newArrayList(params_idx);
     getMethod(tmp_obj);
@@ -184,6 +172,7 @@ public class UrlStub extends CommonStub {
         params_idx,
         tmp_obj);
 
+    // setQueryString
     setNull(params_idx);
     newArrayList(params_idx);
     getQueryString(tmp_obj);
@@ -197,13 +186,11 @@ public class UrlStub extends CommonStub {
         params_idx,
         tmp_obj);
 
+    // setInputStream
     setNull(params_idx);
-
-
-    // todo fix bug
     newArrayList(params_idx);
-    getInputStream(tmp_obj);
-    addListElement(params_idx, T_OBJECT, tmp_obj);
+    getInputStream(instream_idx);
+    addListElement(params_idx, T_OBJECT, instream_idx);
 
     findAndExecute(
         "SecAgent.utils.ReqInfo",
@@ -214,7 +201,6 @@ public class UrlStub extends CommonStub {
         tmp_obj);
 
     setNull(params_idx);
-//
 
 //    newArrayList(params_idx);
 //    getQueryString(tmp_obj);
