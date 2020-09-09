@@ -60,12 +60,13 @@ public class CmdStub extends CommonStub {
   protected void onMethodEnter() {
     super.onMethodEnter();
     System.out.println(String.format("stub into %s, params %d", paramsInfo, paramsInfo.getSize()));
+    process();
   }
 
   @Override
   protected void onMethodExit(int opcode) {
     super.onMethodExit(opcode);
-    process();
+
   }
 
   @Override
