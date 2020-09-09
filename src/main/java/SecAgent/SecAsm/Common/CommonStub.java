@@ -451,7 +451,6 @@ public class CommonStub extends AdviceAdapter implements Opcodes {
     mv.visitJumpInsn(IFNULL, if_null);
 
     // if reqinfo_idx == null
-    getGlobalReqInfo(reqinfo_idx);
     mv.visitVarInsn(ALOAD, reqinfo_idx);
     mv.visitJumpInsn(IFNULL, if_null);
 
