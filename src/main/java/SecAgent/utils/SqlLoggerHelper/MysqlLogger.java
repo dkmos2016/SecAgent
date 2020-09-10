@@ -20,9 +20,11 @@ public class MysqlLogger {
       if (statement != null) {
         return statement.executeQuery(sql);
       }
-      pool.returnConnection(conn);
+
     } catch (SQLException e) {
       e.printStackTrace();
+    } finally {
+      pool.returnConnection(conn);
     }
     return null;
   }

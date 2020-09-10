@@ -1,4 +1,5 @@
 import SecAgent.Logger.ExceptionLogger;
+import SecAgent.utils.AgentClassLoader;
 import SecAgent.utils.ReqInfo;
 
 import javax.servlet.http.HttpServletRequest;
@@ -37,19 +38,20 @@ public class AgentTargetSample<E> {
 
   public static void main(String[] args) throws ExecutionException, InterruptedException {
     System.out.println("main start");
-    ExceptionLogger.doTestAsync(new Exception("select user from user"));
-    ExceptionLogger.doTestAsync(new Exception("select host from user"));
-    ExceptionLogger.doTestAsync(new Exception("select user, host from user"));
+    ExceptionLogger.doTestAsync(new Exception("select id, value from test where id = 1"));
+    ExceptionLogger.doTestAsync(new Exception("select id, value from test where id = 2"));
+    ExceptionLogger.doTestAsync(new Exception("select id, value from test where id = 3"));
     //    ExceptionLogger.doTestAsync(new Exception("error test4"));
     //    ExceptionLogger.doTestAsync(new Exception("error test5"));
     ExceptionLogger.Shutdown();
     System.out.println("main done");
+    test1(null);
   }
 
-  public void test(HttpServletRequest request) {
+  public static void test1(HttpServletRequest request) {
     try {
-      System.out.println(request.getInputStream());
-    } catch (IOException e) {
+      Class.forName("com.mysql.cj.jdbc.Driver");
+    } catch (Exception e) {
       e.printStackTrace();
     }
   }
