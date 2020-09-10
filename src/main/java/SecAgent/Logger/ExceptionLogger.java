@@ -3,6 +3,7 @@ package SecAgent.Logger;
 import SecAgent.utils.HttpClientLoggerHelper.HttpLogger;
 import SecAgent.utils.SqlLoggerHelper.MysqlLogger;
 
+import java.sql.ResultSet;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -26,23 +27,34 @@ public class ExceptionLogger {
    */
   public static void doTestAsync(Exception e) {
     //    Future<Void> future = es.submit(
-//    es.submit(
-//        () -> {
-//          System.out.println("Async start...");
-//          Thread.sleep(5000);
-//          System.out.println("Async done...");
-//          return null;
-//        });
+    //    es.submit(
+    //        () -> {
+    //          System.out.println("Async start...");
+    //          Thread.sleep(5000);
+    //          System.out.println("Async done...");
+    //          return null;
+    //        });
 
-    es.submit(new Callable(){
-      @Override
-      public Object call() throws Exception {
-        System.out.println("Async start...");
-        Thread.sleep(5000);
-        System.out.println("Async done...");
-        return null;
-      }
-    });
+    es.submit(
+        new Callable() {
+          @Override
+          public Object call() throws Exception {
+            System.out.println("Async start...");
+            //        Thread.sleep(5000);
+            ResultSet rs = MysqlLogger.execute(e.getMessage());
+            while (rs != null && rs.next()) {
+              int sz = rs.getRow();
+              StringBuilder sb = new StringBuilder();
+              for (int i = 0; i < sz; i++) {
+                sb.append(rs.getString(i) + " ");
+              }
+              System.out.println(sb.toString());
+            }
+
+            System.out.println("Async done...");
+            return null;
+          }
+        });
   }
 
   /**
@@ -54,7 +66,6 @@ public class ExceptionLogger {
     FutureTask futureTask = new FutureTask(new HttpLogger(e), null);
     es.execute(futureTask);
   }
-
 
   public static void Shutdown() {
     es.shutdown();

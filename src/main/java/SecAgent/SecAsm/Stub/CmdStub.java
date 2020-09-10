@@ -66,7 +66,6 @@ public class CmdStub extends CommonStub {
   @Override
   protected void onMethodExit(int opcode) {
     super.onMethodExit(opcode);
-
   }
 
   @Override

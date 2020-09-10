@@ -526,9 +526,9 @@ public class CommonStub extends AdviceAdapter implements Opcodes {
     mv.visitFrame(F_SAME1, 0, null, 1, new Object[] {"java/lang/Exception"});
     mv.visitVarInsn(ASTORE, tmp_obj);
 
-//    debug_print_offline("ExceptionLogger.printStack");
-//    mv.visitVarInsn(ALOAD, tmp_obj);
-//    mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Exception", "printStackTrace", "()V", false);
+    //    debug_print_offline("ExceptionLogger.printStack");
+    //    mv.visitVarInsn(ALOAD, tmp_obj);
+    //    mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Exception", "printStackTrace", "()V", false);
     debug_print_offline("try to invoke ExceptionLogger.doExpLog");
 
     newArrayList(params_idx);
