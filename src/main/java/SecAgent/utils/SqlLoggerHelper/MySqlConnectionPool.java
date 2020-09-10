@@ -21,6 +21,8 @@ public class MySqlConnectionPool {
                 "jdbc:mysql://localhost:3306/test?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC",
                 "root",
                 "123456");
+
+        connectionArrayList.add(connection);
       }
 
     } catch (ClassNotFoundException e) {
