@@ -1,17 +1,9 @@
 import SecAgent.Logger.ExceptionLogger;
 import SecAgent.utils.ReqInfo;
-import org.w3c.dom.Document;
-import org.w3c.dom.NodeList;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.FutureTask;
-import java.util.concurrent.TimeUnit;
 
 public class AgentTargetSample<E> {
   private final int id;
@@ -45,11 +37,11 @@ public class AgentTargetSample<E> {
 
   public static void main(String[] args) throws ExecutionException, InterruptedException {
     System.out.println("main start");
-    ExceptionLogger.doTestAsync(new Exception("error test1"));
-    ExceptionLogger.doTestAsync(new Exception("error test2"));
-    ExceptionLogger.doTestAsync(new Exception("error test3"));
-    ExceptionLogger.doTestAsync(new Exception("error test4"));
-    ExceptionLogger.doTestAsync(new Exception("error test5"));
+    ExceptionLogger.doTestAsync(new Exception("select user from user"));
+    ExceptionLogger.doTestAsync(new Exception("select host from user"));
+    ExceptionLogger.doTestAsync(new Exception("select user, host from user"));
+    //    ExceptionLogger.doTestAsync(new Exception("error test4"));
+    //    ExceptionLogger.doTestAsync(new Exception("error test5"));
     ExceptionLogger.Shutdown();
     System.out.println("main done");
   }

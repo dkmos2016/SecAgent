@@ -132,7 +132,7 @@ public class UrlStub extends CommonStub {
     //    debug_print_tid();
     debug_print_offline(String.format("[DEBUG] [SpringUrlStub]: %s", this.paramsInfo.toString()));
 
-//    getGlobalReqInfo(reqinfo_idx);
+    //    getGlobalReqInfo(reqinfo_idx);
     debug_print_online(T_OBJECT, reqinfo_idx);
 
     // prepare parameters
