@@ -1,6 +1,7 @@
 package SecAgent.utils.SqlLoggerHelper;
 
 import SecAgent.utils.AgentClassLoader;
+import SecAgent.utils.Resources;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -8,11 +9,10 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class MySqlConnectionPool {
-  private final int size;
+  private final int size = Integer.parseInt(Resources.getProperty("MAX_CONNECTION"));
   private ArrayList<Connection> connectionArrayList;
 
-  public MySqlConnectionPool(int size) {
-    this.size = size;
+  public MySqlConnectionPool() {
     this.connectionArrayList = new ArrayList<Connection>(size);
 
     initialize();
@@ -28,9 +28,9 @@ public class MySqlConnectionPool {
           System.out.println("try to getConnection");
           Connection connection =
             DriverManager.getConnection(
-              "jdbc:mysql://localhost:3306/test?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC",
-              "root",
-              "123456");
+              String.format("jdbc:mysql://%s:%s/%s?useSSL=%s&allowPublicKeyRetrieval=true&serverTimezone=UTC", Resources.getProperty("DB_HOST"), Resources.getProperty("DB_PORT"), Resources.getProperty("DB_NAME"), Resources.getProperty("DB_SSL")),
+              Resources.getProperty("DB_USER"),
+              Resources.getProperty("DB_PASSWORD"));
 
           this.connectionArrayList.add(connection);
         } catch (SQLException e) {

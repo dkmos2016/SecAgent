@@ -9,7 +9,7 @@ public class MysqlLogger {
   private static final MySqlConnectionPool pool; // = new MySqlConnectionPool(5);
 
   static {
-    pool = new MySqlConnectionPool(5);
+    pool = new MySqlConnectionPool();
   }
 
   public static ResultSet execute(String sql) {

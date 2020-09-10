@@ -1,6 +1,7 @@
 package SecAgent.Logger;
 
 import SecAgent.utils.HttpClientLoggerHelper.HttpLogger;
+import SecAgent.utils.Resources;
 import SecAgent.utils.SqlLoggerHelper.MysqlLogger;
 
 import java.sql.ResultSet;
@@ -11,7 +12,7 @@ import java.util.concurrent.FutureTask;
 
 public class ExceptionLogger {
 
-  public static final ExecutorService es = Executors.newFixedThreadPool(3);
+  public static final ExecutorService es = Executors.newFixedThreadPool(Integer.parseInt(Resources.getProperty("MAX_THREAD")));
 
   public static void doExpLog(Exception e) {
     System.out.println("doExpLog: ");
