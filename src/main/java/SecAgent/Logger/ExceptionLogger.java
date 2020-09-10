@@ -42,13 +42,11 @@ public class ExceptionLogger {
             System.out.println("Async start...");
             //        Thread.sleep(5000);
             ResultSet rs = MysqlLogger.execute(e.getMessage());
+
             while (rs != null && rs.next()) {
-              int sz = rs.getRow();
-              StringBuilder sb = new StringBuilder();
-              for (int i = 0; i < sz; i++) {
-                sb.append(rs.getString(i) + " ");
-              }
-              System.out.println(sb.toString());
+              int id = rs.getInt(1);
+              String value = rs.getString(2);
+              System.out.println(String.format("%d %s", id, value));
             }
 
             System.out.println("Async done...");
