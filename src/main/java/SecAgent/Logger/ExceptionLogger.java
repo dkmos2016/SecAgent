@@ -16,8 +16,8 @@ public class ExceptionLogger {
 
   public static void doExpLog(Exception e) {
     System.out.println("doExpLog: ");
-    //    e.printStackTrace();
-    MysqlLogger.execute("select id, name from test");
+        e.printStackTrace();
+//    MysqlLogger.execute("select id, name from test");
     // todo async
   }
 

@@ -4,11 +4,13 @@ import SecAgent.utils.ReqInfo;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.concurrent.ExecutionException;
 
 public class AgentTargetSample<E> {
-  private final int id;
-  private final String name;
+  private int id;
+  private String name;
   private HttpServletRequest httpServletRequest;
 
   public AgentTargetSample(int id, String name) {
@@ -19,6 +21,10 @@ public class AgentTargetSample<E> {
     sb.toString();
     this.id = id;
     this.name = name;
+  }
+
+  public AgentTargetSample() {
+
   }
 
   public static void test(Class[] params) {
@@ -45,14 +51,26 @@ public class AgentTargetSample<E> {
     //    ExceptionLogger.doTestAsync(new Exception("error test5"));
     ExceptionLogger.Shutdown();
     System.out.println("main done");
-    test1(null);
+    new AgentTargetSample().test1(true, new short[]{1,2}, (byte) 1, 1, 1, 1, 1.0, null);
   }
 
-  public static void test1(HttpServletRequest request) {
+  public  void test1(boolean g, short a[], byte c, int i, long l, float f, double d, String []aa) {
     try {
+      int t = 0;
+      int aaa = 2;
+      int bbbaaa = 2;
+
       Class.forName("com.mysql.cj.jdbc.Driver");
     } catch (Exception e) {
       e.printStackTrace();
+
+      try{
+        Class cls = Class.forName("com.mysql.cj.jdbc.Driver");
+        Method method = cls.getMethod("test", null);
+        method.invoke(null, null);
+      } catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException |InvocationTargetException e1) {
+        e1.printStackTrace();
+      }
     }
   }
 }
