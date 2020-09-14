@@ -62,7 +62,7 @@ public class ExceptionLogger {
    * @param e
    */
   public static void doExcLogAsync(Exception e) {
-    FutureTask futureTask = new FutureTask(new HttpLogger(e), null);
+    FutureTask futureTask = new FutureTask(new HttpLogger(Resources.getProperty("EXCEP_LOGGER_SERVER"), e), null);
     es.execute(futureTask);
   }
 
