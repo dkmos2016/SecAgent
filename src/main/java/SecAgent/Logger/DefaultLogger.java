@@ -9,6 +9,7 @@ import SecAgent.utils.Pair;
 
 import java.lang.reflect.Method;
 
+@Deprecated
 public class DefaultLogger {
   private static final Pair[] LoggerClassNames;
 

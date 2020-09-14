@@ -1,31 +1,18 @@
 import SecAgent.utils.Common;
+import SecAgent.utils.MyLoggerHelper.MyLogger;
 import SecAgent.utils.ReqInfo;
 
 import javax.servlet.http.HttpServletRequest;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.ExecutionException;
+import java.util.logging.Logger;
 
 public class AgentTargetSample<E> {
   private int id;
   private String name;
   private HttpServletRequest httpServletRequest;
 
-  public AgentTargetSample(int id, String name) {
-    StringBuilder sb = new StringBuilder();
-    sb.append(id);
-    sb.append("|");
-    sb.append(name);
-    sb.toString();
-    this.id = id;
-    this.name = name;
-  }
-
-  public AgentTargetSample() {
-
-  }
 
   public static void test(Class[] params) {
     ReqInfo res;
@@ -73,30 +60,29 @@ public class AgentTargetSample<E> {
 
     body.put("tttt1", true);
 
-
     System.out.println(Common.MapToJsonStr(body));
+
+//    Logger logger = Logger.getLogger("test");
+//    try {
+//      FileHandler handle = new FileHandler("test.txt");
+//      handle.setFormatter(new Formatter() {
+//        @Override
+//        public String format(LogRecord record) {
+//          return record.getMillis() + "-" + record.getLoggerName() + "-" + record.getMessage();
+//        }
+//      });
+//      logger.addHandler(handle);
+//
+//      logger.info("hello");
+//
+//    } catch (IOException e) {
+//      e.printStackTrace();
+//    }
+
+    Logger logger = MyLogger.getLogger();
+    logger.info("hello world!");
 
 
 //    HttpClientHelper.doPost("http://127.0.0.1:8888", headers, body);
-  }
-
-  public  void test1(boolean g, short a[], byte c, int i, long l, float f, double d, String []aa) {
-    try {
-      int t = 0;
-      int aaa = 2;
-      int bbbaaa = 2;
-
-      Class.forName("com.mysql.cj.jdbc.Driver");
-    } catch (Exception e) {
-      e.printStackTrace();
-
-      try{
-        Class cls = Class.forName("com.mysql.cj.jdbc.Driver");
-        Method method = cls.getMethod("test", null);
-        method.invoke(null, null);
-      } catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException |InvocationTargetException e1) {
-        e1.printStackTrace();
-      }
-    }
   }
 }
