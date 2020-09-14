@@ -1,5 +1,5 @@
 import SecAgent.utils.Common;
-import SecAgent.utils.MyLoggerHelper.MyLogger;
+import SecAgent.utils.DefaultLoggerHelper.DefaultLogger;
 import SecAgent.utils.ReqInfo;
 
 import javax.servlet.http.HttpServletRequest;
@@ -79,8 +79,10 @@ public class AgentTargetSample<E> {
 //      e.printStackTrace();
 //    }
 
-    Logger logger = MyLogger.getLogger();
+    Logger logger = DefaultLogger.getLogger();
     logger.info("hello world!");
+
+    logger.info("test");
 
 
 //    HttpClientHelper.doPost("http://127.0.0.1:8888", headers, body);

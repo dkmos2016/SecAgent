@@ -1,4 +1,4 @@
-package SecAgent.utils.MyLoggerHelper;
+package SecAgent.utils.DefaultLoggerHelper;
 
 
 import java.io.PrintWriter;

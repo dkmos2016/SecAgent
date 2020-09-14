@@ -1,10 +1,10 @@
-package SecAgent.utils.MyLoggerHelper;
+package SecAgent.utils.DefaultLoggerHelper;
 
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.logging.FileHandler;
 import java.util.logging.LogRecord;
+import java.util.logging.Formatter;
 import java.util.logging.SimpleFormatter;
 
 public class DefaultLogFileHandler extends FileHandler {
@@ -12,10 +12,13 @@ public class DefaultLogFileHandler extends FileHandler {
 
     public DefaultLogFileHandler() throws IOException {
         super();
-        System.out.println(LOG_PATH);
+//        System.out.println(LOG_PATH);
         setFormatter(new DefaultLogFormat());
         setOutputStream(new FileOutputStream(LOG_PATH));
+    }
 
+    public DefaultLogFileHandler(Formatter formatter) throws IOException, SecurityException {
+        setFormatter(formatter);
     }
 
     public DefaultLogFileHandler(String log_path) throws IOException, SecurityException {
