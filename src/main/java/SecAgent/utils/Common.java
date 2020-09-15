@@ -2,7 +2,6 @@ package SecAgent.utils;
 
 import java.util.ArrayList;
 import java.util.Map;
-import java.util.Set;
 
 public class Common {
 
@@ -70,7 +69,7 @@ public class Common {
         }
 
     }
-    sb.deleteCharAt(sb.length() - 1);
+    if (sb.length() > 1) sb.deleteCharAt(sb.length() - 1);
     sb.append("}");
 
     return sb.toString();

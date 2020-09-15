@@ -3,10 +3,14 @@ import SecAgent.utils.DefaultLoggerHelper.DefaultLogger;
 import SecAgent.utils.ReqInfo;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.concurrent.ExecutionException;
 
 
 public class AgentTargetSample<E> {
+  public InputStream in;
+  public HttpServletRequest httpServletRequest;
   public static String name = "test";
 
   public static void test(Class[] params) {
@@ -54,6 +58,19 @@ public class AgentTargetSample<E> {
 
 
 //    HttpClientHelper.doPost("http://127.0.0.1:8888", headers, body);
+
+  }
+
+  public void setInputSteam(InputStream in) throws IOException {
+    this.in = in;
+  }
+
+  public InputStream getInputStream() throws IOException {
+    if (this.in == null) {
+      return this.httpServletRequest.getInputStream();
+    } else {
+      return this.in;
+    }
   }
 
 }
