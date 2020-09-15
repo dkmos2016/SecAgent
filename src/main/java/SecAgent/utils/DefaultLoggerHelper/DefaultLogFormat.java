@@ -9,7 +9,7 @@ import java.util.logging.Formatter;
 import java.util.logging.LogRecord;
 
 public class DefaultLogFormat extends Formatter {
-  private static final String format = "%s [%s] %s - %s %s";
+  private static final String format = "%s [%s] %s - %s %s\n";
   private final Date date = new Date();
 
   protected DefaultLogFormat() {

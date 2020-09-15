@@ -596,7 +596,7 @@ public class CommonStub extends AdviceAdapter implements Opcodes {
     newArrayList(params_idx);
     addListElement(params_idx, T_OBJECT, tmp_obj);
     loadClass("SecAgent.Logger.ExceptionLogger", cls_idx);
-    getDeclaredMethod(cls_idx, "doExpLog1", new Class[]{Exception.class}, method_idx);
+    getDeclaredMethod(cls_idx, "doExpLog", new Class[]{Exception.class}, method_idx);
     invoke(method_idx, null_idx, params_idx, dst_idx);
     mv.visitLabel(try_end1);
 
