@@ -2,9 +2,7 @@ package SecAgent.utils;
 
 import SecAgent.utils.DefaultLoggerHelper.DefaultLogger;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -91,6 +89,8 @@ public class ReqInfo {
    */
   public void setQueryString(String queryString) {
     this.queryString = queryString;
+    System.out.println("setQueryString:  ");
+    System.out.println(queryString);
   }
 
   /**
@@ -100,6 +100,8 @@ public class ReqInfo {
    */
   public void setQueries(Map queries) {
     this.queries = queries;
+    System.out.println("setQueries:  ");
+    System.out.println(Common.MapToJsonStr(queries));
   }
 
   /**
@@ -108,7 +110,26 @@ public class ReqInfo {
    * @param inputStream
    */
   public void setInputStream(InputStream inputStream) {
+
     this.inputStream = inputStream;
+
+    byte[] bs = new byte[1024];
+
+    System.out.println("setInputStream:  ");
+    try {
+      System.out.println("length: " + inputStream.available());
+      inputStream.read(bs);
+      System.out.println(new String(bs));
+      inputStream.reset();
+
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
+
+  public void setBufferedReader(BufferedReader bufferedReader) {
+    System.out.println("setBufferedReader: ");
+    System.out.println(bufferedReader);
   }
 
   /**
@@ -158,7 +179,8 @@ public class ReqInfo {
 
   @Override
   public String toString() {
-    System.out.println("toString: ");
+    System.out.println("ReqInfo toString: ");
+
     System.out.println(this.inputStream);
     return String.format(
         "{\"url\":\"%s\",\"method\":\"%s\",\"queries\":\"%s\",\"StubData\": \"%s\"}",
