@@ -1,14 +1,29 @@
 package SecAgent.utils;
 
-import SecAgent.Logger.DefaultLogger;
+import SecAgent.utils.DefaultLoggerHelper.DefaultLogger;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 public class ReqInfo {
+  /** for log information */
+  private static final DefaultLogger logger;
+
+  static {
+    DefaultLogger _logger = null;
+    try {
+      _logger = new DefaultLogger();
+    } catch (IOException e) {
+      e.printStackTrace();
+    } finally {
+      logger = _logger;
+    }
+  }
+
   // store throwable & parameter
   private final Map<String, ArrayList<StubData>> StubDatas = new HashMap<>();
   /** reversed */
@@ -23,7 +38,7 @@ public class ReqInfo {
   private String queryString;
   /** request parameters (include url & body) */
   private Map<String, String[]> queries = new HashMap<>();
-
+  /** getInpusteram */
   private InputStream inputStream;
 
   public ReqInfo() {
@@ -153,20 +168,7 @@ public class ReqInfo {
   /** for SecAgent to do some other jobs */
   public void doJob() {
     System.out.println("doJob:  ");
-
-    System.out.println("SQL: " + Resources.getProperty("SQL"));
-    try {
-      //      System.out.println(this.toString());
-
-      if (DefaultLogger.isFoundLog4j()) {
-        DefaultLogger.info(this.toString());
-      } else {
-        System.out.println(this.toString());
-      }
-
-    } catch (Exception e) {
-      System.out.println("not ready now!");
-    }
+    if (logger != null) logger.info(this.toString());
   }
 
   /** StubData: Stack info and Parameters */
