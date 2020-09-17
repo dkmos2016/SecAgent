@@ -171,108 +171,10 @@ public class UrlStub extends CommonStub {
       reqinfo_idx,
       params_idx,
       tmp_obj);
-  }
-
-  private void process1() {
-    //    debug_print_tid();
-    debug_print_offline(String.format("[DEBUG] [SpringUrlStub]: %s", this.paramsInfo.toString()));
-
-    //    getGlobalReqInfo(reqinfo_idx);
-    debug_print_online(T_OBJECT, reqinfo_idx);
-
-    // prepare parameters
-    // setUrl
-    newArrayList(params_idx);
-    genFullUrl(tmp_obj);
-    addListElement(params_idx, T_OBJECT, tmp_obj);
-
-    findAndExecute(
-        "SecAgent.utils.ReqInfo",
-        "setUrl",
-        new Class[] {String.class},
-        reqinfo_idx,
-        params_idx,
-        tmp_obj);
-
-    // setQueries
-    setNull(params_idx);
-    newArrayList(params_idx);
-    getQueries(tmp_obj);
-    addListElement(params_idx, T_OBJECT, tmp_obj);
-
-    findAndExecute(
-        "SecAgent.utils.ReqInfo",
-        "setQueries",
-        new Class[] {Map.class},
-        reqinfo_idx,
-        params_idx,
-        tmp_obj);
-
-    // setMethod
-    setNull(params_idx);
-    newArrayList(params_idx);
-    getMethod(tmp_obj);
-    addListElement(params_idx, T_OBJECT, tmp_obj);
-
-    findAndExecute(
-        "SecAgent.utils.ReqInfo",
-        "setMethod",
-        new Class[] {String.class},
-        reqinfo_idx,
-        params_idx,
-        tmp_obj);
-
-    // setQueryString
-    setNull(params_idx);
-    newArrayList(params_idx);
-    getQueryString(tmp_obj);
-    addListElement(params_idx, T_OBJECT, tmp_obj);
-
-    findAndExecute(
-        "SecAgent.utils.ReqInfo",
-        "setQueryString",
-        new Class[] {String.class},
-        reqinfo_idx,
-        params_idx,
-        tmp_obj);
-
-    // setInputStream
-        setNull(params_idx);
-        newArrayList(params_idx);
-        getInputStream(instream_idx);
-        addListElement(params_idx, T_OBJECT, instream_idx);
-
-        findAndExecute(
-            "SecAgent.utils.ReqInfo",
-            "setInputStream",
-            new Class[] {InputStream.class},
-            reqinfo_idx,
-            params_idx,
-            tmp_obj);
-
-    setNull(params_idx);
-
-    //
-//        newArrayList(params_idx);
-//        getReader(tmp_obj);
-//        addListElement(params_idx, T_OBJECT, tmp_obj);
-//
-//        findAndExecute(
-//            "SecAgent.utils.ReqInfo",
-//            "setBufferReader",
-//            new Class[] {BufferedReader.class},
-//            reqinfo_idx,
-//            params_idx,
-//            tmp_obj);
-//
-//        setNull(params_idx);
-    //    debug_print_online(T_OBJECT,  tmp_obj);
-
-    //    findAndExecute("SecAgent.utils.ReqInfo", "doTest", new Class[]{int.class, int.class},
-    // reqinfo_idx, params_idx, res_idx);
 
     debug_print_offline("process done..");
   }
+
 
   @Override
   protected void onMethodEnter() {
