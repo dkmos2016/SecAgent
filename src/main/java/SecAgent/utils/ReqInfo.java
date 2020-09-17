@@ -2,6 +2,7 @@ package SecAgent.utils;
 
 import SecAgent.utils.DefaultLoggerHelper.DefaultLogger;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -38,6 +39,10 @@ public class ReqInfo {
   private Map<String, String[]> queries = new HashMap<>();
   /** getInpusteram */
   private InputStream inputStream;
+  /**
+   * HttpServletRequest
+   */
+  private HttpServletRequest request;
 
   public ReqInfo() {
     System.out.println(this.getClass().getClassLoader());
@@ -61,6 +66,12 @@ public class ReqInfo {
    */
   public boolean isALLOWED_PUT_STUB() {
     return ALLOWED_PUT_STUB;
+  }
+
+  public void setHttpServletRequest(HttpServletRequest request) {
+    System.out.println("setHttpServletRequest: ");
+    System.out.println(request);
+    this.request = request;
   }
 
   /**

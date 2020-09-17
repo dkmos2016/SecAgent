@@ -6,7 +6,6 @@ import java.util.Set;
 
 public class SecServletContainerInitializer implements ServletContainerInitializer {
 
-
   @Override
   public void onStartup(Set<Class<?>> c, ServletContext ctx) throws ServletException {
     FilterRegistration.Dynamic filter = ctx.addFilter("SecFileter", new SecFilter());
