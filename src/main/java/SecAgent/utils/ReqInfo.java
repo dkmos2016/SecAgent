@@ -68,76 +68,16 @@ public class ReqInfo {
     return ALLOWED_PUT_STUB;
   }
 
-  public void setHttpServletRequest(HttpServletRequest request) {
+  public void setHttpServletRequest(HttpServletRequest request) throws IOException {
     System.out.println("setHttpServletRequest: ");
     System.out.println(request);
     this.request = request;
-  }
 
-  /**
-   * for HttpServletRequest to invoke setting url
-   *
-   * @param url
-   */
-  public void setUrl(String url) {
-    this.url = url;
-    if (url != null) this.ALLOWED_PUT_STUB = true;
-  }
-
-  /**
-   * for HttpServletRequest to invoke setting method
-   *
-   * @param method
-   */
-  public void setMethod(String method) {
-    this.method = method;
-  }
-
-  /**
-   * for HttpServletRequest to invoke setting QueryString
-   *
-   * @param queryString
-   */
-  public void setQueryString(String queryString) {
-    this.queryString = queryString;
-    System.out.println("setQueryString:  ");
-    System.out.println(queryString);
-  }
-
-  /**
-   * for HttpServletRequest to invoke setting Queries
-   *
-   * @param queries
-   */
-  public void setQueries(Map queries) {
-    this.queries = queries;
-    System.out.println("setQueries:  ");
-    System.out.println(Common.MapToJsonStr(queries));
-  }
-
-  /**
-   * for XXE_STUB @Deprecated for HttpServletRequest to invoke setting Queries
-   *
-   * @param inputStream
-   */
-  public void setInputStream(InputStream inputStream) {
-
-    this.inputStream = inputStream;
-
-    byte[] bs = new byte[1024];
-
-    System.out.println("setInputStream:  ");
-    try {
-      System.out.println("length: " + inputStream.available());
-      System.out.println(new String(bs));
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
-  }
-
-  public void setBufferedReader(BufferedReader bufferedReader) {
-    System.out.println("setBufferedReader: ");
-    System.out.println(bufferedReader);
+    this.url = request.getRequestURI();
+    this.method = request.getMethod();
+    this.queries = request.getParameterMap();
+    this.queryString = request.getQueryString();
+    this.inputStream = request.getInputStream();
   }
 
   /**
