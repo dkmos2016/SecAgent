@@ -11,24 +11,26 @@ import java.util.Enumeration;
 import java.util.Map;
 
 public class CopyServletRequestWrapper extends HttpServletRequestWrapper {
-  private byte[] body;
+//  private byte[] body;
   private ByteArrayOutputStream baout = new ByteArrayOutputStream();
 
   public CopyServletRequestWrapper(HttpServletRequest request) throws IOException {
     super(request);
-    body = this.getBodyString(request).getBytes(Charset.forName("UTF-8"));
+//    body = this.getBodyString(request).getBytes(Charset.forName("UTF-8"));
 
     InputStream in = request.getInputStream();
     int v;
     while ((v=in.read()) != -1) {
-      baout.write(v);
+      this.baout.write(v);
     }
-    in.close();
+
+//    this.body = baout.toByteArray();
+//    in.close();
 
   }
 
   public byte[] getBody() {
-    return baout.toByteArray();
+    return this.baout.toByteArray();
   }
 
   public void setBody(byte[] body) throws IOException {
@@ -45,7 +47,7 @@ public class CopyServletRequestWrapper extends HttpServletRequestWrapper {
   @Override
   public ServletInputStream getInputStream() throws IOException {
 
-    final ByteArrayInputStream bais = new ByteArrayInputStream(this.body);
+    final ByteArrayInputStream bais = new ByteArrayInputStream(this.baout.toByteArray());
 
     return new ServletInputStream() {
       @Override
@@ -93,7 +95,8 @@ public class CopyServletRequestWrapper extends HttpServletRequestWrapper {
     InputStream inputStream = null;
     BufferedReader reader = null;
     try {
-      inputStream = request.getInputStream();
+      if (this.baout == null)
+       inputStream = request.getInputStream();
 
       reader = new BufferedReader(new InputStreamReader(inputStream, Charset.forName("UTF-8")));
       String line = "";

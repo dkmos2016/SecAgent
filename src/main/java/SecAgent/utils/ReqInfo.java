@@ -118,10 +118,7 @@ public class ReqInfo {
     System.out.println("setInputStream:  ");
     try {
       System.out.println("length: " + inputStream.available());
-      inputStream.read(bs);
       System.out.println(new String(bs));
-      inputStream.reset();
-
     } catch (IOException e) {
       e.printStackTrace();
     }
