@@ -5,6 +5,7 @@ import SecAgent.utils.ParamsInfo;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Type;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.util.Map;
@@ -150,6 +151,29 @@ public class UrlStub extends CommonStub {
   }
 
   private void process() {
+    //    debug_print_tid();
+    debug_print_offline(String.format("[DEBUG] [SpringUrlStub]: %s", this.paramsInfo.toString()));
+
+    //    getGlobalReqInfo(reqinfo_idx);
+    debug_print_online(T_OBJECT, reqinfo_idx);
+
+
+    // prepare parameters
+    // setHttpServletRequest
+    newArrayList(params_idx);
+//    genFullUrl(tmp_obj);
+    addListElement(params_idx, T_OBJECT, 1);
+
+    findAndExecute(
+      "SecAgent.utils.ReqInfo",
+      "setHttpServletRequest",
+      new Class[] {HttpServletRequest.class},
+      reqinfo_idx,
+      params_idx,
+      tmp_obj);
+  }
+
+  private void process1() {
     //    debug_print_tid();
     debug_print_offline(String.format("[DEBUG] [SpringUrlStub]: %s", this.paramsInfo.toString()));
 
