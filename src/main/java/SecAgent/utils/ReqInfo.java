@@ -76,6 +76,7 @@ public class ReqInfo {
   public void setHttpServletRequest(HttpServletRequest request) throws IOException {
     System.out.println("setHttpServletRequest: ");
     System.out.println(request);
+    if (request == null) return;
     this.request = request;
 
     this.url = request.getScheme() + "://"+request.getServerName()+":"+request.getServerPort()+request.getRequestURI();
@@ -83,6 +84,8 @@ public class ReqInfo {
     this.queries = request.getParameterMap();
     this.queryString = request.getQueryString();
     this.inputStream = request.getInputStream();
+
+    this.ALLOWED_PUT_STUB = true;
   }
 
   public void setHttpServletResponse(HttpServletResponse response) throws IOException {
