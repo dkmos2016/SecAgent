@@ -56,6 +56,8 @@ public class AgentTargetSample<E> {
 
     logger.error("error");
 
+    logger.info("info 2");
+
 
 //    HttpClientHelper.doPost("http://127.0.0.1:8888", headers, body);
 
