@@ -4,40 +4,97 @@ import java.io.IOException;
 import java.util.logging.*;
 
 public class DefaultLogger extends Logger {
-  private static String DefaultLoggerName = "SecAgent";
+  private final static String DEFAULT_LOGGER_NAME;
   private static String LoggerName = null;
-  private Handler handler = null;
+  private static MyLevel DEFAULT_LEVEL;
+
+  private Handler file_handler = null;
+  private Handler console_handler = null;
+
+  static {
+    DEFAULT_LOGGER_NAME = "SecAgent";
+    DEFAULT_LEVEL = MyLevel.INFO;
+    LoggerName = null;
+  }
+
+  public enum MyLevel {
+    DEBUG(0), INFO(1),  WARN(2), ERROR(3),;
+    private int value;
+    MyLevel(int value) {
+      this.value = value;
+    }
+
+    public int getValue(){
+      return this.value;
+    }
+
+    public Level getLevel(){
+      switch (this) {
+        case DEBUG:
+          return DefaultLevel.DEBUG;
+
+        case WARN:
+          return DefaultLevel.WARNING;
+
+        case ERROR:
+          return DefaultLevel.ERROR;
+
+        case INFO:
+        default:
+          return Level.INFO;
+      }
+    }
+  }
 
   public DefaultLogger() throws IOException {
-    super(DefaultLoggerName, null);
-    handler = new DefaultLogFileHandler();
+    super(DEFAULT_LOGGER_NAME, null);
+    this.file_handler = new DefaultLogFileHandler();
+    this.console_handler = new DefaultLogConsoleHandler();
+
     this.addDefaultHandle();
   }
 
   public DefaultLogger(String log_path) throws IOException {
-    super(DefaultLoggerName, null);
-    handler = new DefaultLogFileHandler(log_path);
+    super(DEFAULT_LOGGER_NAME, null);
+    file_handler = new DefaultLogFileHandler(log_path);
+    console_handler = new DefaultLogConsoleHandler();
     this.addDefaultHandle();
   }
 
   protected DefaultLogger(String name, String resourceBundleName) throws IOException {
     super(name, resourceBundleName);
     this.LoggerName = name;
-    handler = new DefaultLogFileHandler();
+    file_handler = new DefaultLogFileHandler();
+    console_handler = new DefaultLogConsoleHandler();
     this.addDefaultHandle();
   }
 
   private void addDefaultHandle() {
-    this.addHandler(this.handler);
+    this.addHandler(this.file_handler);
+    this.addHandler(this.console_handler);
   }
 
   public void setFormatter(Formatter formatter) throws IOException {
-    DefaultLogFileHandler handler = new DefaultLogFileHandler();
-    if (handler == null) return;
-    this.removeHandler(this.handler);
-    this.handler = handler;
-    handler.setFormatter(formatter);
-    this.addHandler(handler);
+    DefaultLogFileHandler file_handler = new DefaultLogFileHandler();
+    DefaultLogConsoleHandler console_handler = new DefaultLogConsoleHandler();
+    if (file_handler == null || console_handler == null) return;
+    this.removeHandler(this.file_handler);
+    this.removeHandler(this.console_handler);
+    this.file_handler = file_handler;
+    this.console_handler = console_handler;
+
+    this.file_handler.setFormatter(formatter);
+    this.console_handler.setFormatter(formatter);
+    this.addHandler(file_handler);
+    this.addHandler(console_handler);
+  }
+
+  public static void setLevel(MyLevel mylevel) {
+    DEFAULT_LEVEL = mylevel;
+  }
+
+  public MyLevel getLevel(MyLevel mylevel) {
+    return DEFAULT_LEVEL;
   }
 
   public static DefaultLogger getInstance(String name) {
@@ -77,13 +134,19 @@ public class DefaultLogger extends Logger {
 
   public void log(Level level, String msg) {
     LogRecord lr = new LogRecord(level, msg);
-    lr.setLoggerName(LoggerName == null || LoggerName.isEmpty()? DefaultLoggerName: LoggerName);
+    lr.setLoggerName(LoggerName == null || LoggerName.isEmpty()? DEFAULT_LOGGER_NAME : LoggerName);
     System.out.println(lr.getLoggerName());
     log(lr);
   }
 
+  public void log(MyLevel level, String msg) {
+    if (level.getValue() >= DEFAULT_LEVEL.getValue()) {
+      log(level.getLevel(), msg);
+    }
+  }
+
   public void info(String msg) {
-    log(Level.INFO, msg);
+    log(MyLevel.INFO, msg);
   }
 
   public void info(Object obj) {
@@ -119,12 +182,10 @@ public class DefaultLogger extends Logger {
   }
 
   public void error(String msg) {
-    log(DefaultLevel.ERROR, msg);
+    log(MyLevel.ERROR, msg);
   }
 
   public void error(Object obj) {
-//    logger.info(obj.toString());
-//    super.info("");
     error(String.format("%s", obj));
   }
 
@@ -157,11 +218,9 @@ public class DefaultLogger extends Logger {
     error(String.format("%s", v));
   }
 
-
   public void debug(String msg) {
-    log(DefaultLevel.DEBUG, msg);
+    log(MyLevel.DEBUG, msg);
   }
-
 
   public void debug(Object obj) {
 //    logger.info(obj.toString());
@@ -198,12 +257,57 @@ public class DefaultLogger extends Logger {
     debug(String.format("%s", v));
   }
 
+  public void warn(String msg) {
+    log(MyLevel.WARN, msg);
+  }
+
+  public void warn(Object obj) {
+    warn(String.format("%s", obj));
+  }
+
+  public void warn(int v) {
+    warn(String.format("%s", v));
+  }
+
+  public void warn(boolean v) {
+    warn(String.format("%s", v));
+  }
+
+  public void warn(char v) {
+    warn(String.format("%s", v));
+  }
+
+  public void warn(double v) {
+    warn(String.format("%s", v));
+  }
+
+  public void warn(byte v) {
+    warn(String.format("%s", v));
+  }
+
+  public void warn(short v) {
+    warn(String.format("%s", v));
+  }
+
+  public void warn(long v) {
+    warn(String.format("%s", v));
+  }
+
 
   private static final class DefaultLevel extends Level {
 
     private static final String defaultBundle = "sun.util.logging.resources.logging";
-    public static final Level ERROR = new DefaultLevel("ERROR",Integer.MAX_VALUE);
-    public static final Level DEBUG = new DefaultLevel("DEBUG",Integer.MAX_VALUE);
+    public static final Level ERROR;
+    public static final Level DEBUG;
+    public static final Level WARN;
+    public static final Level INFO;
+
+    static {
+      ERROR = new DefaultLevel("ERROR", Integer.MAX_VALUE);
+      DEBUG = new DefaultLevel("DEBUG", 0);
+      WARN = Level.WARNING;
+      INFO = Level.INFO;
+    }
 
     protected DefaultLevel(String name, int value) {
       super(name, value, defaultBundle);
@@ -212,6 +316,5 @@ public class DefaultLogger extends Logger {
     protected DefaultLevel(String name, int value, String resourceBundleName) {
       super(name, value, resourceBundleName);
     }
-
   }
 }

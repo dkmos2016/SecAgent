@@ -8,9 +8,17 @@ import java.util.logging.FileHandler;
 import java.util.logging.LogRecord;
 import java.util.logging.Formatter;
 
+/**
+ * Default file handle
+ * read filepath from config.properties
+ */
 public class DefaultLogFileHandler extends FileHandler {
     private final static String LOG_PATH = Resources.getProperty("INFORMATION_LOG_PATH");
 
+    /**
+     * construct DefaultLogFileHandler with DefaultLogFormatter
+     * @throws IOException
+     */
     public DefaultLogFileHandler() throws IOException {
         super();
 //        System.out.println(LOG_PATH);
@@ -19,6 +27,7 @@ public class DefaultLogFileHandler extends FileHandler {
     }
 
     public DefaultLogFileHandler(Formatter formatter) throws IOException, SecurityException {
+        super();
         setFormatter(formatter);
     }
 
