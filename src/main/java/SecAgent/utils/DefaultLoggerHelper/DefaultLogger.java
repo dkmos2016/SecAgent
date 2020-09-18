@@ -7,6 +7,7 @@ public class DefaultLogger extends Logger {
   private final static String DEFAULT_LOGGER_NAME;
   private static String LoggerName = null;
   private static MyLevel DEFAULT_LEVEL;
+  private MyLevel LEVEL = null;
 
   private Handler file_handler = null;
   private Handler console_handler = null;
@@ -89,12 +90,12 @@ public class DefaultLogger extends Logger {
     this.addHandler(console_handler);
   }
 
-  public static void setLevel(MyLevel mylevel) {
-    DEFAULT_LEVEL = mylevel;
+  public void setLevel(MyLevel mylevel) {
+    this.LEVEL = mylevel;
   }
 
-  public MyLevel getLevel(MyLevel mylevel) {
-    return DEFAULT_LEVEL;
+  public Level getLevel() {
+    return this.LEVEL == null? DEFAULT_LEVEL.getLevel():this.LEVEL.getLevel();
   }
 
   public static DefaultLogger getInstance(String name) {
@@ -140,9 +141,16 @@ public class DefaultLogger extends Logger {
   }
 
   public void log(MyLevel level, String msg) {
-    if (level.getValue() >= DEFAULT_LEVEL.getValue()) {
-      log(level.getLevel(), msg);
+    if (this.LEVEL == null) {
+      if (level.getValue() >= DEFAULT_LEVEL.getValue()) {
+        log(level.getLevel(), msg);
+      }
+    } else {
+      if (level.getValue() >= this.LEVEL.getValue()) {
+        log(level.getLevel(), msg);
+      }
     }
+
   }
 
   public void info(String msg) {
