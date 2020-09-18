@@ -587,10 +587,7 @@ public class CommonStub extends AdviceAdapter implements Opcodes {
     Label try_excep1 = new Label();
     Label try_end1 = new Label();
 
-    mv.visitTryCatchBlock(try_start1, try_end1, try_excep1, "java/lang/ClassNotFoundException");
-    mv.visitTryCatchBlock(try_start1, try_end1, try_excep1, "java/lang/NoSuchMethodException");
-    mv.visitTryCatchBlock(try_start1, try_end1, try_excep1, "java/lang/IllegalAccessException");
-    mv.visitTryCatchBlock(try_start1, try_end1, try_excep1, "java/lang/reflect/InvocationTargetException");
+    mv.visitTryCatchBlock(try_start1, try_end1, try_excep1, "java/lang/Exception");
     mv.visitLabel(try_start1);
 
     newArrayList(params_idx);
@@ -622,12 +619,12 @@ public class CommonStub extends AdviceAdapter implements Opcodes {
 
     System.out.println(tmp_list);
     mv.visitLabel(try_excep1);
-    mv.visitFrame(F_FULL, size, tmp_list.toArray(), 1, new Object[]{"java/lang/ReflectiveOperationException"});
+    mv.visitFrame(F_FULL, size, tmp_list.toArray(), 1, new Object[]{"java/lang/Exception"});
 //    mv.visitVarInsn(ASTORE, tmp_obj);
 ////        mv.visitVarInsn(ALOAD, tmp_obj);
 //
 //    mv.visitVarInsn(ALOAD, tmp_obj);
-    mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/ReflectiveOperationException", "printStackTrace", "()V", false);
+    mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Exception", "printStackTrace", "()V", false);
 
     mv.visitLabel(try_end_all);
 

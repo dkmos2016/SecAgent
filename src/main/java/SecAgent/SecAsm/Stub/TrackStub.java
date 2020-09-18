@@ -34,11 +34,6 @@ public class TrackStub extends AdviceAdapter implements Opcodes {
     System.out.println(String.format("debug wiit idx-%d", idx));
   }
 
-  @Override
-  public void visitCode() {
-    super.visitCode();
-  }
-
   public void debug_print(String msg) {
     mv.visitFieldInsn(GETSTATIC, "java/lang/System", "out", "Ljava/io/PrintStream;");
     mv.visitLdcInsn(msg);
@@ -241,12 +236,13 @@ public class TrackStub extends AdviceAdapter implements Opcodes {
   protected void onMethodEnter() {
     super.onMethodEnter();
     System.out.println(String.format("stub into %s, params %d", paramsInfo, paramsInfo.getSize()));
+    debug_print(String.format("[DEBUG] [TrackStub]: %s", this.paramsInfo.toString()));
+
   }
 
   @Override
   protected void onMethodExit(int opcode) {
     process();
-
     super.onMethodExit(opcode);
   }
 
