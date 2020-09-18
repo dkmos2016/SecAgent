@@ -3,6 +3,7 @@ package SecAgent.utils;
 import SecAgent.utils.DefaultLoggerHelper.DefaultLogger;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -43,6 +44,10 @@ public class ReqInfo {
    * HttpServletRequest
    */
   private HttpServletRequest request;
+  /**
+   * HttpServletRequest
+   */
+  private HttpServletResponse response;
 
   public ReqInfo() {
     System.out.println(this.getClass().getClassLoader());
@@ -73,11 +78,17 @@ public class ReqInfo {
     System.out.println(request);
     this.request = request;
 
-    this.url = request.getRequestURI();
+    this.url = request.getScheme() + "://"+request.getServerName()+":"+request.getServerPort()+request.getRequestURI();
     this.method = request.getMethod();
     this.queries = request.getParameterMap();
     this.queryString = request.getQueryString();
     this.inputStream = request.getInputStream();
+  }
+
+  public void setHttpServletResponse(HttpServletResponse response) throws IOException {
+    System.out.println("setHttpServletResponse: ");
+    System.out.println(response);
+    this.response = response;
   }
 
   /**
@@ -88,7 +99,6 @@ public class ReqInfo {
    * @param obj
    */
   public void putStubData(String type, Throwable throwable, Object obj) {
-    //    String realType;
     System.out.println("putStubData: ");
     if (!ALLOWED_PUT_STUB) {
       System.out.println(String.format("skipped %s because of not setting url.", type));
