@@ -41,14 +41,17 @@ public class Config {
     include_classes = new String[] {"java.io", "java.sql.Statement"};
     include_methods =
         new String[] {
-          "len.test.show2",
-          "java.lang.SecurityManager.checkWrite(Ljava.lang.String;)V",
+//          "len.test.show2",
+//          "java.lang.SecurityManager.checkWrite(Ljava.lang.String;)V",
           //          "java.lang.Runtime.exec",
           //          "java.sql.Statement",
-          "java.lang.UNIXProcess",
+//          "java.lang.UNIXProcess",
           //          "com.sun.org.apache.xerces.internal.impl.XMLVersionDetector",
           //
           // "com.sun.org.apache.xerces.internal.impl.XMLEntityManager$RewindableInputStream.<init>",
+//                "java.sql.Statement.execute",
+                "com.mysql.cj.jdbc.StatementImpl.executeInternal",
+//                "oracle.jdbc.driver.OracleStatement.executeInternal",
         };
   }
 
