@@ -474,7 +474,11 @@ public class CommonStub extends AdviceAdapter implements Opcodes {
       reqinfo_idx,
       params_idx,
       tmp_obj);
-    mv.visitVarInsn(ILOAD, tmp_obj);
+    mv.visitVarInsn(ALOAD, tmp_obj);
+    mv.visitJumpInsn(IFNULL, if_null);
+    mv.visitVarInsn(ALOAD, tmp_obj);
+    mv.visitTypeInsn(CHECKCAST, "java/lang/Boolean");
+    mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Boolean", "booleanValue", "()Z", false);
     mv.visitJumpInsn(IFEQ, if_null);
 
     newArrayList(params_idx);
