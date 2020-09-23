@@ -10,7 +10,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.Map;
 
 public class CopyServletRequestWrapper extends HttpServletRequestWrapper {
@@ -19,6 +21,7 @@ public class CopyServletRequestWrapper extends HttpServletRequestWrapper {
       DefaultLogger.getLogger(CopyServletRequestWrapper.class, Config.EXCEPTION_PATH);
 
   private ByteArrayOutputStream baout = new ByteArrayOutputStream();
+  private Map paramMap = new HashMap();
 
   public CopyServletRequestWrapper(HttpServletRequest request) throws IOException {
     super(request);
@@ -43,6 +46,29 @@ public class CopyServletRequestWrapper extends HttpServletRequestWrapper {
     //    this.body = body;
     this.baout = new ByteArrayOutputStream();
     this.baout.write(body);
+  }
+
+  @Override
+  public Map<String, String[]> getParameterMap() {
+    String params = new String(this.baout.toByteArray());
+    Map<String, String[]> map = new HashMap<>();
+    Map<String, ArrayList<String>> tmp_map = new HashMap<>();
+
+    if (params == null || params.isEmpty()) return map;
+
+    for (String param: params.split("&")) {
+      String[] field_item = param.split("=");
+
+      ArrayList<String> arrayList = tmp_map.getOrDefault(field_item[0], new ArrayList());
+      arrayList.add(field_item[1]);
+
+      tmp_map.put(field_item[0], arrayList);
+
+      map.put(field_item[0], arrayList.toArray(new String[0]));
+    }
+    this.paramMap = map;
+
+    return this.paramMap;
   }
 
   @Override
@@ -89,11 +115,6 @@ public class CopyServletRequestWrapper extends HttpServletRequestWrapper {
   @Override
   public Enumeration<String> getHeaders(String name) {
     return super.getHeaders(name);
-  }
-
-  @Override
-  public Map<String, String[]> getParameterMap() {
-    return super.getParameterMap();
   }
 
   public String getBodyString(ServletRequest request) {

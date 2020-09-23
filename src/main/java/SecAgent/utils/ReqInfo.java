@@ -34,7 +34,7 @@ public class ReqInfo {
   /** get queryString */
   private String queryString;
   /** request parameters (include url & body) */
-  private Map<String, String[]> queries = new HashMap<>();
+  private Map queries = new HashMap<>();
   /** getInpusteram */
   private InputStream inputStream;
   /** HttpServletRequest */
@@ -129,7 +129,7 @@ public class ReqInfo {
 
     return String.format(
         "{\"url\":\"%s\",\"method\":\"%s\",\"queries\":\"%s\",\"StubData\": \"%s\"}",
-        url, method, null, StubDatas);
+        url, method, queries, StubDatas);
   }
 
   /** for SecAgent to do some other jobs */
