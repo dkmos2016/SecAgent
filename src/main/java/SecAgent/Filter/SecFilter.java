@@ -10,21 +10,25 @@ import java.io.IOException;
 
 public class SecFilter implements Filter {
   private static final DefaultLogger logger =
-      DefaultLogger.getLogger(SecFilter.class, Config.EXCEPTION_PATH);
+      DefaultLogger.getLogger(SecFilter.class, Config.DEBUG_PATH);
 
   @Override
   public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
       throws IOException, ServletException {
     if (logger != null) logger.debug("doFilter: ");
     try {
-      CopyServletRequestWrapper new_request =
-          new CopyServletRequestWrapper((HttpServletRequest) request);
+//      CopyServletRequestWrapper new_request =
+//          new CopyServletRequestWrapper((HttpServletRequest) request);
       CopyServletResponseWrapper new_response =
           new CopyServletResponseWrapper((HttpServletResponse) response);
+
+      HttpServletRequest new_request = (HttpServletRequest) new SecServletRequestFactory(request).getProxyInstance();
       chain.doFilter(new_request, new_response);
+
     } catch (Exception e) {
       if (logger != null) logger.error(e);
-      throw new ServletException(e);
+      e.printStackTrace();
+//      throw new ServletException(e);
     }
   }
 }

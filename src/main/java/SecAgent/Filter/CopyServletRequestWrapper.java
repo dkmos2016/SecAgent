@@ -2,6 +2,20 @@ package SecAgent.Filter;
 
 import SecAgent.Conf.Config;
 import SecAgent.utils.DefaultLoggerHelper.DefaultLogger;
+import jakarta.servlet.MultipartConfigElement;
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.ServletException;
+import org.apache.catalina.Context;
+import org.apache.catalina.core.ApplicationPart;
+import org.apache.coyote.Request;
+import org.apache.tomcat.util.http.Parameters;
+import org.apache.tomcat.util.http.fileupload.FileItem;
+import org.apache.tomcat.util.http.fileupload.FileUploadException;
+import org.apache.tomcat.util.http.fileupload.disk.DiskFileItemFactory;
+import org.apache.tomcat.util.http.fileupload.impl.InvalidContentTypeException;
+import org.apache.tomcat.util.http.fileupload.impl.SizeException;
+import org.apache.tomcat.util.http.fileupload.servlet.ServletFileUpload;
+import org.apache.tomcat.util.http.fileupload.servlet.ServletRequestContext;
 
 import javax.servlet.ReadListener;
 import javax.servlet.ServletInputStream;
@@ -10,10 +24,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class CopyServletRequestWrapper extends HttpServletRequestWrapper {
   //  private byte[] body;
@@ -21,7 +32,7 @@ public class CopyServletRequestWrapper extends HttpServletRequestWrapper {
       DefaultLogger.getLogger(CopyServletRequestWrapper.class, Config.EXCEPTION_PATH);
 
   private ByteArrayOutputStream baout = new ByteArrayOutputStream();
-  private Map paramMap = new HashMap();
+  private Map<String, String[]> paramMap = new HashMap();
 
   public CopyServletRequestWrapper(HttpServletRequest request) throws IOException {
     super(request);
@@ -32,9 +43,6 @@ public class CopyServletRequestWrapper extends HttpServletRequestWrapper {
     while ((v = in.read()) != -1) {
       this.baout.write(v);
     }
-
-    //    this.body = baout.toByteArray();
-    //    in.close();
 
   }
 
@@ -66,10 +74,34 @@ public class CopyServletRequestWrapper extends HttpServletRequestWrapper {
 
       map.put(field_item[0], arrayList.toArray(new String[0]));
     }
-    this.paramMap = map;
+    this.paramMap = Collections.unmodifiableMap(map);
 
     return this.paramMap;
   }
+
+  @Override
+  public Enumeration<String> getParameterNames() {
+    ArrayList<String> list = new ArrayList();
+
+    for(Iterator<Map.Entry<String, String[]>> iterator = this.paramMap.entrySet().iterator(); iterator.hasNext();) {
+      Map.Entry<String, String []> entry = iterator.next();
+      list.add(entry.getKey());
+    }
+
+    return Collections.enumeration(list);
+  }
+
+  @Override
+  public String getParameter(String name) {
+    String[] obj = this.paramMap.get(name);
+    return obj == null || obj.length == 0 ? null: obj[0];
+  }
+
+  @Override
+  public String[] getParameterValues(String name) {
+    return this.paramMap.getOrDefault(name, null);
+  }
+
 
   @Override
   public BufferedReader getReader() throws IOException {
@@ -152,4 +184,5 @@ public class CopyServletRequestWrapper extends HttpServletRequestWrapper {
     }
     return sb.toString();
   }
+
 }

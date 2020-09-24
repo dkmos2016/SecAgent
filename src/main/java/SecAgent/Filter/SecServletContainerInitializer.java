@@ -9,6 +9,7 @@ public class SecServletContainerInitializer implements ServletContainerInitializ
   @Override
   public void onStartup(Set<Class<?>> c, ServletContext ctx) throws ServletException {
     FilterRegistration.Dynamic filter = ctx.addFilter("SecFileter", new SecFilter());
+    ctx.addListener(new SecServletListener());
     filter.addMappingForUrlPatterns(EnumSet.of(DispatcherType.REQUEST), true, "/*");
   }
 }

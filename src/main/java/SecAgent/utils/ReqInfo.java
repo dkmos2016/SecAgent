@@ -73,9 +73,12 @@ public class ReqInfo {
             + request.getServerPort()
             + request.getRequestURI();
     this.method = request.getMethod();
-    this.queries = request.getParameterMap();
+
+//    this.inputStream = request.getInputStream();
+//    this.queries = request.getParameterMap();
     this.queryString = request.getQueryString();
-    this.inputStream = request.getInputStream();
+
+
 
     this.ALLOWED_PUT_STUB = true;
   }
@@ -83,6 +86,17 @@ public class ReqInfo {
   public void setHttpServletResponse(HttpServletResponse response) throws IOException {
 
     this.response = response;
+  }
+
+  public void setInputStream(InputStream inputStream) throws IOException {
+    this.inputStream = inputStream;
+    byte [] b = new byte[1025];
+
+    this.inputStream.mark(Integer.MAX_VALUE);
+    this.inputStream.read(b);
+
+    System.out.println("result1:" + new String(b));
+    this.inputStream.reset();
   }
 
   /**
