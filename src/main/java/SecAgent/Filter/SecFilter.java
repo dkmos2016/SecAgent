@@ -22,7 +22,7 @@ public class SecFilter implements Filter {
       CopyServletResponseWrapper new_response =
           new CopyServletResponseWrapper((HttpServletResponse) response);
 
-      HttpServletRequest new_request = (HttpServletRequest) new SecServletRequestFactory(request).getProxyInstance();
+      HttpServletRequest new_request = (HttpServletRequest) new SecInstanceProxyFactory(request).getProxyInstance();
       chain.doFilter(new_request, new_response);
 
     } catch (Exception e) {

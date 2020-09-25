@@ -1,23 +1,27 @@
-
-
-import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 
 public class AgentTargetSample<E> {
 
   public static void main(String[] args) {
+    try {
+      Class cls = Class.forName("Test");
+      Method method = cls.getMethod("print", null);
 
-  }
+      Constructor constructor = cls.getConstructor(int.class);
+      constructor.newInstance(1);
 
 
-  public class DynamicProxy implements InvocationHandler {
+      Test test = new Test(1);
+      Test test1 = null;
+      Object obj = test;
+
+      test1 = (Test)obj;
 
 
-    @Override
-    public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-      System.out.println();
-
-      return null;
+//      method.invoke(null, );
+    } catch (Exception e) {
+      e.printStackTrace();
     }
   }
 }

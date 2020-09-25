@@ -2,6 +2,7 @@ package SecAgent.Filter;
 
 import SecAgent.Conf.Config;
 import SecAgent.utils.DefaultLoggerHelper.DefaultLogger;
+import SecAgent.utils.ReqLocal;
 import jakarta.servlet.MultipartConfigElement;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletException;
@@ -28,8 +29,13 @@ import java.util.*;
 
 public class CopyServletRequestWrapper extends HttpServletRequestWrapper {
   //  private byte[] body;
-  private static final DefaultLogger logger =
-      DefaultLogger.getLogger(CopyServletRequestWrapper.class, Config.EXCEPTION_PATH);
+  private static final DefaultLogger logger;
+
+  static {
+    logger =
+            DefaultLogger.getLogger(CopyServletRequestWrapper.class, Config.EXCEPTION_PATH);
+    logger.setLevel(DefaultLogger.MyLevel.DEBUG);
+  }
 
   private ByteArrayOutputStream baout = new ByteArrayOutputStream();
   private Map<String, String[]> paramMap = new HashMap();
@@ -110,8 +116,11 @@ public class CopyServletRequestWrapper extends HttpServletRequestWrapper {
 
   @Override
   public ServletInputStream getInputStream() throws IOException {
+    logger.debug("getInputStream: ");
 
     final ByteArrayInputStream bais = new ByteArrayInputStream(this.baout.toByteArray());
+
+    ReqLocal.getReqInfo().setInputStream(new ByteArrayInputStream(this.baout.toByteArray()));
 
     return new ServletInputStream() {
       @Override

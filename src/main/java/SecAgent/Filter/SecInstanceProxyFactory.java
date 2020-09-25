@@ -14,7 +14,11 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 
-public class SecServletRequestFactory {
+/**
+ * for class with implements
+ *
+ */
+public class SecInstanceProxyFactory {
   private static final DefaultLogger logger;
 
   private final Object target;
@@ -22,12 +26,14 @@ public class SecServletRequestFactory {
 
 
     static {
-        logger = DefaultLogger.getLogger(SecServletRequestFactory.class, Config.EXCEPTION_PATH);
+        logger = DefaultLogger.getLogger(SecInstanceProxyFactory.class, Config.EXCEPTION_PATH);
         logger.setLevel(DefaultLogger.MyLevel.DEBUG);
     }
 
-  public SecServletRequestFactory(Object object) {
+  public SecInstanceProxyFactory(Object object) {
     this.target = object;
+    System.out.println(object);
+      logger.debug("SecInstanceProxyFactory.<init>");
   }
 
   public Object getProxyInstance() {

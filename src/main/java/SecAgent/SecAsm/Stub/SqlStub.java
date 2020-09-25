@@ -17,7 +17,32 @@ public class SqlStub extends CommonStub {
   }
 
   private void process() {
+
+//    newArrayList(params_idx);
+//    addListElement(params_idx, T_OBJECT, 0);
+//
+//    findAndGetInstance("SecAgent.Filter.SecInstanceProxyFactory", new Class[]{Object.class}, params_idx, inst_idx);
+//
+//    newArrayList(params_idx);
+//    findAndExecute("SecAgent.Filter.SecInstanceProxyFactory", "getProxyInstance", new Class[]{}, inst_idx, params_idx, tmp_obj);
+//
+//    mv.visitVarInsn(ALOAD, 0);
+//    mv.visitVarInsn(ASTORE, bak_obj);
+//
+//    mv.visitVarInsn(ALOAD, tmp_obj);
+//    mv.visitTypeInsn(CHECKCAST, "org/apache/ibatis/mapping/BoundSql");
+//    mv.visitVarInsn(ASTORE, 0);
+
+    findAndGetSecProxyInstance(0, inst_idx);
+
+    mv.visitVarInsn(ALOAD, inst_idx);
+    mv.visitTypeInsn(CHECKCAST, "org/apache/ibatis/mapping/BoundSql");
+    mv.visitVarInsn(ASTORE, 0);
+
+//    debug_print_online(T_OBJECT, inst_idx);
+
     putStubData("SQL", T_OBJECT, 2);
+
   }
 
   @Override
@@ -29,6 +54,8 @@ public class SqlStub extends CommonStub {
   @Override
   protected void onMethodExit(int opcode) {
 
+//    mv.visitVarInsn(ALOAD, bak_obj);
+//    mv.visitVarInsn(ASTORE, 0);
     super.onMethodExit(opcode);
   }
 

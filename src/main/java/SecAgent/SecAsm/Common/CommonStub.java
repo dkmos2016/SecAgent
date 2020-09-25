@@ -20,6 +20,7 @@ public class CommonStub extends AdviceAdapter implements Opcodes {
   protected int tmp_len = newLocal(Type.getType(int.class));
   protected int tmp_idx = newLocal(Type.getType(int.class));
   protected int tmp_obj = newLocal(Type.getType(Object.class));
+  protected int bak_obj = newLocal(Type.getType(Object.class));
 
   // new Throwable()
   protected int stk_idx = newLocal(Type.getType(Throwable.class));
@@ -585,6 +586,173 @@ public class CommonStub extends AdviceAdapter implements Opcodes {
   }
 
   /**
+   * for [new SecInstanceProxyFactory(Object).getProxyInstance()]
+   * @see SecAgent.Filter.SecInstanceProxyFactory
+   * @param obj_idx
+   * @param dst_idx
+   */
+  protected void findAndGetSecProxyInstance(int obj_idx,
+                                            int dst_idx) {
+
+    Label try_end_all = new Label();
+    Label try_start0 = new Label();
+    Label try_end0 = new Label();
+    Label try_excep0 = new Label();
+
+    mv.visitTryCatchBlock(try_start0, try_end0, try_excep0, "java/lang/Exception");
+    mv.visitLabel(try_start0);
+
+    //    debug_print_offline("to load: " + classname);
+    debug_print_offline("getConstructor done");
+    loadClass("SecAgent.Filter.SecInstanceProxyFactory", cls_idx);
+
+    Class [] paramTypes = new Class[]{Object.class};
+    getConstructor(cls_idx, paramTypes, method_idx);
+
+    newArrayList(params_idx);
+    addListElement(params_idx, T_OBJECT, obj_idx);
+
+    invokeConstructor(method_idx, params_idx, inst_idx);
+    getDeclaredMethod(cls_idx, "getProxyInstance", new Class[]{}, method_idx);
+
+    newArrayList(params_idx);
+    invoke(method_idx, inst_idx, params_idx, dst_idx);
+
+
+    mv.visitLabel(try_end0);
+
+    mv.visitJumpInsn(GOTO, try_end_all);
+
+    mv.visitLabel(try_excep0);
+    mv.visitFrame(F_SAME1, 0, null, 1, new Object[] {"java/lang/Exception"});
+    mv.visitVarInsn(ASTORE, tmp_obj);
+
+    //   ExceptionLogger.doExpLog(Exception e)
+    Label try_start1 = new Label();
+    Label try_excep1 = new Label();
+    Label try_end1 = new Label();
+
+    mv.visitTryCatchBlock(try_start1, try_end1, try_excep1, "java/lang/Exception");
+    mv.visitLabel(try_start1);
+
+    newArrayList(params_idx);
+    addListElement(params_idx, T_OBJECT, tmp_obj);
+    loadClass("SecAgent.Logger.ExceptionLogger", cls_idx);
+    getDeclaredMethod(cls_idx, "doExpLog", new Class[] {Exception.class}, method_idx);
+    invoke(method_idx, null_idx, params_idx, dst_idx);
+    mv.visitLabel(try_end1);
+
+    mv.visitJumpInsn(GOTO, try_end_all);
+
+    int size = this.paramsInfo.getIn_types().length + 1;
+    ArrayList tmp_list;
+
+    if (Modifier.isStatic(this.paramsInfo.getAccess())) {
+
+      tmp_list = new ArrayList(size);
+    } else {
+
+      size += 1;
+      tmp_list = new ArrayList(size);
+      tmp_list.add(this.paramsInfo.getClazz().replace('.', '/'));
+    }
+
+    for (Type type : this.paramsInfo.getIn_types()) {
+      tmp_list.add(getInnerNameforClass(type));
+    }
+    tmp_list.add("java/lang/Exception");
+
+    mv.visitLabel(try_excep1);
+    mv.visitFrame(F_FULL, size, tmp_list.toArray(), 1, new Object[] {"java/lang/Exception"});
+    //    mv.visitVarInsn(ASTORE, tmp_obj);
+    ////        mv.visitVarInsn(ALOAD, tmp_obj);
+    //
+    //    mv.visitVarInsn(ALOAD, tmp_obj);
+    mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Exception", "printStackTrace", "()V", false);
+
+    mv.visitLabel(try_end_all);
+
+    mv.visitFrame(Opcodes.F_CHOP, 1, null, 0, null);
+  }
+
+  protected void findAndGetInstance(
+      String classname, Class[] paramTypes, int params_idx, int dst_idx) {
+    //    debug_print_offline("findAndExecute 1 " + classname + "." + methodname);
+
+    Label try_end_all = new Label();
+
+    Label try_start0 = new Label();
+    Label try_end0 = new Label();
+    Label try_excep0 = new Label();
+
+    mv.visitTryCatchBlock(try_start0, try_end0, try_excep0, "java/lang/Exception");
+    mv.visitLabel(try_start0);
+
+    //    debug_print_offline("to load: " + classname);
+    loadClass(classname, cls_idx);
+    //    debug_print_online(T_OBJECT, cls_idx);
+    //    debug_print_offline("find: " + methodname);
+    getConstructor(cls_idx, paramTypes, method_idx);
+    //    debug_print_online(T_OBJECT, method_idx);
+    invokeConstructor(method_idx, params_idx, dst_idx);
+
+    mv.visitLabel(try_end0);
+
+    mv.visitJumpInsn(GOTO, try_end_all);
+
+    mv.visitLabel(try_excep0);
+    mv.visitFrame(F_SAME1, 0, null, 1, new Object[] {"java/lang/Exception"});
+    mv.visitVarInsn(ASTORE, tmp_obj);
+
+    //   ExceptionLogger.doExpLog(Exception e)
+    Label try_start1 = new Label();
+    Label try_excep1 = new Label();
+    Label try_end1 = new Label();
+
+    mv.visitTryCatchBlock(try_start1, try_end1, try_excep1, "java/lang/Exception");
+    mv.visitLabel(try_start1);
+
+    newArrayList(params_idx);
+    addListElement(params_idx, T_OBJECT, tmp_obj);
+    loadClass("SecAgent.Logger.ExceptionLogger", cls_idx);
+    getDeclaredMethod(cls_idx, "doExpLog", new Class[] {Exception.class}, method_idx);
+    invoke(method_idx, null_idx, params_idx, dst_idx);
+    mv.visitLabel(try_end1);
+
+    mv.visitJumpInsn(GOTO, try_end_all);
+
+    int size = this.paramsInfo.getIn_types().length + 1;
+    ArrayList tmp_list;
+
+    if (Modifier.isStatic(this.paramsInfo.getAccess())) {
+
+      tmp_list = new ArrayList(size);
+    } else {
+
+      size += 1;
+      tmp_list = new ArrayList(size);
+      tmp_list.add(this.paramsInfo.getClazz().replace('.', '/'));
+    }
+
+    for (Type type : this.paramsInfo.getIn_types()) {
+      tmp_list.add(getInnerNameforClass(type));
+    }
+    tmp_list.add("java/lang/Exception");
+
+    mv.visitLabel(try_excep1);
+    mv.visitFrame(F_FULL, size, tmp_list.toArray(), 1, new Object[] {"java/lang/Exception"});
+    //    mv.visitVarInsn(ASTORE, tmp_obj);
+    ////        mv.visitVarInsn(ALOAD, tmp_obj);
+    //
+    //    mv.visitVarInsn(ALOAD, tmp_obj);
+    mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Exception", "printStackTrace", "()V", false);
+
+    mv.visitLabel(try_end_all);
+
+    mv.visitFrame(Opcodes.F_CHOP, 1, null, 0, null);
+  }
+
+  /**
    * load class
    *
    * @param classname
@@ -606,6 +774,82 @@ public class CommonStub extends AdviceAdapter implements Opcodes {
         "loadClass",
         "(Ljava/lang/String;)Ljava/lang/Class;",
         false);
+    mv.visitVarInsn(ASTORE, dst_idx);
+  }
+
+  /**
+   * find Constructor
+   *
+   * @param cls_idx
+   * @param paramTypes
+   * @param dst_idx
+   */
+  private void getConstructor(int cls_idx, Class[] paramTypes, int dst_idx) {
+    if (paramTypes == null || paramTypes.length == 0) {
+      //      debug_print_offline("no paramTypes");
+      mv.visitInsn(ACONST_NULL);
+    } else {
+      //      debug_print_offline("more paramTypes");
+      mv.visitIntInsn(BIPUSH, paramTypes.length);
+      mv.visitTypeInsn(ANEWARRAY, "java/lang/Class");
+
+      for (int i = 0; i < paramTypes.length; i++) {
+        mv.visitInsn(DUP);
+        mv.visitIntInsn(BIPUSH, i);
+        //        debug_print_offline(paramTypes[i].toString());
+        switch (paramTypes[i].getName()) {
+          case "byte":
+            mv.visitFieldInsn(GETSTATIC, "java/lang/Byte", "TYPE", "Ljava/lang/Class;");
+            break;
+
+          case "short":
+            mv.visitFieldInsn(GETSTATIC, "java/lang/Short", "TYPE", "Ljava/lang/Class;");
+            break;
+
+          case "int":
+            mv.visitFieldInsn(GETSTATIC, "java/lang/Integer", "TYPE", "Ljava/lang/Class;");
+            break;
+
+          case "boolean":
+            mv.visitFieldInsn(GETSTATIC, "java/lang/Boolean", "TYPE", "Ljava/lang/Class;");
+            break;
+
+          case "char":
+            mv.visitFieldInsn(GETSTATIC, "java/lang/Character", "TYPE", "Ljava/lang/Class;");
+            break;
+
+          case "long":
+            mv.visitFieldInsn(GETSTATIC, "java/lang/Long", "TYPE", "Ljava/lang/Class;");
+            break;
+
+          case "double":
+            mv.visitFieldInsn(GETSTATIC, "java/lang/Double", "TYPE", "Ljava/lang/Class;");
+            break;
+
+          case "float":
+            mv.visitFieldInsn(GETSTATIC, "java/lang/Float", "TYPE", "Ljava/lang/Class;");
+            break;
+
+          default:
+            mv.visitLdcInsn(Type.getType(paramTypes[i]));
+            break;
+        }
+        mv.visitInsn(AASTORE);
+      }
+    }
+    mv.visitVarInsn(ASTORE, tmp_obj);
+
+    mv.visitVarInsn(ALOAD, cls_idx);
+    mv.visitVarInsn(ALOAD, tmp_obj);
+
+    //    debug_print_offline("to getMethod...");
+    mv.visitMethodInsn(
+        INVOKEVIRTUAL,
+        "java/lang/Class",
+        "getConstructor",
+        "([Ljava/lang/Class;)Ljava/lang/reflect/Constructor;",
+        false);
+
     mv.visitVarInsn(ASTORE, dst_idx);
   }
 
@@ -737,6 +981,47 @@ public class CommonStub extends AdviceAdapter implements Opcodes {
         "java/lang/reflect/Method",
         "invoke",
         "(Ljava/lang/Object;[Ljava/lang/Object;)Ljava/lang/Object;",
+        false);
+    mv.visitVarInsn(ASTORE, dst_idx);
+  }
+
+  private void invokeConstructor(int method_idx, int params_idx, int dst_idx) {
+    Label if_null = new Label();
+    Label if_body = new Label();
+    Label if_end = new Label();
+
+    // if params == null
+    mv.visitVarInsn(ALOAD, params_idx);
+    mv.visitJumpInsn(IFNULL, if_null);
+    mv.visitJumpInsn(GOTO, if_body);
+
+    // if params.length == 0
+    mv.visitVarInsn(ALOAD, params_idx);
+    mv.visitInsn(ARRAYLENGTH);
+    mv.visitJumpInsn(IFEQ, if_null);
+
+    mv.visitLabel(if_body);
+    mv.visitVarInsn(ALOAD, params_idx);
+    mv.visitMethodInsn(
+        INVOKEVIRTUAL, "java/util/ArrayList", "toArray", "()[Ljava/lang/Object;", false);
+    mv.visitVarInsn(ASTORE, tmp_obj);
+    mv.visitJumpInsn(GOTO, if_end);
+
+    mv.visitLabel(if_null);
+    mv.visitInsn(ACONST_NULL);
+    mv.visitVarInsn(ASTORE, tmp_obj);
+
+    mv.visitLabel(if_end);
+    //    mv.visitVarInsn(ALOAD, method_idx);
+    //    mv.visitVarInsn(ALOAD, inst_idx);
+
+    mv.visitVarInsn(ALOAD, method_idx);
+    mv.visitVarInsn(ALOAD, tmp_obj);
+    mv.visitMethodInsn(
+        INVOKEVIRTUAL,
+        "java/lang/reflect/Constructor",
+        "newInstance",
+        "([Ljava/lang/Object;)Ljava/lang/Object;",
         false);
     mv.visitVarInsn(ASTORE, dst_idx);
   }
