@@ -21,6 +21,7 @@ public class CommonStub extends AdviceAdapter implements Opcodes {
   protected int tmp_idx = newLocal(Type.getType(int.class));
   protected int tmp_obj = newLocal(Type.getType(Object.class));
   protected int bak_obj = newLocal(Type.getType(Object.class));
+  protected int flag_idx = newLocal(Type.getType(int.class));
 
   // new Throwable()
   protected int stk_idx = newLocal(Type.getType(Throwable.class));
@@ -488,6 +489,28 @@ public class CommonStub extends AdviceAdapter implements Opcodes {
     mv.visitLabel(if_null);
   }
 
+  private void hasInterface(int obj_idx, int dst_idx) {
+    Label if_null = new Label();
+    Label if_end = new Label();
+    mv.visitInsn(ICONST_0);
+    mv.visitVarInsn(ISTORE, dst_idx);
+
+    mv.visitVarInsn(ALOAD, obj_idx);
+    mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Object", "getClass", "()Ljava/lang/Class;", false);
+    mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Class", "getInterfaces", "()[Ljava/lang/Class;", false);
+    mv.visitInsn(ARRAYLENGTH);
+
+    mv.visitJumpInsn(IFLE, if_null);
+
+    mv.visitInsn(ICONST_1);
+    mv.visitVarInsn(ISTORE, dst_idx);
+//    debug_print_offline("has interface");
+    mv.visitJumpInsn(GOTO, if_end);
+    mv.visitLabel(if_null);
+//    debug_print_offline("does not have interface");
+    mv.visitLabel(if_end);
+  }
+
   private Object getInnerNameforClass(Type type) {
 
     return type.getInternalName();
@@ -598,9 +621,14 @@ public class CommonStub extends AdviceAdapter implements Opcodes {
     Label try_start0 = new Label();
     Label try_end0 = new Label();
     Label try_excep0 = new Label();
+    Label if_false = new Label();
 
     mv.visitTryCatchBlock(try_start0, try_end0, try_excep0, "java/lang/Exception");
     mv.visitLabel(try_start0);
+
+    hasInterface(obj_idx, flag_idx);
+    mv.visitVarInsn(ILOAD, flag_idx);
+    mv.visitJumpInsn(IFEQ, if_false);
 
     //    debug_print_offline("to load: " + classname);
     debug_print_offline("getConstructor done");
@@ -670,6 +698,7 @@ public class CommonStub extends AdviceAdapter implements Opcodes {
     //    mv.visitVarInsn(ALOAD, tmp_obj);
     mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Exception", "printStackTrace", "()V", false);
 
+    mv.visitLabel(if_false);
     mv.visitLabel(try_end_all);
 
     mv.visitFrame(Opcodes.F_CHOP, 1, null, 0, null);

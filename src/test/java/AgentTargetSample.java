@@ -16,6 +16,11 @@ public class AgentTargetSample<E> {
       Test test1 = null;
       Object obj = test;
 
+      boolean flag = false;
+      if (test.getClass().getInterfaces().length > 0) {
+        flag = true;
+      }
+
       test1 = (Test)obj;
 
 
