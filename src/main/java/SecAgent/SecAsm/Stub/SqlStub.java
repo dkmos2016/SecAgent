@@ -33,15 +33,25 @@ public class SqlStub extends CommonStub {
 //    mv.visitTypeInsn(CHECKCAST, "org/apache/ibatis/mapping/BoundSql");
 //    mv.visitVarInsn(ASTORE, 0);
 
-    findAndGetSecProxyInstance(0, inst_idx);
 
-    mv.visitVarInsn(ALOAD, inst_idx);
-    mv.visitTypeInsn(CHECKCAST, "org/apache/ibatis/mapping/BoundSql");
-    mv.visitVarInsn(ASTORE, 0);
+    debug_print_offline(String.format("[DEBUG] [SqlStub]: %s", this.paramsInfo.toString()));
+
+//    findAndGetSecProxyInstance(0, inst_idx);
+//
+//    mv.visitVarInsn(ALOAD, inst_idx);
+//    mv.visitTypeInsn(CHECKCAST, "org/apache/ibatis/mapping/BoundSql");
+//    mv.visitVarInsn(ASTORE, 0);
+
+    newArrayList(params2_idx);
+    addListElement(params2_idx, T_OBJECT, 2);
+    addListElement(params2_idx, T_OBJECT, 3);
+    addListElement(params2_idx, T_OBJECT, 4);
+
+    debug_print_online(T_OBJECT, params2_idx);
 
 //    debug_print_online(T_OBJECT, inst_idx);
 
-    putStubData("SQL", T_OBJECT, 2);
+//    putStubData("SQL", T_OBJECT, params2_idx);
 
 
   }

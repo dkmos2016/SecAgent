@@ -8,7 +8,7 @@ public class Test {
         print();
     }
 
-    public void print() {
+    public void print(Object ...obj) {
         System.out.println("id = " + this.id);
     }
 }

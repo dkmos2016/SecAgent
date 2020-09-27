@@ -76,14 +76,15 @@ public class ReqInfo {
             + request.getRequestURI();
     this.method = request.getMethod();
 
-    if (method.equals("POST"))
+    if (method.equals("POST")) {
       this.setInputStream(request.getInputStream());
+    }
 //    this.queries = request.getParameterMap();
     this.queryString = request.getQueryString();
-
-
+    this.state_code |= ReqInfoState.PUTTED_URI | ReqInfoState.PUTTED_QUERYSTRING | ReqInfoState.PUTTED_METHOD | ReqInfoState.PUTTED_INPUTSTREAM;
 
     this.ALLOWED_PUT_STUB = true;
+
   }
 
   public void setHttpServletResponse(HttpServletResponse response) throws IOException {
@@ -111,7 +112,7 @@ public class ReqInfo {
    * @param throwable
    * @param obj
    */
-  public void putStubData(String type, Throwable throwable, Object obj) {
+  private void putStubData(String type, Throwable throwable, Object... obj) {
     if (logger != null) logger.debug(obj);
 
     if (this.ALLOWED_PUT_STUB == false) return;

@@ -36,23 +36,23 @@ public class CommonAdapter extends ClassVisitor implements Opcodes {
         case Config.MYBATIS_STUB:
           return new SqlStub(this.api, mv, access, name, descriptor, paramsInfo);
 
-        case Config.TOMCAT_STUB:
-          return new TomcatStub1(this.api, mv, access, name, descriptor, paramsInfo);
-
-        case Config.EXEC_STUB:
-          return new CmdStub(this.api, mv, access, name, descriptor, paramsInfo);
-
-        case Config.DOWN_STUB:
-          return new DownStub(this.api, mv, access, name, descriptor, paramsInfo);
-
-        case Config.UPLOAD_STUB:
-          return new UploadStub(this.api, mv, access, name, descriptor, paramsInfo);
-
-        case Config.SPRING_URL_STUB:
-          return new UrlStub(this.api, mv, access, name, descriptor, paramsInfo);
-
-        case Config.XXE_STUB:
-          return new XxeStub(this.api, mv, access, name, descriptor, paramsInfo);
+//        case Config.TOMCAT_STUB:
+//          return new TomcatStub1(this.api, mv, access, name, descriptor, paramsInfo);
+//
+//        case Config.EXEC_STUB:
+//          return new CmdStub(this.api, mv, access, name, descriptor, paramsInfo);
+//
+//        case Config.DOWN_STUB:
+//          return new DownStub(this.api, mv, access, name, descriptor, paramsInfo);
+//
+//        case Config.UPLOAD_STUB:
+//          return new UploadStub(this.api, mv, access, name, descriptor, paramsInfo);
+//
+//        case Config.SPRING_URL_STUB:
+//          return new UrlStub(this.api, mv, access, name, descriptor, paramsInfo);
+//
+//        case Config.XXE_STUB:
+//          return new XxeStub(this.api, mv, access, name, descriptor, paramsInfo);
 
         default:
           if (Config.isIncludedMethod(paramsInfo.toString())) {

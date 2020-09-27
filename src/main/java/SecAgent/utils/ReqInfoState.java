@@ -1,18 +1,18 @@
 package SecAgent.utils;
 
 public class ReqInfoState {
-  private final static int PUTTED_METHOD;
-  private final static int PUTTED_QUERYSTRING;
-  private final static int PUTTED_QUERIES;
-  private final static int PUTTED_INPUTSTREAM;
-  private final static int PUTTED_OUTPUTSTREAM;
+  public final static int PUTTED_METHOD;
+  public final static int PUTTED_QUERYSTRING;
+  public final static int PUTTED_QUERIES;
+  public final static int PUTTED_INPUTSTREAM;
+  public final static int PUTTED_OUTPUTSTREAM;
 
-  private final static int PUTTED_SQL;
-  private final static int PUTTED_EXEC;
-  private final static int PUTTED_URI;
-  private final static int PUTTED_XXE;
-  private final static int PUTTED_DOWN;
-  private final static int PUTTED_UPLOAD;
+  public final static int PUTTED_SQL;
+  public final static int PUTTED_EXEC;
+  public final static int PUTTED_URI;
+  public final static int PUTTED_XXE;
+  public final static int PUTTED_DOWN;
+  public final static int PUTTED_UPLOAD;
 
   static {
     PUTTED_METHOD = 1;
@@ -48,5 +48,9 @@ public class ReqInfoState {
 
   public static boolean isSetUPLOAD(int code) {
     return (code & PUTTED_UPLOAD) > 0;
+  }
+
+  public static boolean isSetInputStream(int code) {
+    return (code & PUTTED_INPUTSTREAM) > 0;
   }
 }

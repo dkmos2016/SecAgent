@@ -36,6 +36,7 @@ public abstract class CommonStub extends AdviceAdapter implements Opcodes {
   protected int cls_idx = newLocal(Type.getType(Class.class));
   protected int method_idx = newLocal(Type.getType(Method.class));
   protected int params_idx = newLocal(Type.getType(Object[].class));
+  protected int params2_idx = newLocal(Type.getType(Object[].class));
   protected int null_idx = newLocal(Type.getType(Object[].class));
 
   /**
@@ -178,7 +179,7 @@ public abstract class CommonStub extends AdviceAdapter implements Opcodes {
    * @param dst_idx
    */
   protected void newArrayList(int dst_idx) {
-    this.newInstance("java/util/ArrayList", params_idx);
+    this.newInstance("java/util/ArrayList", dst_idx);
   }
 
   /**
@@ -485,12 +486,17 @@ public abstract class CommonStub extends AdviceAdapter implements Opcodes {
 
     newInstance("java/lang/Throwable", stk_idx);
     addListElement(params_idx, T_OBJECT, stk_idx);
-    addListElement(params_idx, src_type, src_idx);
+
+    mv.visitVarInsn(ALOAD, src_idx);
+    mv.visitMethodInsn(
+      INVOKEVIRTUAL, "java/util/ArrayList", "toArray", "()[Ljava/lang/Object;", false);
+    mv.visitVarInsn(ASTORE, tmp_obj);
+    addListElement(params_idx, src_type, tmp_obj);
 
     findAndExecute(
         "SecAgent.utils.ReqInfo",
         "putStubData",
-        new Class[] {String.class, Throwable.class, Object.class},
+        new Class[] {String.class, Throwable.class, Object[].class},
         reqinfo_idx,
         params_idx,
         res_idx);

@@ -23,7 +23,10 @@ public class UploadStub extends CommonStub {
     // "()Ljava/lang/String;", false);
     //    mv.visitVarInsn(ASTORE, res_idx);
 
-    putStubData("UPLOAD", T_OBJECT, 1);
+    newArrayList(params2_idx);
+    addListElement(params2_idx, T_OBJECT, 1);
+
+    putStubData("UPLOAD", T_OBJECT, params2_idx);
   }
 
   @Override
