@@ -33,6 +33,7 @@ public class AgentDemo {
           "com.mysql.cj.jdbc.StatementImpl",
           "oracle.jdbc.driver.OracleStatement",
           "oracle.jdbc.driverOracleResultSetImpl",
+          "org.apache.tomcat.util.http.fileupload.FileUploadBase",
         };
 
     TARGET_OTHER_CLASSES =

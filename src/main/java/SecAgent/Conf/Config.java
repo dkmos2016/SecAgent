@@ -39,6 +39,8 @@ public class Config {
   // todo
   public static final String SSRF_STUB = "java.io.FileOutputStream.<init>(Ljava.io.File;Z)V";
 
+  public static final String TOMCAT_STUB = "org.apache.tomcat.util.http.fileupload.FileUploadBase.parseRequest(Lorg.apache.tomcat.util.http.fileupload.RequestContext;)Ljava.util.List;";
+
   public static String[] exclude_classes;
   public static String[] exclude_methods;
   public static String[] include_classes;
@@ -75,6 +77,9 @@ public class Config {
           // mybatis
           "org.apache.ibatis.mapping.BoundSql",
           //            "org.apache.ibatis.mapping.SqlSource",
+
+          // tomcat
+          "org.apache.tomcat.util.http.fileupload.FileUploadBase",
         };
 
     include_methods =
@@ -95,6 +100,8 @@ public class Config {
           // mybatis
           //                "org.apache.ibatis.mapping.BoundSql",
           //                "org.apache.ibatis.mapping.SqlSource",
+
+          "org.apache.tomcat.util.http.fileupload.FileUploadBase.parseRequest(Lorg.apache.tomcat.util.http.fileupload.RequestContext;)Ljava.util.List;",
         };
   }
 

@@ -54,10 +54,12 @@ public class SecInstanceProxyFactory {
                     while ((v = in.read()) > -1) {
                         byteArrayOutputStream.write(v);
                     }
+                    byteArrayOutputStream.flush();
 
                     byteArrayInputStream =
                             new ByteArrayInputStream(byteArrayOutputStream.toByteArray());
 
+//                    System.out.println(new String(byteArrayOutputStream.toByteArray()));
                     ReqLocal.getReqInfo().setInputStream(new ByteArrayInputStream(byteArrayOutputStream.toByteArray()));
                 }
 

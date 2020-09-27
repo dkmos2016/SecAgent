@@ -43,6 +43,7 @@ public class SqlStub extends CommonStub {
 
     putStubData("SQL", T_OBJECT, 2);
 
+
   }
 
   @Override

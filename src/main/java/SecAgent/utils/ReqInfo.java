@@ -21,6 +21,8 @@ public class ReqInfo {
     if (logger != null) logger.setLevel(DefaultLogger.MyLevel.INFO);
   }
 
+  private int state_code = 0;
+
   // store throwable & parameter
   private final Map<String, ArrayList<StubData>> StubDatas = new HashMap<>();
   /** reversed */
@@ -74,7 +76,8 @@ public class ReqInfo {
             + request.getRequestURI();
     this.method = request.getMethod();
 
-//    this.inputStream = request.getInputStream();
+    if (method.equals("POST"))
+      this.setInputStream(request.getInputStream());
 //    this.queries = request.getParameterMap();
     this.queryString = request.getQueryString();
 
@@ -89,14 +92,16 @@ public class ReqInfo {
   }
 
   public void setInputStream(InputStream inputStream) throws IOException {
+    if (inputStream.available() <= 0 ) return;
+
     this.inputStream = inputStream;
     byte [] b = new byte[1025];
 
-    this.inputStream.mark(Integer.MAX_VALUE);
+//    this.inputStream.mark(Integer.MAX_VALUE);
     this.inputStream.read(b);
 
     System.out.println("result1:" + new String(b));
-    this.inputStream.reset();
+//    this.inputStream.reset();
   }
 
   /**

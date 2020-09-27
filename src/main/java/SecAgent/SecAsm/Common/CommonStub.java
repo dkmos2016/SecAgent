@@ -12,7 +12,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 
-public class CommonStub extends AdviceAdapter implements Opcodes {
+public abstract class CommonStub extends AdviceAdapter implements Opcodes {
   protected static final int T_OBJECT = 1111111;
   protected int sb_idx = newLocal(Type.getType(StringBuilder.class));
   protected int tmp_sb = newLocal(Type.getType(StringBuilder.class));
@@ -321,6 +321,15 @@ public class CommonStub extends AdviceAdapter implements Opcodes {
     mv.visitVarInsn(ALOAD, sb_idx);
     mv.visitMethodInsn(
         INVOKEVIRTUAL, "java/lang/StringBuilder", "toString", "()Ljava/lang/String;", false);
+    mv.visitVarInsn(ASTORE, dst_idx);
+  }
+
+  protected void Exchange(int src_idx, int dst_idx) {
+    mv.visitVarInsn(ALOAD, src_idx);
+    mv.visitVarInsn(ASTORE, bak_obj);
+    mv.visitVarInsn(ALOAD, dst_idx);
+    mv.visitVarInsn(ASTORE, src_idx);
+    mv.visitVarInsn(ALOAD, bak_obj);
     mv.visitVarInsn(ASTORE, dst_idx);
   }
 
@@ -704,6 +713,7 @@ public class CommonStub extends AdviceAdapter implements Opcodes {
     mv.visitFrame(Opcodes.F_CHOP, 1, null, 0, null);
   }
 
+  @Deprecated
   protected void findAndGetInstance(
       String classname, Class[] paramTypes, int params_idx, int dst_idx) {
     //    debug_print_offline("findAndExecute 1 " + classname + "." + methodname);
