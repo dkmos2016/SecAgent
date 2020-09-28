@@ -1,8 +1,10 @@
 package SecAgent.SecAsm.Common;
 
 import SecAgent.Conf.Config;
+import SecAgent.SecAsm.Stub.*;
+import SecAgent.SecAsm.Stub.Container.Tomcat.TomcatStub1;
 import SecAgent.SecAsm.Stub.Sql.MySqlStub;
-import SecAgent.SecAsm.Stub.TrackStub;
+import SecAgent.SecAsm.Stub.Sql.MybatisStub;
 import SecAgent.utils.DefaultLoggerHelper.DefaultLogger;
 import SecAgent.utils.ParamsInfo;
 import org.objectweb.asm.ClassVisitor;
@@ -33,27 +35,28 @@ public class CommonAdapter extends ClassVisitor implements Opcodes {
       switch (paramsInfo.toString()) {
         case Config.MYSQL_STUB:
           return new MySqlStub(this.api, mv, access, name, descriptor, paramsInfo);
-          //      case Config.ORACLE_STUB:
-          //        case Config.MYBATIS_STUB:
-          //          return new MybatisStub(this.api, mv, access, name, descriptor, paramsInfo);
+        case Config.ORACLE_STUB:
+          return new OracleStub(this.api, mv, access, name, descriptor, paramsInfo);
+        case Config.MYBATIS_STUB:
+          return new MybatisStub(this.api, mv, access, name, descriptor, paramsInfo);
 
-          //        case Config.TOMCAT_STUB:
-          //          return new TomcatStub1(this.api, mv, access, name, descriptor, paramsInfo);
-          //
-          //        case Config.EXEC_STUB:
-          //          return new CmdStub(this.api, mv, access, name, descriptor, paramsInfo);
-          //
-          //        case Config.DOWN_STUB:
-          //          return new DownStub(this.api, mv, access, name, descriptor, paramsInfo);
-          //
-          //        case Config.UPLOAD_STUB:
-          //          return new UploadStub(this.api, mv, access, name, descriptor, paramsInfo);
-          //
-          //        case Config.SPRING_URL_STUB:
-          //          return new UrlStub(this.api, mv, access, name, descriptor, paramsInfo);
-          //
-          //        case Config.XXE_STUB:
-          //          return new XxeStub(this.api, mv, access, name, descriptor, paramsInfo);
+        case Config.TOMCAT_STUB:
+          return new TomcatStub1(this.api, mv, access, name, descriptor, paramsInfo);
+
+        case Config.EXEC_STUB:
+          return new CmdStub(this.api, mv, access, name, descriptor, paramsInfo);
+
+        case Config.DOWN_STUB:
+          return new DownStub(this.api, mv, access, name, descriptor, paramsInfo);
+
+        case Config.UPLOAD_STUB:
+          return new UploadStub(this.api, mv, access, name, descriptor, paramsInfo);
+
+        case Config.SPRING_URL_STUB:
+          return new UrlStub(this.api, mv, access, name, descriptor, paramsInfo);
+
+        case Config.XXE_STUB:
+          return new XxeStub(this.api, mv, access, name, descriptor, paramsInfo);
 
         default:
           if (Config.isIncludedMethod(paramsInfo.toString())) {

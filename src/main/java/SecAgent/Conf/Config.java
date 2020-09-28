@@ -16,11 +16,12 @@ public class Config {
       "com.mysql.cj.jdbc.EscapeProcessor.escapeSQL(Ljava.lang.String;Ljava.util.TimeZone;ZZLcom.mysql.cj.exceptions.ExceptionInterceptor;)Ljava.lang.Object;";
 
   // bug
-    public static final String MYSQL_STUB =
-        "com.mysql.cj.jdbc.StatementImpl.executeInternal(Ljava.lang.String;Z)Z";
+  public static final String MYSQL_STUB =
+      "com.mysql.cj.jdbc.StatementImpl.executeInternal(Ljava.lang.String;Z)Z";
 
-//  public static final String MYSQL_STUB =
-//      "com.mysql.cj.jdbc.EscapeProcessor.escapeSQL(Ljava.lang.String;Ljava.util.TimeZone;ZZLcom.mysql.cj.exceptions.ExceptionInterceptor;)Ljava.lang.Object;";
+  //  public static final String MYSQL_STUB =
+  //
+  // "com.mysql.cj.jdbc.EscapeProcessor.escapeSQL(Ljava.lang.String;Ljava.util.TimeZone;ZZLcom.mysql.cj.exceptions.ExceptionInterceptor;)Ljava.lang.Object;";
 
   public static final String ORACLE_STUB =
       "oracle.jdbc.driver.OracleStatement.executeInternal(Ljava.lang.String;)Z";
@@ -81,7 +82,7 @@ public class Config {
           "com.mysql.cj.jdbc.StatementImpl",
 
           /* ignore oracle because of ojdbc6 exception */
-          //            "oracle.jdbc.driver.OracleStatement",
+          "oracle.jdbc.driver.OracleStatement",
           //            "oracle.jdbc.driver.OracleResultSetImpl",
 
           // mybatis
