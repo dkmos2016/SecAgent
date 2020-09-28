@@ -19,6 +19,7 @@ public class Config {
   public static final String MYSQL_STUB =
       "com.mysql.cj.jdbc.StatementImpl.executeInternal(Ljava.lang.String;Z)Z";
 
+
   //  public static final String MYSQL_STUB =
   //
   // "com.mysql.cj.jdbc.EscapeProcessor.escapeSQL(Ljava.lang.String;Ljava.util.TimeZone;ZZLcom.mysql.cj.exceptions.ExceptionInterceptor;)Ljava.lang.Object;";
@@ -87,10 +88,14 @@ public class Config {
 
           // mybatis
           "org.apache.ibatis.mapping.BoundSql",
+          "org.apache.ibatis.scripting.xmltags.OgnlCache",
+          "org.apache.ibatis.ognl.Ognl",
+          "org.apache.ibatis.parsing.GenericTokenParser",
           //            "org.apache.ibatis.mapping.SqlSource",
 
           // tomcat
           "org.apache.tomcat.util.http.fileupload.FileUploadBase",
+
         };
 
     include_methods =
@@ -115,6 +120,13 @@ public class Config {
           //                "org.apache.ibatis.mapping.SqlSource",
 
           "org.apache.tomcat.util.http.fileupload.FileUploadBase.parseRequest(Lorg.apache.tomcat.util.http.fileupload.RequestContext;)Ljava.util.List;",
+//          "org.apache.ibatis.scripting.xmltags.OgnlCache.parseExpression",
+
+          // sql in xxMapper.xml value(${id}...)
+          "org.apache.ibatis.ognl.Ognl.getValue",
+
+          // sql in xxMapper.xml (process twice，#/$)
+          "org.apache.ibatis.parsing.GenericTokenParser.parse",
         };
   }
 
