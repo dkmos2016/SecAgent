@@ -141,7 +141,7 @@ public class ReqInfo {
   }
 
   /**
-   * todo: mybatis类型埋点涉及到构造语句时使用的入参处理
+   * todo: mybatis
    *
    * @param type
    * @param throwable

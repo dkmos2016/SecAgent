@@ -34,6 +34,7 @@ public class AgentDemo {
           "oracle.jdbc.driver.OracleStatement",
           "oracle.jdbc.driverOracleResultSetImpl",
           "org.apache.tomcat.util.http.fileupload.FileUploadBase",
+          "ognl.Ognl"
         };
 
     TARGET_OTHER_CLASSES =
