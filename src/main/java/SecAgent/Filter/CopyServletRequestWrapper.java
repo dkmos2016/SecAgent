@@ -3,20 +3,6 @@ package SecAgent.Filter;
 import SecAgent.Conf.Config;
 import SecAgent.utils.DefaultLoggerHelper.DefaultLogger;
 import SecAgent.utils.ReqLocal;
-import jakarta.servlet.MultipartConfigElement;
-import jakarta.servlet.ServletContext;
-import jakarta.servlet.ServletException;
-import org.apache.catalina.Context;
-import org.apache.catalina.core.ApplicationPart;
-import org.apache.coyote.Request;
-import org.apache.tomcat.util.http.Parameters;
-import org.apache.tomcat.util.http.fileupload.FileItem;
-import org.apache.tomcat.util.http.fileupload.FileUploadException;
-import org.apache.tomcat.util.http.fileupload.disk.DiskFileItemFactory;
-import org.apache.tomcat.util.http.fileupload.impl.InvalidContentTypeException;
-import org.apache.tomcat.util.http.fileupload.impl.SizeException;
-import org.apache.tomcat.util.http.fileupload.servlet.ServletFileUpload;
-import org.apache.tomcat.util.http.fileupload.servlet.ServletRequestContext;
 
 import javax.servlet.ReadListener;
 import javax.servlet.ServletInputStream;
@@ -32,8 +18,7 @@ public class CopyServletRequestWrapper extends HttpServletRequestWrapper {
   private static final DefaultLogger logger;
 
   static {
-    logger =
-            DefaultLogger.getLogger(CopyServletRequestWrapper.class, Config.EXCEPTION_PATH);
+    logger = DefaultLogger.getLogger(CopyServletRequestWrapper.class, Config.EXCEPTION_PATH);
     logger.setLevel(DefaultLogger.MyLevel.DEBUG);
   }
 
@@ -49,7 +34,6 @@ public class CopyServletRequestWrapper extends HttpServletRequestWrapper {
     while ((v = in.read()) != -1) {
       this.baout.write(v);
     }
-
   }
 
   public byte[] getBody() {
@@ -70,7 +54,7 @@ public class CopyServletRequestWrapper extends HttpServletRequestWrapper {
 
     if (params == null || params.isEmpty()) return map;
 
-    for (String param: params.split("&")) {
+    for (String param : params.split("&")) {
       String[] field_item = param.split("=");
 
       ArrayList<String> arrayList = tmp_map.getOrDefault(field_item[0], new ArrayList());
@@ -89,8 +73,9 @@ public class CopyServletRequestWrapper extends HttpServletRequestWrapper {
   public Enumeration<String> getParameterNames() {
     ArrayList<String> list = new ArrayList();
 
-    for(Iterator<Map.Entry<String, String[]>> iterator = this.paramMap.entrySet().iterator(); iterator.hasNext();) {
-      Map.Entry<String, String []> entry = iterator.next();
+    for (Iterator<Map.Entry<String, String[]>> iterator = this.paramMap.entrySet().iterator();
+        iterator.hasNext(); ) {
+      Map.Entry<String, String[]> entry = iterator.next();
       list.add(entry.getKey());
     }
 
@@ -100,14 +85,13 @@ public class CopyServletRequestWrapper extends HttpServletRequestWrapper {
   @Override
   public String getParameter(String name) {
     String[] obj = this.paramMap.get(name);
-    return obj == null || obj.length == 0 ? null: obj[0];
+    return obj == null || obj.length == 0 ? null : obj[0];
   }
 
   @Override
   public String[] getParameterValues(String name) {
     return this.paramMap.getOrDefault(name, null);
   }
-
 
   @Override
   public BufferedReader getReader() throws IOException {
@@ -193,5 +177,4 @@ public class CopyServletRequestWrapper extends HttpServletRequestWrapper {
     }
     return sb.toString();
   }
-
 }

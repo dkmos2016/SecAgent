@@ -1,18 +1,18 @@
 package SecAgent.utils;
 
 public class ReqInfoState {
-  public final static int PUTTED_METHOD;
-  public final static int PUTTED_QUERYSTRING;
-  public final static int PUTTED_QUERIES;
-  public final static int PUTTED_INPUTSTREAM;
-  public final static int PUTTED_OUTPUTSTREAM;
+  public static final int PUTTED_METHOD;
+  public static final int PUTTED_QUERYSTRING;
+  public static final int PUTTED_QUERIES;
+  public static final int PUTTED_INPUTSTREAM;
+  public static final int PUTTED_OUTPUTSTREAM;
 
-  public final static int PUTTED_SQL;
-  public final static int PUTTED_EXEC;
-  public final static int PUTTED_URI;
-  public final static int PUTTED_XXE;
-  public final static int PUTTED_DOWN;
-  public final static int PUTTED_UPLOAD;
+  public static final int PUTTED_SQL;
+  public static final int PUTTED_EXEC;
+  public static final int PUTTED_URI;
+  public static final int PUTTED_XXE;
+  public static final int PUTTED_DOWN;
+  public static final int PUTTED_UPLOAD;
 
   static {
     PUTTED_METHOD = 1;
@@ -28,7 +28,6 @@ public class ReqInfoState {
     PUTTED_DOWN = 512;
     PUTTED_UPLOAD = 1024;
   }
-
 
   public static boolean isSetURI(int code) {
     return (code & (PUTTED_METHOD | PUTTED_QUERYSTRING | PUTTED_QUERIES | PUTTED_INPUTSTREAM)) > 0;

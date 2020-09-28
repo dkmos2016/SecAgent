@@ -36,7 +36,6 @@ dependencies {
     compile group: 'javax.servlet', name: 'javax.servlet-api', version: '4.0.1'
     implementation group: 'org.springframework', name: 'spring-jdbc', version: '5.2.8.RELEASE'
     implementation group: 'mysql', name: 'mysql-connector-java', version: '8.0.21'
-
 }
 
 jar {

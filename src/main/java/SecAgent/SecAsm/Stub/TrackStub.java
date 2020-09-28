@@ -34,6 +34,104 @@ public class TrackStub extends AdviceAdapter implements Opcodes {
     System.out.println(String.format("debug wiit idx-%d", idx));
   }
 
+  protected void append(int sb_idx, int obj_idx) {
+    mv.visitVarInsn(ALOAD, sb_idx);
+    mv.visitVarInsn(ALOAD, obj_idx);
+    mv.visitMethodInsn(
+        INVOKEVIRTUAL, "java/lang/Object", "toString", "()Ljava/lang/String;", false);
+    mv.visitMethodInsn(
+        INVOKEVIRTUAL,
+        "java/lang/StringBuilder",
+        "append",
+        "(Ljava/lang/Object;)Ljava/lang/StringBuilder;",
+        false);
+    mv.visitInsn(POP);
+  }
+
+  protected void append(int sb_idx, String sep) {
+    mv.visitVarInsn(ALOAD, sb_idx);
+    mv.visitLdcInsn(sep);
+    mv.visitMethodInsn(
+        INVOKEVIRTUAL,
+        "java/lang/StringBuilder",
+        "append",
+        "(Ljava/lang/Object;)Ljava/lang/StringBuilder;",
+        false);
+    mv.visitInsn(POP);
+  }
+
+  /**
+   * @param cls
+   * @param target
+   */
+  protected void newInstance(String cls, int target) {
+    mv.visitTypeInsn(NEW, cls);
+    mv.visitInsn(DUP);
+    mv.visitMethodInsn(INVOKESPECIAL, cls, "<init>", "()V", false);
+    mv.visitVarInsn(ASTORE, target);
+  }
+
+  /** print trace stack */
+  @Deprecated
+  protected void stackTrack() {
+    // StackTraceElement[] tmp_arr = new Throwable().getStackTrace();
+    mv.visitTypeInsn(NEW, "java/lang/Throwable");
+    mv.visitInsn(DUP);
+    mv.visitMethodInsn(INVOKESPECIAL, "java/lang/Throwable", "<init>", "()V", false);
+    mv.visitMethodInsn(
+        INVOKEVIRTUAL,
+        "java/lang/Throwable",
+        "getStackTrace",
+        "()[Ljava/lang/StackTraceElement;",
+        false);
+    mv.visitVarInsn(ASTORE, tmp_arr);
+
+    Label if_empty = new Label();
+    mv.visitVarInsn(ALOAD, tmp_arr);
+    mv.visitJumpInsn(IFNULL, if_empty);
+
+    // StringBuilder sb = new StringBuilder();
+    newInstance("java/lang/StringBuilder", sb_idx);
+
+    // tmp_len = tmp_arr.length
+    // tmp_idx = 0;
+    mv.visitVarInsn(ALOAD, tmp_arr);
+    mv.visitInsn(ARRAYLENGTH);
+    mv.visitVarInsn(ISTORE, tmp_len);
+    mv.visitInsn(ICONST_0);
+    mv.visitVarInsn(ISTORE, tmp_idx);
+
+    Label loop_start = new Label();
+    Label loop_end = new Label();
+    mv.visitLabel(loop_start);
+
+    // if tmp_idx < tmp_len
+    mv.visitVarInsn(ILOAD, tmp_idx);
+    mv.visitVarInsn(ILOAD, tmp_len);
+    mv.visitJumpInsn(IF_ICMPGE, loop_end);
+
+    // tmp_obj = tmp_arr[tmp_idx]
+    mv.visitVarInsn(ALOAD, tmp_arr);
+    mv.visitVarInsn(ILOAD, tmp_idx);
+    mv.visitInsn(AALOAD);
+    mv.visitVarInsn(ASTORE, tmp_obj);
+
+    // tmp_sb.append(tmp_obj.toString());
+    append(tmp_sb, tmp_obj);
+    append(tmp_sb, "\n");
+
+    // loop
+    mv.visitIincInsn(tmp_idx, 1);
+    mv.visitJumpInsn(GOTO, loop_start);
+
+    // loop done
+    mv.visitLabel(loop_end);
+
+    // do something else  (ex log, upload, print,..)
+
+    mv.visitLabel(if_empty);
+  }
+
   public void debug_print(String msg) {
     mv.visitFieldInsn(GETSTATIC, "java/lang/System", "out", "Ljava/io/PrintStream;");
     mv.visitLdcInsn(msg);

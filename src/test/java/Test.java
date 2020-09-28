@@ -1,14 +1,12 @@
-
-
 public class Test {
-    int id;
+  int id;
 
-    public Test(int id) {
-        this.id = id;
-        print();
-    }
+  public Test(int id) {
+    this.id = id;
+    print();
+  }
 
-    public void print(Object ...obj) {
-        System.out.println("id = " + this.id);
-    }
+  public void print(Object... obj) {
+    System.out.println("id = " + this.id);
+  }
 }
