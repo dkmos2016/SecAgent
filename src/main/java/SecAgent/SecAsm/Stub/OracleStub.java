@@ -20,7 +20,7 @@ public class OracleStub extends CommonStub {
     debug_print_offline(String.format("[DEBUG] [OracleStub]: %s", this.paramsInfo.toString()));
 
 //    putStubData("SQL", T_OBJECT, 0);
-    debug_print_online(T_OBJECT, 0);
+    debug_print_online(T_OBJECT, 1);
   }
 
   @Override
