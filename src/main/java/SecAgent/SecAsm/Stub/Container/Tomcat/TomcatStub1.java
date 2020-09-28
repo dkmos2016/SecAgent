@@ -4,19 +4,24 @@ import SecAgent.SecAsm.Common.CommonStub;
 import SecAgent.utils.ParamsInfo;
 import org.objectweb.asm.MethodVisitor;
 
-
 // for request.getInputSteam;
 public class TomcatStub1 extends CommonStub {
-  private ParamsInfo paramsInfo;
-  public TomcatStub1(int api, MethodVisitor methodVisitor, int access, String name, String descriptor, ParamsInfo paramsInfo) {
+  private final ParamsInfo paramsInfo;
+
+  public TomcatStub1(
+      int api,
+      MethodVisitor methodVisitor,
+      int access,
+      String name,
+      String descriptor,
+      ParamsInfo paramsInfo) {
     super(api, methodVisitor, access, name, descriptor, paramsInfo);
 
     this.paramsInfo = paramsInfo;
-
   }
 
   private void process() {
-//    findAndGetSecProxyInstance(0, inst_idx);
+    //    findAndGetSecProxyInstance(0, inst_idx);
 
     debug_print_offline(String.format("[DEBUG] [TomcatStub1]: %s", this.paramsInfo.toString()));
 
@@ -35,7 +40,5 @@ public class TomcatStub1 extends CommonStub {
   @Override
   protected void onMethodExit(int opcode) {
     super.onMethodExit(opcode);
-
   }
-
 }

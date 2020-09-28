@@ -1,8 +1,6 @@
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 
-import org.apache.tomcat.util.http.fileupload.FileUploadBase;
-
 public class AgentTargetSample<E> {
 
   public static void main(String[] args) {
@@ -13,7 +11,6 @@ public class AgentTargetSample<E> {
       Constructor constructor = cls.getConstructor(int.class);
       constructor.newInstance(1);
 
-
       Test test = new Test(1);
       Test test1 = null;
       Object obj = test;
@@ -23,10 +20,9 @@ public class AgentTargetSample<E> {
         flag = true;
       }
 
-      test1 = (Test)obj;
+      test1 = (Test) obj;
 
-
-//      method.invoke(null, );
+      //      method.invoke(null, );
     } catch (Exception e) {
       e.printStackTrace();
     }

@@ -2,7 +2,10 @@ package SecAgent.Conf;
 
 import SecAgent.utils.Resources;
 
+import java.util.HashMap;
+
 public class Config {
+  public static final HashMap MODIFIED_CLASSES = new HashMap();
   public static final boolean DEBUG = true;
 
   public static final String DEBUG_PATH = Resources.getProperty("DEBUG_LOG_PATH");
@@ -12,10 +15,16 @@ public class Config {
   public static final String SQL_STUB =
       "com.mysql.cj.jdbc.EscapeProcessor.escapeSQL(Ljava.lang.String;Ljava.util.TimeZone;ZZLcom.mysql.cj.exceptions.ExceptionInterceptor;)Ljava.lang.Object;";
 
-  public static final String MYSQL_STUB =
-      "com.mysql.cj.jdbc.StatementImpl.executeInternal(Ljava.lang.String;Z)Z";
+  // bug
+    public static final String MYSQL_STUB =
+        "com.mysql.cj.jdbc.StatementImpl.executeInternal(Ljava.lang.String;Z)Z";
+
+//  public static final String MYSQL_STUB =
+//      "com.mysql.cj.jdbc.EscapeProcessor.escapeSQL(Ljava.lang.String;Ljava.util.TimeZone;ZZLcom.mysql.cj.exceptions.ExceptionInterceptor;)Ljava.lang.Object;";
+
   public static final String ORACLE_STUB =
       "oracle.jdbc.driver.OracleStatement.executeInternal(Ljava.lang.String;)Z";
+
   public static final String MYBATIS_STUB =
       "org.apache.ibatis.mapping.BoundSql.<init>(Lorg.apache.ibatis.session.Configuration;Ljava.lang.String;Ljava.util.List;Ljava.lang.Object;)V";
 
@@ -39,7 +48,8 @@ public class Config {
   // todo
   public static final String SSRF_STUB = "java.io.FileOutputStream.<init>(Ljava.io.File;Z)V";
 
-  public static final String TOMCAT_STUB = "org.apache.tomcat.util.http.fileupload.FileUploadBase.parseRequest(Lorg.apache.tomcat.util.http.fileupload.RequestContext;)Ljava.util.List;";
+  public static final String TOMCAT_STUB =
+      "org.apache.tomcat.util.http.fileupload.FileUploadBase.parseRequest(Lorg.apache.tomcat.util.http.fileupload.RequestContext;)Ljava.util.List;";
 
   public static String[] exclude_classes;
   public static String[] exclude_methods;
@@ -68,7 +78,7 @@ public class Config {
           "java.lang.ProcessImpl",
 
           /* mysql */
-          //            "com.mysql.cj.jdbc.StatementImpl",
+          "com.mysql.cj.jdbc.StatementImpl",
 
           /* ignore oracle because of ojdbc6 exception */
           //            "oracle.jdbc.driver.OracleStatement",
@@ -92,8 +102,10 @@ public class Config {
           //          "com.sun.org.apache.xerces.internal.impl.XMLVersionDetector",
           //
           // "com.sun.org.apache.xerces.internal.impl.XMLEntityManager$RewindableInputStream.<init>",
-          //                "java.sql.Statement.execute",
-          //          "com.mysql.cj.jdbc.StatementImpl.executeInternal",
+          //                          "java.sql.Statement.execute",
+          //                    "com.mysql.cj.jdbc.StatementImpl",
+          //
+          // "com.mysql.cj.jdbc.EscapeProcessor.escapeSQL(Ljava.lang.String;Ljava.util.TimeZone;ZZLcom.mysql.cj.exceptions.ExceptionInterceptor;)Ljava.lang.Object;",
           //                          "oracle.jdbc.driver.OracleStatement.executeInternal",
           //                "oracle.jdbc.driver.OracleStatement.execute",
 
@@ -139,5 +151,13 @@ public class Config {
       }
     }
     return false;
+  }
+
+  public static void setAsModified(String classname) {
+    MODIFIED_CLASSES.put(classname, true);
+  }
+
+  public static boolean isModified(String classname) {
+    return (boolean) MODIFIED_CLASSES.getOrDefault(classname, false);
   }
 }

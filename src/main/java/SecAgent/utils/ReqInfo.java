@@ -21,12 +21,11 @@ public class ReqInfo {
     if (logger != null) logger.setLevel(DefaultLogger.MyLevel.INFO);
   }
 
-  private int state_code = 0;
-
   // store throwable & parameter
   private final Map<String, ArrayList<StubData>> StubDatas = new HashMap<>();
   /** reversed */
   private final Map<String, String> headers = new HashMap<>();
+  private int state_code = 0;
   /** complete url */
   private String url;
   /** with url */
@@ -36,7 +35,7 @@ public class ReqInfo {
   /** get queryString */
   private String queryString;
   /** request parameters (include url & body) */
-  private Map queries = new HashMap<>();
+  private final Map queries = new HashMap<>();
   /** getInpusteram */
   private InputStream inputStream;
   /** HttpServletRequest */
@@ -79,12 +78,15 @@ public class ReqInfo {
     if (method.equals("POST")) {
       this.setInputStream(request.getInputStream());
     }
-//    this.queries = request.getParameterMap();
+    //    this.queries = request.getParameterMap();
     this.queryString = request.getQueryString();
-    this.state_code |= ReqInfoState.PUTTED_URI | ReqInfoState.PUTTED_QUERYSTRING | ReqInfoState.PUTTED_METHOD | ReqInfoState.PUTTED_INPUTSTREAM;
+    this.state_code |=
+        ReqInfoState.PUTTED_URI
+            | ReqInfoState.PUTTED_QUERYSTRING
+            | ReqInfoState.PUTTED_METHOD
+            | ReqInfoState.PUTTED_INPUTSTREAM;
 
     this.ALLOWED_PUT_STUB = true;
-
   }
 
   public void setHttpServletResponse(HttpServletResponse response) throws IOException {
@@ -93,16 +95,16 @@ public class ReqInfo {
   }
 
   public void setInputStream(InputStream inputStream) throws IOException {
-    if (inputStream.available() <= 0 ) return;
+    if (inputStream.available() <= 0) return;
 
     this.inputStream = inputStream;
-    byte [] b = new byte[1025];
+    byte[] b = new byte[1025];
 
-//    this.inputStream.mark(Integer.MAX_VALUE);
+    //    this.inputStream.mark(Integer.MAX_VALUE);
     this.inputStream.read(b);
 
     System.out.println("result1:" + new String(b));
-//    this.inputStream.reset();
+    //    this.inputStream.reset();
   }
 
   /**
@@ -112,19 +114,44 @@ public class ReqInfo {
    * @param throwable
    * @param obj
    */
-  private void putStubData(String type, Throwable throwable, Object... obj) {
-    if (logger != null) logger.debug(obj);
+  public void putStubData(String type, Throwable throwable, Object obj) {
+    if (logger != null) logger.warn(obj);
 
-    if (this.ALLOWED_PUT_STUB == false) return;
+    if (!this.ALLOWED_PUT_STUB) return;
 
-    ArrayList list = StubDatas.getOrDefault(type, new ArrayList());
-    list.add(new StubData(throwable, obj));
+    ArrayList list = null;
 
-    // may be not useful
-    //    realType = (type.equals("DOWN") || type.equals("UPLOAD")) &&
-    // obj.toString().endsWith(".xml")? "XXE": type;
+    switch (type.toLowerCase()) {
+      case "mybatis":
+        list = doPutMybatis(type, throwable, obj);
+        break;
+
+      default:
+        list = doPutCommon(type, throwable, obj);
+        break;
+    }
 
     StubDatas.put(type, list);
+  }
+
+  private ArrayList doPutCommon(String type, Throwable throwable, Object obj) {
+    ArrayList list = StubDatas.getOrDefault(type, new ArrayList());
+    list.add(new StubData(throwable, obj));
+    return list;
+  }
+
+  /**
+   * todo: mybatis类型埋点涉及到构造语句时使用的入参处理
+   *
+   * @param type
+   * @param throwable
+   * @param obj
+   * @return
+   */
+  private ArrayList doPutMybatis(String type, Throwable throwable, Object obj) {
+    ArrayList list = StubDatas.getOrDefault(type, new ArrayList());
+    list.add(new StubData(throwable, obj));
+    return list;
   }
 
   /**

@@ -14,11 +14,7 @@ import java.util.ArrayList;
 
 public abstract class CommonStub extends AdviceAdapter implements Opcodes {
   protected static final int T_OBJECT = 1111111;
-  protected int sb_idx = newLocal(Type.getType(StringBuilder.class));
-  protected int tmp_sb = newLocal(Type.getType(StringBuilder.class));
-  protected int tmp_arr = newLocal(Type.getType("[Ljava/lang/Object;"));
-  protected int tmp_len = newLocal(Type.getType(int.class));
-  protected int tmp_idx = newLocal(Type.getType(int.class));
+
   protected int tmp_obj = newLocal(Type.getType(Object.class));
   protected int bak_obj = newLocal(Type.getType(Object.class));
   protected int flag_idx = newLocal(Type.getType(int.class));
@@ -64,10 +60,6 @@ public abstract class CommonStub extends AdviceAdapter implements Opcodes {
 
   /** initialize all local */
   private void initExtras() {
-    setNull(this.tmp_sb);
-    setNull(this.tmp_idx);
-    setNull(this.tmp_arr);
-    setNull(this.tmp_len);
     setNull(this.tmp_obj);
     setNull(this.stk_idx);
     setNull(this.res_idx);
@@ -334,68 +326,6 @@ public abstract class CommonStub extends AdviceAdapter implements Opcodes {
     mv.visitVarInsn(ASTORE, dst_idx);
   }
 
-  /** print trace stack */
-  @Deprecated
-  protected void stackTrack() {
-
-    // StackTraceElement[] tmp_arr = new Throwable().getStackTrace();
-    mv.visitTypeInsn(NEW, "java/lang/Throwable");
-    mv.visitInsn(DUP);
-    mv.visitMethodInsn(INVOKESPECIAL, "java/lang/Throwable", "<init>", "()V", false);
-    mv.visitMethodInsn(
-        INVOKEVIRTUAL,
-        "java/lang/Throwable",
-        "getStackTrace",
-        "()[Ljava/lang/StackTraceElement;",
-        false);
-    mv.visitVarInsn(ASTORE, tmp_arr);
-
-    Label if_empty = new Label();
-    mv.visitVarInsn(ALOAD, tmp_arr);
-    mv.visitJumpInsn(IFNULL, if_empty);
-
-    // StringBuilder sb = new StringBuilder();
-    newStringBuilder(tmp_sb);
-
-    // tmp_len = tmp_arr.length
-    // tmp_idx = 0;
-    mv.visitVarInsn(ALOAD, tmp_arr);
-    mv.visitInsn(ARRAYLENGTH);
-    mv.visitVarInsn(ISTORE, tmp_len);
-    mv.visitInsn(ICONST_0);
-    mv.visitVarInsn(ISTORE, tmp_idx);
-
-    Label loop_start = new Label();
-    Label loop_end = new Label();
-    mv.visitLabel(loop_start);
-
-    // if tmp_idx < tmp_len
-    mv.visitVarInsn(ILOAD, tmp_idx);
-    mv.visitVarInsn(ILOAD, tmp_len);
-    mv.visitJumpInsn(IF_ICMPGE, loop_end);
-
-    // tmp_obj = tmp_arr[tmp_idx]
-    mv.visitVarInsn(ALOAD, tmp_arr);
-    mv.visitVarInsn(ILOAD, tmp_idx);
-    mv.visitInsn(AALOAD);
-    mv.visitVarInsn(ASTORE, tmp_obj);
-
-    // tmp_sb.append(tmp_obj.toString());
-    append(tmp_sb, tmp_obj);
-    append(tmp_sb, "\n");
-
-    // loop
-    mv.visitIincInsn(tmp_idx, 1);
-    mv.visitJumpInsn(GOTO, loop_start);
-
-    // loop done
-    mv.visitLabel(loop_end);
-
-    // do something else  (ex log, upload, print,..)
-
-    mv.visitLabel(if_empty);
-  }
-
   /** use thread to dump current classloader */
   //  @Deprecated
   protected void classLoaderInfo() {
@@ -486,17 +416,18 @@ public abstract class CommonStub extends AdviceAdapter implements Opcodes {
 
     newInstance("java/lang/Throwable", stk_idx);
     addListElement(params_idx, T_OBJECT, stk_idx);
+    addListElement(params_idx, T_OBJECT, src_idx);
 
-    mv.visitVarInsn(ALOAD, src_idx);
-    mv.visitMethodInsn(
-      INVOKEVIRTUAL, "java/util/ArrayList", "toArray", "()[Ljava/lang/Object;", false);
-    mv.visitVarInsn(ASTORE, tmp_obj);
-    addListElement(params_idx, src_type, tmp_obj);
+    //    mv.visitVarInsn(ALOAD, src_idx);
+    //    mv.visitMethodInsn(
+    //      INVOKEVIRTUAL, "java/util/ArrayList", "toArray", "()[Ljava/lang/Object;", false);
+    //    mv.visitVarInsn(ASTORE, tmp_obj);
+    //    addListElement(params_idx, src_type, tmp_obj);
 
     findAndExecute(
         "SecAgent.utils.ReqInfo",
         "putStubData",
-        new Class[] {String.class, Throwable.class, Object[].class},
+        new Class[] {String.class, Throwable.class, Object.class},
         reqinfo_idx,
         params_idx,
         res_idx);
@@ -512,17 +443,18 @@ public abstract class CommonStub extends AdviceAdapter implements Opcodes {
 
     mv.visitVarInsn(ALOAD, obj_idx);
     mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Object", "getClass", "()Ljava/lang/Class;", false);
-    mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Class", "getInterfaces", "()[Ljava/lang/Class;", false);
+    mv.visitMethodInsn(
+        INVOKEVIRTUAL, "java/lang/Class", "getInterfaces", "()[Ljava/lang/Class;", false);
     mv.visitInsn(ARRAYLENGTH);
 
     mv.visitJumpInsn(IFLE, if_null);
 
     mv.visitInsn(ICONST_1);
     mv.visitVarInsn(ISTORE, dst_idx);
-//    debug_print_offline("has interface");
+    //    debug_print_offline("has interface");
     mv.visitJumpInsn(GOTO, if_end);
     mv.visitLabel(if_null);
-//    debug_print_offline("does not have interface");
+    //    debug_print_offline("does not have interface");
     mv.visitLabel(if_end);
   }
 
@@ -625,12 +557,12 @@ public abstract class CommonStub extends AdviceAdapter implements Opcodes {
 
   /**
    * for [new SecInstanceProxyFactory(Object).getProxyInstance()]
+   *
    * @see SecAgent.Filter.SecInstanceProxyFactory
    * @param obj_idx
    * @param dst_idx
    */
-  protected void findAndGetSecProxyInstance(int obj_idx,
-                                            int dst_idx) {
+  protected void findAndGetSecProxyInstance(int obj_idx, int dst_idx) {
 
     Label try_end_all = new Label();
     Label try_start0 = new Label();
@@ -649,18 +581,17 @@ public abstract class CommonStub extends AdviceAdapter implements Opcodes {
     debug_print_offline("getConstructor done");
     loadClass("SecAgent.Filter.SecInstanceProxyFactory", cls_idx);
 
-    Class [] paramTypes = new Class[]{Object.class};
+    Class[] paramTypes = new Class[] {Object.class};
     getConstructor(cls_idx, paramTypes, method_idx);
 
     newArrayList(params_idx);
     addListElement(params_idx, T_OBJECT, obj_idx);
 
     invokeConstructor(method_idx, params_idx, inst_idx);
-    getDeclaredMethod(cls_idx, "getProxyInstance", new Class[]{}, method_idx);
+    getDeclaredMethod(cls_idx, "getProxyInstance", new Class[] {}, method_idx);
 
     newArrayList(params_idx);
     invoke(method_idx, inst_idx, params_idx, dst_idx);
-
 
     mv.visitLabel(try_end0);
 

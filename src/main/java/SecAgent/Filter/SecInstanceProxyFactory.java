@@ -14,26 +14,22 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 
-/**
- * for class with implements
- *
- */
+/** for class with implements */
 public class SecInstanceProxyFactory {
   private static final DefaultLogger logger;
+
+  static {
+    logger = DefaultLogger.getLogger(SecInstanceProxyFactory.class, Config.EXCEPTION_PATH);
+    logger.setLevel(DefaultLogger.MyLevel.DEBUG);
+  }
 
   private final Object target;
   private ByteArrayInputStream byteArrayInputStream = null;
 
-
-    static {
-        logger = DefaultLogger.getLogger(SecInstanceProxyFactory.class, Config.EXCEPTION_PATH);
-        logger.setLevel(DefaultLogger.MyLevel.DEBUG);
-    }
-
   public SecInstanceProxyFactory(Object object) {
     this.target = object;
     System.out.println(object);
-      logger.debug("SecInstanceProxyFactory.<init>");
+    logger.debug("SecInstanceProxyFactory.<init>");
   }
 
   public Object getProxyInstance() {
@@ -46,45 +42,45 @@ public class SecInstanceProxyFactory {
             logger.debug("before invoke " + method.getName());
             Object obj = method.invoke(target, args);
             if (obj instanceof InputStream) {
-                ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+              ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
 
-                if (byteArrayInputStream == null) {
-                    InputStream in = (InputStream) obj;
-                    int v = -1;
-                    while ((v = in.read()) > -1) {
-                        byteArrayOutputStream.write(v);
-                    }
-                    byteArrayOutputStream.flush();
-
-                    byteArrayInputStream =
-                            new ByteArrayInputStream(byteArrayOutputStream.toByteArray());
-
-//                    System.out.println(new String(byteArrayOutputStream.toByteArray()));
-                    ReqLocal.getReqInfo().setInputStream(new ByteArrayInputStream(byteArrayOutputStream.toByteArray()));
+              if (byteArrayInputStream == null) {
+                InputStream in = (InputStream) obj;
+                int v = -1;
+                while ((v = in.read()) > -1) {
+                  byteArrayOutputStream.write(v);
                 }
+                byteArrayOutputStream.flush();
 
+                byteArrayInputStream =
+                    new ByteArrayInputStream(byteArrayOutputStream.toByteArray());
 
-                obj = new ServletInputStream() {
+                //                    System.out.println(new
+                // String(byteArrayOutputStream.toByteArray()));
+                ReqLocal.getReqInfo()
+                    .setInputStream(new ByteArrayInputStream(byteArrayOutputStream.toByteArray()));
+              }
+
+              obj =
+                  new ServletInputStream() {
                     @Override
                     public boolean isFinished() {
-                        return false;
+                      return false;
                     }
 
                     @Override
                     public boolean isReady() {
-                        return false;
+                      return false;
                     }
 
                     @Override
-                    public void setReadListener(ReadListener readListener) {
-
-                    }
+                    public void setReadListener(ReadListener readListener) {}
 
                     @Override
                     public int read() throws IOException {
-                        return byteArrayInputStream.read();
+                      return byteArrayInputStream.read();
                     }
-                };
+                  };
             }
             logger.debug("after invoke " + method.getName());
 
