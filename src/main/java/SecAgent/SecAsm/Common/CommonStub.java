@@ -20,7 +20,7 @@ public abstract class CommonStub extends AdviceAdapter implements Opcodes {
   protected int flag_idx = newLocal(Type.getType(int.class));
 
   // new Throwable()
-  protected int stk_idx = newLocal(Type.getType(Throwable.class));
+  private int stk_idx = newLocal(Type.getType(Throwable.class));
   protected int res_idx = newLocal(Type.getType(Object.class));
   protected int reqinfo_idx = newLocal(Type.getType(ReqInfo.class));
   protected ParamsInfo paramsInfo;
@@ -29,9 +29,13 @@ public abstract class CommonStub extends AdviceAdapter implements Opcodes {
   /** for invoke (nonestatic) */
   protected int inst_idx = newLocal(Type.getType(Object.class));
 
-  protected int cls_idx = newLocal(Type.getType(Class.class));
-  protected int method_idx = newLocal(Type.getType(Method.class));
+  private int cls_idx = newLocal(Type.getType(Class.class));
+  private int method_idx = newLocal(Type.getType(Method.class));
   protected int params_idx = newLocal(Type.getType(Object[].class));
+
+  /**
+   * for mybatis
+   */
   protected int params2_idx = newLocal(Type.getType(Object[].class));
   protected int null_idx = newLocal(Type.getType(Object[].class));
 
@@ -491,13 +495,14 @@ public abstract class CommonStub extends AdviceAdapter implements Opcodes {
     mv.visitTryCatchBlock(try_start0, try_end0, try_excep0, "java/lang/Exception");
     mv.visitLabel(try_start0);
 
-    //    debug_print_offline("to load: " + classname);
+//        debug_print_offline("to load: " + classname);
     loadClass(classname, cls_idx);
     //    debug_print_online(T_OBJECT, cls_idx);
     //    debug_print_offline("find: " + methodname);
     getDeclaredMethod(cls_idx, methodname, paramTypes, method_idx);
-    //    debug_print_online(T_OBJECT, method_idx);
+//        debug_print_online(T_OBJECT, method_idx);
     invoke(method_idx, inst_idx, params_idx, dst_idx);
+        debug_print_offline("invoke done. " );
 
     mv.visitLabel(try_end0);
 
