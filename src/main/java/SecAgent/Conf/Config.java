@@ -2,10 +2,7 @@ package SecAgent.Conf;
 
 import SecAgent.utils.Resources;
 
-import java.util.HashMap;
-
 public class Config {
-  public static final HashMap MODIFIED_CLASSES = new HashMap();
   public static final boolean DEBUG = true;
 
   public static final String DEBUG_PATH = Resources.getProperty("DEBUG_LOG_PATH");
@@ -16,16 +13,21 @@ public class Config {
       "com.mysql.cj.jdbc.EscapeProcessor.escapeSQL(Ljava.lang.String;Ljava.util.TimeZone;ZZLcom.mysql.cj.exceptions.ExceptionInterceptor;)Ljava.lang.Object;";
 
   // bug
-  public static final String MYSQL_STUB =
-      "com.mysql.cj.jdbc.StatementImpl.executeInternal(Ljava.lang.String;Z)Z";
+  //  public static final String MYSQL_STUB =
+  //      "com.mysql.cj.jdbc.StatementImpl.executeInternal(Ljava.lang.String;Z)Z";
 
+  public static final String MYSQL_STUB =
+      "com.mysql.cj.jdbc.StatementImpl.checkNullOrEmptyQuery(Ljava.lang.String;)V";
 
   //  public static final String MYSQL_STUB =
   //
   // "com.mysql.cj.jdbc.EscapeProcessor.escapeSQL(Ljava.lang.String;Ljava.util.TimeZone;ZZLcom.mysql.cj.exceptions.ExceptionInterceptor;)Ljava.lang.Object;";
 
+  //  public static final String ORACLE_STUB =
+  //      "oracle.jdbc.driver.OracleStatement.executeInternal(Ljava.lang.String;)Z";
+
   public static final String ORACLE_STUB =
-      "oracle.jdbc.driver.OracleStatement.executeInternal(Ljava.lang.String;)Z";
+      "oracle.jdbc.driver.OracleSql.initialize(Ljava.lang.String;)V";
 
   public static final String MYBATIS_STUB =
       "org.apache.ibatis.mapping.BoundSql.<init>(Lorg.apache.ibatis.session.Configuration;Ljava.lang.String;Ljava.util.List;Ljava.lang.Object;)V";
@@ -69,24 +71,25 @@ public class Config {
         new String[] {
           "java.io",
           // xxe
+          "com.sun.org.apache.xerces.internal.impl.XMLEntityManager",
           "com.sun.org.apache.xerces.internal.impl.XMLEntityManager$RewindableInputStream",
           // url
           "javax.servlet.http.HttpServlet",
           // down
-          "java.io.FileInputStream",
+          //          "java.io.FileInputStream",
           // upload
-          "java.io.FileOutputStream",
+          //          "java.io.FileOutputStream",
           // exec
           "java.lang.ProcessImpl",
 
-          /* mysql */
+          // mysql
           "com.mysql.cj.jdbc.StatementImpl",
 
           /* ignore oracle because of ojdbc6 exception */
           "oracle.jdbc.driver.OracleStatement",
           //            "oracle.jdbc.driver.OracleResultSetImpl",
 
-          // mybatis
+          /* mybatis */
           "org.apache.ibatis.mapping.BoundSql",
           "org.apache.ibatis.scripting.xmltags.OgnlCache",
           "org.apache.ibatis.ognl.Ognl",
@@ -95,7 +98,7 @@ public class Config {
 
           // tomcat
           "org.apache.tomcat.util.http.fileupload.FileUploadBase",
-
+          "oracle.jdbc.driver.OracleSql",
         };
 
     include_methods =
@@ -119,14 +122,17 @@ public class Config {
           //                "org.apache.ibatis.mapping.BoundSql",
           //                "org.apache.ibatis.mapping.SqlSource",
 
-          "org.apache.tomcat.util.http.fileupload.FileUploadBase.parseRequest(Lorg.apache.tomcat.util.http.fileupload.RequestContext;)Ljava.util.List;",
-//          "org.apache.ibatis.scripting.xmltags.OgnlCache.parseExpression",
+          //
+          // "org.apache.tomcat.util.http.fileupload.FileUploadBase.parseRequest(Lorg.apache.tomcat.util.http.fileupload.RequestContext;)Ljava.util.List;",
+          //          "org.apache.ibatis.scripting.xmltags.OgnlCache.parseExpression",
 
           // sql in xxMapper.xml value(${id}...)
-          "org.apache.ibatis.ognl.Ognl.getValue",
+          //          "org.apache.ibatis.ognl.Ognl.getValue",
 
-          // sql in xxMapper.xml (process twice，#/$)
-          "org.apache.ibatis.parsing.GenericTokenParser.parse",
+          // sql in xxMapper.xml (process twice, #/$)
+          //          "org.apache.ibatis.parsing.GenericTokenParser.parse",
+
+          //                "oracle.jdbc.driver.OracleSql.initialize",
         };
   }
 
@@ -164,13 +170,5 @@ public class Config {
       }
     }
     return false;
-  }
-
-  public static void setAsModified(String classname) {
-    MODIFIED_CLASSES.put(classname, true);
-  }
-
-  public static boolean isModified(String classname) {
-    return (boolean) MODIFIED_CLASSES.getOrDefault(classname, false);
   }
 }

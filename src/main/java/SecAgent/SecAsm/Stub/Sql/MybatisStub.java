@@ -17,13 +17,13 @@ public class MybatisStub extends CommonStub {
   }
 
   private void process() {
-    debug_print_offline(String.format("[DEBUG] [MybatisStub]: %s", this.paramsInfo.toString()));
+//    debug_print_offline(String.format("[DEBUG] [MybatisStub]: %s", this.paramsInfo.toString()));
     newArrayList(params2_idx);
     addListElement(params2_idx, T_OBJECT, 2);
     addListElement(params2_idx, T_OBJECT, 3);
     addListElement(params2_idx, T_OBJECT, 4);
 
-    debug_print_online(T_OBJECT, params2_idx);
+//    debug_print_online(T_OBJECT, params2_idx);
 
     putStubData("SQL", T_OBJECT, params2_idx);
   }
