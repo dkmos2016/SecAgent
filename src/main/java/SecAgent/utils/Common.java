@@ -1,7 +1,9 @@
 package SecAgent.utils;
 
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.Objects;
 
 public class Common {
 
@@ -145,5 +147,29 @@ public class Common {
     sb.deleteCharAt(sb.length() - 1);
 
     return sb.toString();
+  }
+
+  public static OutputStream transferTo(InputStream in) {
+    Objects.requireNonNull(in, "in");
+    ByteArrayOutputStream ba = new ByteArrayOutputStream();
+    try {
+      int v = -1;
+      while ((v = in.read()) > -1) ba.write(v);
+    } catch (Exception e) {
+;
+    }
+    return ba;
+  }
+
+  public static InputStream transferFrom(ByteArrayOutputStream outputStream) {
+    Objects.requireNonNull(outputStream, "out");
+    InputStream inputStream = new ByteArrayInputStream(outputStream.toByteArray());
+
+    return new InputStream() {
+      @Override
+      public int read() throws IOException {
+        return inputStream.read();
+      }
+    };
   }
 }
