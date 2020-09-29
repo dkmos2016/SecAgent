@@ -1,5 +1,6 @@
 import SecAgent.Conf.Config;
 import SecAgent.SecAsm.Common.CommonAdapter;
+import SecAgent.utils.AgentClassLoader;
 import SecAgent.utils.DefaultLoggerHelper.DefaultLogger;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassVisitor;
@@ -30,7 +31,8 @@ public class SecAsmTransformer implements ClassFileTransformer, Opcodes {
     ClassWriter cw = new ClassWriter(cr, ClassWriter.COMPUTE_FRAMES) {
       @Override
       protected ClassLoader getClassLoader() {
-        return loader;
+        return new AgentClassLoader(loader);
+//        return loader;
       }
     };
     //    ClassVisitor cv = new testClassVisitor(cw, className);
@@ -39,8 +41,6 @@ public class SecAsmTransformer implements ClassFileTransformer, Opcodes {
     try {
       cr.accept(cv, ClassReader.EXPAND_FRAMES);
       new_classfileBuffer = cw.toByteArray();
-
-      Config.setAsModified(className);
 
     } catch (Exception e) {
       //      e.printStackTrace();
