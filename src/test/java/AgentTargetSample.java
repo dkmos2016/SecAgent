@@ -1,3 +1,4 @@
+import java.io.InputStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 
@@ -5,22 +6,10 @@ public class AgentTargetSample<E> {
 
   public static void main(String[] args) {
     try {
-      Class cls = Class.forName("Test");
-      Method method = cls.getMethod("print", null);
+      Class cls = Class.forName("SecAgent.utils.Common");
+      Method method = cls.getMethod("transferTo", InputStream.class);
 
-      Constructor constructor = cls.getConstructor(int.class);
-      constructor.newInstance(1);
-
-      Test test = new Test(1);
-      Test test1 = null;
-      Object obj = test;
-
-      boolean flag = false;
-      if (test.getClass().getInterfaces().length > 0) {
-        flag = true;
-      }
-
-      test1 = (Test) obj;
+      method.invoke(null, new Object[]{null});
 
       //      method.invoke(null, );
     } catch (Exception e) {
