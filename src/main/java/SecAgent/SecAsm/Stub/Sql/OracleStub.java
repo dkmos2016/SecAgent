@@ -1,4 +1,4 @@
-package SecAgent.SecAsm.Stub;
+package SecAgent.SecAsm.Stub.Sql;
 
 import SecAgent.SecAsm.Common.CommonStub;
 import SecAgent.utils.ParamsInfo;
