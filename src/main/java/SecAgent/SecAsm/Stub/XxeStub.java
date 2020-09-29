@@ -39,8 +39,6 @@ public class XxeStub extends CommonStub {
         params_idx,
         res_idx);
 
-    putStubData("XXE", T_OBJECT, res_idx);
-
     newArrayList(params_idx);
     addListElement(params_idx, T_OBJECT, res_idx);
     findAndExecute(
@@ -53,6 +51,16 @@ public class XxeStub extends CommonStub {
 
     mv.visitVarInsn(ALOAD, res_idx);
     mv.visitVarInsn(ASTORE, 2);
+
+    findAndExecute(
+            "SecAgent.utils.Common",
+            "transferFrom",
+            new Class[] {ByteArrayOutputStream.class},
+            null_idx,
+            params_idx,
+            res_idx);
+
+    putStubData("XXE", T_OBJECT, res_idx);
   }
 
   @Override
