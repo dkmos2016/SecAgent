@@ -7,8 +7,8 @@ import java.util.logging.Formatter;
 import java.util.logging.LogRecord;
 
 public class DefaultLogFormat extends Formatter {
-  private static final String format = "%s [%s] %s - %s %s\n";
-  private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd hh:mm:ss:SSS");
+  private static final String format = "%s [%s] [%s] -- %s %s\n";
+  private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss:SSS");
 
   protected DefaultLogFormat() {
     super();
@@ -27,6 +27,7 @@ public class DefaultLogFormat extends Formatter {
     } else {
       source = record.getLoggerName();
     }
+
     String message = formatMessage(record);
     String throwable = "";
     if (record.getThrown() != null) {
@@ -42,8 +43,8 @@ public class DefaultLogFormat extends Formatter {
         format,
         sdf.format(record.getMillis()),
         //        source,
-        record.getLoggerName(),
         record.getLevel().getName(),
+        record.getLoggerName(),
         message,
         throwable);
   }
