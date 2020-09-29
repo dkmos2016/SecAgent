@@ -1,6 +1,9 @@
 package SecAgent.utils;
 
-public class AgentClassLoader extends ClassLoader {
+import java.net.URL;
+import java.net.URLClassLoader;
+
+public class AgentClassLoader extends URLClassLoader {
   protected ClassLoader parent;
 
   public AgentClassLoader() {
@@ -9,13 +12,13 @@ public class AgentClassLoader extends ClassLoader {
   }
 
   public AgentClassLoader(ClassLoader parent) {
-    super(parent);
-    //    this.parent = null;
+    super(new URL[]{}, parent);
+//    super(parent);
+        this.parent = parent;
   }
 
   @Override
   protected Class<?> loadClass(String name, boolean resolve) throws ClassNotFoundException {
-
     return super.loadClass(name, resolve);
   }
 }
