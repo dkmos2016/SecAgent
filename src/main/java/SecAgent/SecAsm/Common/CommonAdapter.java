@@ -5,6 +5,7 @@ import SecAgent.SecAsm.Stub.*;
 import SecAgent.SecAsm.Stub.Container.Tomcat.TomcatStub1;
 import SecAgent.SecAsm.Stub.Sql.MySqlStub;
 import SecAgent.SecAsm.Stub.Sql.MybatisStub;
+import SecAgent.SecAsm.Stub.Sql.OracleStub;
 import SecAgent.utils.DefaultLoggerHelper.DefaultLogger;
 import SecAgent.utils.ParamsInfo;
 import org.objectweb.asm.ClassVisitor;
@@ -35,8 +36,10 @@ public class CommonAdapter extends ClassVisitor implements Opcodes {
       switch (paramsInfo.toString()) {
         case Config.MYSQL_STUB:
           return new MySqlStub(this.api, mv, access, name, descriptor, paramsInfo);
+
         case Config.ORACLE_STUB:
           return new OracleStub(this.api, mv, access, name, descriptor, paramsInfo);
+
         case Config.MYBATIS_STUB:
           return new MybatisStub(this.api, mv, access, name, descriptor, paramsInfo);
 

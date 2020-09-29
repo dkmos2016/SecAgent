@@ -13,6 +13,11 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
+
+/**
+ * cannot process getPart/getParts
+ */
+@Deprecated
 public class CopyServletRequestWrapper extends HttpServletRequestWrapper {
   //  private byte[] body;
   private static final DefaultLogger logger;

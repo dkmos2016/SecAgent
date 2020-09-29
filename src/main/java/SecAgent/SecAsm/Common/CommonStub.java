@@ -502,7 +502,7 @@ public abstract class CommonStub extends AdviceAdapter implements Opcodes {
     getDeclaredMethod(cls_idx, methodname, paramTypes, method_idx);
 //        debug_print_online(T_OBJECT, method_idx);
     invoke(method_idx, inst_idx, params_idx, dst_idx);
-        debug_print_offline("invoke done. " );
+//        debug_print_offline("invoke done. " );
 
     mv.visitLabel(try_end0);
 

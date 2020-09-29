@@ -30,6 +30,7 @@ public class AgentDemo {
           //              "java.util.ArrayList",
           //          "com.sun.org.apache.xerces.internal.impl.XMLVersionDetector",
           "com.sun.org.apache.xerces.internal.impl.XMLEntityManager",
+          "com.sun.org.apache.xerces.internal.impl.XMLEntityManager$RewindableInputStream",
           "com.mysql.cj.jdbc.StatementImpl",
           "oracle.jdbc.driver.OracleStatement",
           "oracle.jdbc.driverOracleResultSetImpl",
