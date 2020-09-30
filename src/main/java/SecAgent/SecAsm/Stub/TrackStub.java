@@ -11,13 +11,14 @@ import java.lang.reflect.Modifier;
 
 /** origin asm bytecode */
 public class TrackStub extends AdviceAdapter implements Opcodes {
-  final int sb_idx = newLocal(Type.getType(StringBuilder.class));
-  final int tmp_sb = newLocal(Type.getType(StringBuilder.class));
-  final int tmp_arr = newLocal(Type.getType("[Ljava/lang/Object;"));
-  final int tmp_len = newLocal(Type.getType(int.class));
-  final int tmp_idx = newLocal(Type.getType(int.class));
-  final int tmp_obj = newLocal(Type.getType(Object.class));
-  ParamsInfo paramsInfo;
+  private static final int T_OBJECT = 1111111;
+  private final int sb_idx = newLocal(Type.getType(StringBuilder.class));
+  private final int tmp_sb = newLocal(Type.getType(StringBuilder.class));
+  private final int tmp_arr = newLocal(Type.getType("[Ljava/lang/Object;"));
+  private final int tmp_len = newLocal(Type.getType(int.class));
+  private final int tmp_idx = newLocal(Type.getType(int.class));
+  private final int tmp_obj = newLocal(Type.getType(Object.class));
+  private ParamsInfo paramsInfo;
 
   public TrackStub(
       int api,
@@ -30,11 +31,7 @@ public class TrackStub extends AdviceAdapter implements Opcodes {
     this.paramsInfo = paramsInfo;
   }
 
-  public static void output(int idx) {
-    System.out.println(String.format("debug wiit idx-%d", idx));
-  }
-
-  protected void append(int sb_idx, int obj_idx) {
+  private void append(int sb_idx, int obj_idx) {
     mv.visitVarInsn(ALOAD, sb_idx);
     mv.visitVarInsn(ALOAD, obj_idx);
     mv.visitMethodInsn(
@@ -48,7 +45,7 @@ public class TrackStub extends AdviceAdapter implements Opcodes {
     mv.visitInsn(POP);
   }
 
-  protected void append(int sb_idx, String sep) {
+  private void append(int sb_idx, String sep) {
     mv.visitVarInsn(ALOAD, sb_idx);
     mv.visitLdcInsn(sep);
     mv.visitMethodInsn(
@@ -64,7 +61,7 @@ public class TrackStub extends AdviceAdapter implements Opcodes {
    * @param cls
    * @param target
    */
-  protected void newInstance(String cls, int target) {
+  private void newInstance(String cls, int target) {
     mv.visitTypeInsn(NEW, cls);
     mv.visitInsn(DUP);
     mv.visitMethodInsn(INVOKESPECIAL, cls, "<init>", "()V", false);
@@ -73,7 +70,7 @@ public class TrackStub extends AdviceAdapter implements Opcodes {
 
   /** print trace stack */
   @Deprecated
-  protected void stackTrack() {
+  private void stackTrack() {
     // StackTraceElement[] tmp_arr = new Throwable().getStackTrace();
     mv.visitTypeInsn(NEW, "java/lang/Throwable");
     mv.visitInsn(DUP);
@@ -132,14 +129,59 @@ public class TrackStub extends AdviceAdapter implements Opcodes {
     mv.visitLabel(if_empty);
   }
 
-  public void debug_print(String msg) {
+  private void debug_print_offline(String msg) {
     mv.visitFieldInsn(GETSTATIC, "java/lang/System", "out", "Ljava/io/PrintStream;");
     mv.visitLdcInsn(msg);
     mv.visitMethodInsn(
-        INVOKEVIRTUAL, "java/io/PrintStream", "println", "(Ljava/lang/String;)V", false);
+            INVOKEVIRTUAL, "java/io/PrintStream", "println", "(Ljava/lang/String;)V", false);
   }
 
-  public void process() {
+  private void debug_print_online(int type, int obj_idx) {
+    String desc;
+
+    mv.visitFieldInsn(GETSTATIC, "java/lang/System", "out", "Ljava/io/PrintStream;");
+    switch (type) {
+      case T_BYTE:
+      case T_SHORT:
+      case T_INT:
+        desc = "(I)V";
+        mv.visitVarInsn(ILOAD, obj_idx);
+        break;
+      case T_BOOLEAN:
+        desc = "(Z)V";
+        mv.visitVarInsn(ILOAD, obj_idx);
+        break;
+
+      case T_CHAR:
+        desc = "(C)V";
+        mv.visitVarInsn(ILOAD, obj_idx);
+        break;
+
+      case T_LONG:
+        desc = "(J)V";
+        mv.visitVarInsn(LLOAD, obj_idx);
+        break;
+
+      case T_DOUBLE:
+        desc = "(J)V";
+        mv.visitVarInsn(DLOAD, obj_idx);
+        break;
+
+      case T_FLOAT:
+        desc = "(J)V";
+        mv.visitVarInsn(FLOAD, obj_idx);
+        break;
+
+      case T_OBJECT:
+      default:
+        desc = "(Ljava/lang/Object;)V";
+        mv.visitVarInsn(ALOAD, obj_idx);
+        break;
+    }
+    mv.visitMethodInsn(INVOKEVIRTUAL, "java/io/PrintStream", "println", desc, false);
+  }
+
+  private void process() {
     int param_idx = 1;
     int size = paramsInfo.getSize() + 1;
 
@@ -161,10 +203,11 @@ public class TrackStub extends AdviceAdapter implements Opcodes {
     //            "sb_idx: %d, tmp_sb: %d, tmp_arr: %d, tmp_len: %d, tmp_idx: %d, tmp_obj: %d",
     //            sb_idx, tmp_sb, tmp_arr, tmp_len, tmp_idx, tmp_obj));
 
+    debug_print_offline("parameter in: ");
     for (Type type : this.paramsInfo.getIn_types()) {
       mv.visitVarInsn(ALOAD, sb_idx);
       String desc = String.format("(%s)Ljava/lang/StringBuilder;", type.toString());
-      debug_print(
+      debug_print_offline(
           String.format(
               "[DEBUG] [TrackStub]: %s %s %d",
               this.paramsInfo.toString(), type.toString(), param_idx));
@@ -203,7 +246,7 @@ public class TrackStub extends AdviceAdapter implements Opcodes {
               && !type.toString().startsWith("[[")
               && type.toString().endsWith(";")) {
 
-            debug_print(
+            debug_print_offline(
                 param_idx + " reformat " + type.toString() + "   " + this.paramsInfo.toString());
 
             // clear opcode stack
@@ -334,13 +377,51 @@ public class TrackStub extends AdviceAdapter implements Opcodes {
   protected void onMethodEnter() {
     super.onMethodEnter();
     System.out.println(String.format("stub into %s, params %d", paramsInfo, paramsInfo.getSize()));
-    debug_print(String.format("[DEBUG] [TrackStub]: %s", this.paramsInfo.toString()));
+    debug_print_offline(String.format("[DEBUG] [TrackStub]: %s", this.paramsInfo.toString()));
   }
 
   @Override
   protected void onMethodExit(int opcode) {
     process();
     super.onMethodExit(opcode);
+
+    int type = 0;
+
+    switch(opcode) {
+      case ARETURN:
+        type = T_OBJECT;
+        mv.visitVarInsn(ASTORE, tmp_obj);
+        mv.visitVarInsn(ALOAD, tmp_obj);
+        break;
+      case FRETURN:
+        type = T_FLOAT;
+        mv.visitVarInsn(FSTORE, tmp_obj);
+        mv.visitVarInsn(FLOAD, tmp_obj);
+        break;
+
+      case DRETURN:
+        type = T_DOUBLE;
+        mv.visitVarInsn(DSTORE, tmp_obj);
+        mv.visitVarInsn(DLOAD, tmp_obj);
+        break;
+      case LRETURN:
+        type = T_LONG;
+        mv.visitVarInsn(LSTORE, tmp_obj);
+        mv.visitVarInsn(LLOAD, tmp_obj);
+        break;
+      case IRETURN:
+        type = T_INT;
+        mv.visitVarInsn(ISTORE, tmp_obj);
+        mv.visitVarInsn(ILOAD, tmp_obj);
+        break;
+
+      case RETURN:
+      default:
+        break;
+    }
+
+    debug_print_offline("parameter out: ");
+    debug_print_online(type, tmp_obj);
   }
 
   @Override
