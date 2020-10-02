@@ -18,51 +18,56 @@ public abstract class CommonStub extends AdviceAdapter implements Opcodes {
   protected int tmp_obj = newLocal(Type.getType(Object.class));
   protected int bak_obj = newLocal(Type.getType(Object.class));
   protected int flag_idx = newLocal(Type.getType(int.class));
-
-  // new Throwable()
-  private int stk_idx = newLocal(Type.getType(Throwable.class));
   protected int res_idx = newLocal(Type.getType(Object.class));
   protected int reqinfo_idx = newLocal(Type.getType(ReqInfo.class));
   protected ParamsInfo paramsInfo;
-
-  // for invoke
-  /** for invoke (nonestatic) */
+  /**
+   * for invoke (nonestatic)
+   */
   protected int inst_idx = newLocal(Type.getType(Object.class));
 
-  private int cls_idx = newLocal(Type.getType(Class.class));
-  private int method_idx = newLocal(Type.getType(Method.class));
-  protected int params_idx = newLocal(Type.getType(Object[].class));
+  /**
+   * for invoke
+   */
 
+  protected int params_idx = newLocal(Type.getType(Object[].class));
   /**
    * for mybatis
    */
   protected int params2_idx = newLocal(Type.getType(Object[].class));
+
   protected int null_idx = newLocal(Type.getType(Object[].class));
+  // new Throwable()
+  private final int stk_idx = newLocal(Type.getType(Throwable.class));
+  private final int cls_idx = newLocal(Type.getType(Class.class));
+  private final int method_idx = newLocal(Type.getType(Method.class));
 
   /**
    * Constructs a new {@link AdviceAdapter}.
    *
-   * @param api the ASM API version implemented by this visitor. Must be one of {@link
-   *     Opcodes#ASM4}, {@link Opcodes#ASM5}, {@link Opcodes#ASM6} or {@link Opcodes#ASM7}.
+   * @param api           the ASM API version implemented by this visitor. Must be one of {@link
+   *                      Opcodes#ASM4}, {@link Opcodes#ASM5}, {@link Opcodes#ASM6} or {@link Opcodes#ASM7}.
    * @param methodVisitor the method visitor to which this adapter delegates calls.
-   * @param access the method's access flags (see {@link Opcodes}).
-   * @param name the method's name.
-   * @param descriptor the method's descriptor (see {@link Type Type}).
+   * @param access        the method's access flags (see {@link Opcodes}).
+   * @param name          the method's name.
+   * @param descriptor    the method's descriptor (see {@link Type Type}).
    */
   public CommonStub(
-      int api,
-      MethodVisitor methodVisitor,
-      int access,
-      String name,
-      String descriptor,
-      ParamsInfo paramsInfo) {
+    int api,
+    MethodVisitor methodVisitor,
+    int access,
+    String name,
+    String descriptor,
+    ParamsInfo paramsInfo) {
     super(api, methodVisitor, access, name, descriptor);
     this.paramsInfo = paramsInfo;
 
     initExtras();
   }
 
-  /** initialize all local */
+  /**
+   * initialize all local
+   */
   private void initExtras() {
     setNull(this.tmp_obj);
     setNull(this.stk_idx);
@@ -88,7 +93,7 @@ public abstract class CommonStub extends AdviceAdapter implements Opcodes {
   protected void debug_print_tid() {
     mv.visitFieldInsn(GETSTATIC, "java/lang/System", "out", "Ljava/io/PrintStream;");
     mv.visitMethodInsn(
-        INVOKESTATIC, "java/lang/Thread", "currentThread", "()Ljava/lang/Thread;", false);
+      INVOKESTATIC, "java/lang/Thread", "currentThread", "()Ljava/lang/Thread;", false);
     mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Thread", "getId", "()J", false);
     mv.visitMethodInsn(INVOKEVIRTUAL, "java/io/PrintStream", "println", "(J)V", false);
   }
@@ -97,7 +102,7 @@ public abstract class CommonStub extends AdviceAdapter implements Opcodes {
     mv.visitFieldInsn(GETSTATIC, "java/lang/System", "out", "Ljava/io/PrintStream;");
     mv.visitLdcInsn(msg);
     mv.visitMethodInsn(
-        INVOKEVIRTUAL, "java/io/PrintStream", "println", "(Ljava/lang/String;)V", false);
+      INVOKEVIRTUAL, "java/io/PrintStream", "println", "(Ljava/lang/String;)V", false);
   }
 
   protected void debug_print_online(int type, int obj_idx) {
@@ -148,7 +153,7 @@ public abstract class CommonStub extends AdviceAdapter implements Opcodes {
   /**
    * generate new instance of cls, and saved to target
    *
-   * @param cls: classname, ex: java/lang/StringBuilder
+   * @param cls:    classname, ex: java/lang/StringBuilder
    * @param target: index of instance, ex: tmp_sb
    */
   protected void newInstance(String cls, int target) {
@@ -181,20 +186,20 @@ public abstract class CommonStub extends AdviceAdapter implements Opcodes {
   /**
    * sb.append(obj.toString());
    *
-   * @param sb_idx: index of StringBuilder's instance
+   * @param sb_idx:  index of StringBuilder's instance
    * @param obj_idx: index of target
    */
   protected void append(int sb_idx, int obj_idx) {
     mv.visitVarInsn(ALOAD, sb_idx);
     mv.visitVarInsn(ALOAD, obj_idx);
     mv.visitMethodInsn(
-        INVOKEVIRTUAL, "java/lang/Object", "toString", "()Ljava/lang/String;", false);
+      INVOKEVIRTUAL, "java/lang/Object", "toString", "()Ljava/lang/String;", false);
     mv.visitMethodInsn(
-        INVOKEVIRTUAL,
-        "java/lang/StringBuilder",
-        "append",
-        "(Ljava/lang/Object;)Ljava/lang/StringBuilder;",
-        false);
+      INVOKEVIRTUAL,
+      "java/lang/StringBuilder",
+      "append",
+      "(Ljava/lang/Object;)Ljava/lang/StringBuilder;",
+      false);
     mv.visitInsn(POP);
   }
 
@@ -202,17 +207,17 @@ public abstract class CommonStub extends AdviceAdapter implements Opcodes {
    * sb.append(str);
    *
    * @param sb_idx: index of StringBuilder's instance
-   * @param sep: index of target
+   * @param sep:    index of target
    */
   protected void append(int sb_idx, String sep) {
     mv.visitVarInsn(ALOAD, sb_idx);
     mv.visitLdcInsn(sep);
     mv.visitMethodInsn(
-        INVOKEVIRTUAL,
-        "java/lang/StringBuilder",
-        "append",
-        "(Ljava/lang/Object;)Ljava/lang/StringBuilder;",
-        false);
+      INVOKEVIRTUAL,
+      "java/lang/StringBuilder",
+      "append",
+      "(Ljava/lang/Object;)Ljava/lang/StringBuilder;",
+      false);
     mv.visitInsn(POP);
   }
 
@@ -317,7 +322,7 @@ public abstract class CommonStub extends AdviceAdapter implements Opcodes {
   protected void toStr(int sb_idx, int dst_idx) {
     mv.visitVarInsn(ALOAD, sb_idx);
     mv.visitMethodInsn(
-        INVOKEVIRTUAL, "java/lang/StringBuilder", "toString", "()Ljava/lang/String;", false);
+      INVOKEVIRTUAL, "java/lang/StringBuilder", "toString", "()Ljava/lang/String;", false);
     mv.visitVarInsn(ASTORE, dst_idx);
   }
 
@@ -330,7 +335,9 @@ public abstract class CommonStub extends AdviceAdapter implements Opcodes {
     mv.visitVarInsn(ASTORE, dst_idx);
   }
 
-  /** use thread to dump current classloader */
+  /**
+   * use thread to dump current classloader
+   */
   //  @Deprecated
   protected void classLoaderInfo() {
     // classloader info
@@ -342,25 +349,25 @@ public abstract class CommonStub extends AdviceAdapter implements Opcodes {
     mv.visitLabel(try_start);
 
     mv.visitMethodInsn(
-        INVOKESTATIC, "java/lang/Thread", "currentThread", "()Ljava/lang/Thread;", false);
+      INVOKESTATIC, "java/lang/Thread", "currentThread", "()Ljava/lang/Thread;", false);
     mv.visitMethodInsn(
-        INVOKEVIRTUAL,
-        "java/lang/Thread",
-        "getContextClassLoader",
-        "()Ljava/lang/ClassLoader;",
-        false);
+      INVOKEVIRTUAL,
+      "java/lang/Thread",
+      "getContextClassLoader",
+      "()Ljava/lang/ClassLoader;",
+      false);
     mv.visitVarInsn(ASTORE, tmp_obj);
 
     mv.visitJumpInsn(GOTO, try_target);
     mv.visitLabel(try_excep);
-    mv.visitFrame(F_SAME1, 0, null, 1, new Object[] {"java/lang/ClassNotFoundException"});
+    mv.visitFrame(F_SAME1, 0, null, 1, new Object[]{"java/lang/ClassNotFoundException"});
     //    mv.visitVarInsn(ASTORE, tmp_obj);
     mv.visitMethodInsn(
-        INVOKESTATIC,
-        "SecAgent/Logger/ExceptionLogger",
-        "doExpLogger",
-        "(Ljava/lang/Exception;)V",
-        false);
+      INVOKESTATIC,
+      "SecAgent/Logger/ExceptionLogger",
+      "doExpLogger",
+      "(Ljava/lang/Exception;)V",
+      false);
 
     //    mv.visitVarInsn(ALOAD, tmp_obj);
     //    mv.visitMethodInsn(
@@ -429,12 +436,12 @@ public abstract class CommonStub extends AdviceAdapter implements Opcodes {
     //    addListElement(params_idx, src_type, tmp_obj);
 
     findAndExecute(
-        "SecAgent.utils.ReqInfo",
-        "putStubData",
-        new Class[] {String.class, Throwable.class, Object.class},
-        reqinfo_idx,
-        params_idx,
-        res_idx);
+      "SecAgent.utils.ReqInfo",
+      "putStubData",
+      new Class[]{String.class, Throwable.class, Object.class},
+      reqinfo_idx,
+      params_idx,
+      res_idx);
 
     mv.visitLabel(if_null);
   }
@@ -448,7 +455,7 @@ public abstract class CommonStub extends AdviceAdapter implements Opcodes {
     mv.visitVarInsn(ALOAD, obj_idx);
     mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Object", "getClass", "()Ljava/lang/Class;", false);
     mv.visitMethodInsn(
-        INVOKEVIRTUAL, "java/lang/Class", "getInterfaces", "()[Ljava/lang/Class;", false);
+      INVOKEVIRTUAL, "java/lang/Class", "getInterfaces", "()[Ljava/lang/Class;", false);
     mv.visitInsn(ARRAYLENGTH);
 
     mv.visitJumpInsn(IFLE, if_null);
@@ -470,20 +477,20 @@ public abstract class CommonStub extends AdviceAdapter implements Opcodes {
   /**
    * find method with paramTypes, and execute
    *
-   * @param classname: class'name, ex: java.lang.Math
+   * @param classname:  class'name, ex: java.lang.Math
    * @param methodname: method name
    * @param paramTypes: method parameters' type, int.class, Object.class...
-   * @param inst_idx: instance of object
+   * @param inst_idx:   instance of object
    * @param params_idx: params index of real stack, ArrayList
-   * @param dst_idx: save result to dst_idx
+   * @param dst_idx:    save result to dst_idx
    */
   protected void findAndExecute(
-      String classname,
-      String methodname,
-      Class[] paramTypes,
-      int inst_idx,
-      int params_idx,
-      int dst_idx) {
+    String classname,
+    String methodname,
+    Class[] paramTypes,
+    int inst_idx,
+    int params_idx,
+    int dst_idx) {
     //    debug_print_offline("findAndExecute 1 " + classname + "." + methodname);
 
     Label try_end_all = new Label();
@@ -509,7 +516,7 @@ public abstract class CommonStub extends AdviceAdapter implements Opcodes {
     mv.visitJumpInsn(GOTO, try_end_all);
 
     mv.visitLabel(try_excep0);
-    mv.visitFrame(F_SAME1, 0, null, 1, new Object[] {"java/lang/Exception"});
+    mv.visitFrame(F_SAME1, 0, null, 1, new Object[]{"java/lang/Exception"});
     mv.visitVarInsn(ASTORE, tmp_obj);
 
     //   ExceptionLogger.doExpLog(Exception e)
@@ -523,7 +530,7 @@ public abstract class CommonStub extends AdviceAdapter implements Opcodes {
     newArrayList(params_idx);
     addListElement(params_idx, T_OBJECT, tmp_obj);
     loadClass("SecAgent.Logger.ExceptionLogger", cls_idx);
-    getDeclaredMethod(cls_idx, "doExpLog", new Class[] {Exception.class}, method_idx);
+    getDeclaredMethod(cls_idx, "doExpLog", new Class[]{Exception.class}, method_idx);
     invoke(method_idx, null_idx, params_idx, dst_idx);
     mv.visitLabel(try_end1);
 
@@ -548,7 +555,7 @@ public abstract class CommonStub extends AdviceAdapter implements Opcodes {
     tmp_list.add("java/lang/Exception");
 
     mv.visitLabel(try_excep1);
-    mv.visitFrame(F_FULL, size, tmp_list.toArray(), 1, new Object[] {"java/lang/Exception"});
+    mv.visitFrame(F_FULL, size, tmp_list.toArray(), 1, new Object[]{"java/lang/Exception"});
     //    mv.visitVarInsn(ASTORE, tmp_obj);
     ////        mv.visitVarInsn(ALOAD, tmp_obj);
     //
@@ -563,9 +570,9 @@ public abstract class CommonStub extends AdviceAdapter implements Opcodes {
   /**
    * for [new SecInstanceProxyFactory(Object).getProxyInstance()]
    *
-   * @see SecAgent.Filter.SecInstanceProxyFactory
    * @param obj_idx
    * @param dst_idx
+   * @see SecAgent.Filter.SecInstanceProxyFactory
    */
   protected void findAndGetSecProxyInstance(int obj_idx, int dst_idx) {
 
@@ -586,14 +593,14 @@ public abstract class CommonStub extends AdviceAdapter implements Opcodes {
     debug_print_offline("getConstructor done");
     loadClass("SecAgent.Filter.SecInstanceProxyFactory", cls_idx);
 
-    Class[] paramTypes = new Class[] {Object.class};
+    Class[] paramTypes = new Class[]{Object.class};
     getConstructor(cls_idx, paramTypes, method_idx);
 
     newArrayList(params_idx);
     addListElement(params_idx, T_OBJECT, obj_idx);
 
     invokeConstructor(method_idx, params_idx, inst_idx);
-    getDeclaredMethod(cls_idx, "getProxyInstance", new Class[] {}, method_idx);
+    getDeclaredMethod(cls_idx, "getProxyInstance", new Class[]{}, method_idx);
 
     newArrayList(params_idx);
     invoke(method_idx, inst_idx, params_idx, dst_idx);
@@ -603,7 +610,7 @@ public abstract class CommonStub extends AdviceAdapter implements Opcodes {
     mv.visitJumpInsn(GOTO, try_end_all);
 
     mv.visitLabel(try_excep0);
-    mv.visitFrame(F_SAME1, 0, null, 1, new Object[] {"java/lang/Exception"});
+    mv.visitFrame(F_SAME1, 0, null, 1, new Object[]{"java/lang/Exception"});
     mv.visitVarInsn(ASTORE, tmp_obj);
 
     //   ExceptionLogger.doExpLog(Exception e)
@@ -617,7 +624,7 @@ public abstract class CommonStub extends AdviceAdapter implements Opcodes {
     newArrayList(params_idx);
     addListElement(params_idx, T_OBJECT, tmp_obj);
     loadClass("SecAgent.Logger.ExceptionLogger", cls_idx);
-    getDeclaredMethod(cls_idx, "doExpLog", new Class[] {Exception.class}, method_idx);
+    getDeclaredMethod(cls_idx, "doExpLog", new Class[]{Exception.class}, method_idx);
     invoke(method_idx, null_idx, params_idx, dst_idx);
     mv.visitLabel(try_end1);
 
@@ -642,7 +649,7 @@ public abstract class CommonStub extends AdviceAdapter implements Opcodes {
     tmp_list.add("java/lang/Exception");
 
     mv.visitLabel(try_excep1);
-    mv.visitFrame(F_FULL, size, tmp_list.toArray(), 1, new Object[] {"java/lang/Exception"});
+    mv.visitFrame(F_FULL, size, tmp_list.toArray(), 1, new Object[]{"java/lang/Exception"});
     //    mv.visitVarInsn(ASTORE, tmp_obj);
     ////        mv.visitVarInsn(ALOAD, tmp_obj);
     //
@@ -655,9 +662,9 @@ public abstract class CommonStub extends AdviceAdapter implements Opcodes {
     mv.visitFrame(Opcodes.F_CHOP, 1, null, 0, null);
   }
 
-  @Deprecated
+  //  @Deprecated
   protected void findAndGetInstance(
-      String classname, Class[] paramTypes, int params_idx, int dst_idx) {
+    String classname, Class[] paramTypes, int params_idx, int dst_idx) {
     //    debug_print_offline("findAndExecute 1 " + classname + "." + methodname);
 
     Label try_end_all = new Label();
@@ -682,7 +689,7 @@ public abstract class CommonStub extends AdviceAdapter implements Opcodes {
     mv.visitJumpInsn(GOTO, try_end_all);
 
     mv.visitLabel(try_excep0);
-    mv.visitFrame(F_SAME1, 0, null, 1, new Object[] {"java/lang/Exception"});
+    mv.visitFrame(F_SAME1, 0, null, 1, new Object[]{"java/lang/Exception"});
     mv.visitVarInsn(ASTORE, tmp_obj);
 
     //   ExceptionLogger.doExpLog(Exception e)
@@ -696,7 +703,7 @@ public abstract class CommonStub extends AdviceAdapter implements Opcodes {
     newArrayList(params_idx);
     addListElement(params_idx, T_OBJECT, tmp_obj);
     loadClass("SecAgent.Logger.ExceptionLogger", cls_idx);
-    getDeclaredMethod(cls_idx, "doExpLog", new Class[] {Exception.class}, method_idx);
+    getDeclaredMethod(cls_idx, "doExpLog", new Class[]{Exception.class}, method_idx);
     invoke(method_idx, null_idx, params_idx, dst_idx);
     mv.visitLabel(try_end1);
 
@@ -721,7 +728,7 @@ public abstract class CommonStub extends AdviceAdapter implements Opcodes {
     tmp_list.add("java/lang/Exception");
 
     mv.visitLabel(try_excep1);
-    mv.visitFrame(F_FULL, size, tmp_list.toArray(), 1, new Object[] {"java/lang/Exception"});
+    mv.visitFrame(F_FULL, size, tmp_list.toArray(), 1, new Object[]{"java/lang/Exception"});
     //    mv.visitVarInsn(ASTORE, tmp_obj);
     ////        mv.visitVarInsn(ALOAD, tmp_obj);
     //
@@ -741,20 +748,20 @@ public abstract class CommonStub extends AdviceAdapter implements Opcodes {
    */
   private void loadClass(String classname, int dst_idx) {
     mv.visitMethodInsn(
-        INVOKESTATIC, "java/lang/Thread", "currentThread", "()Ljava/lang/Thread;", false);
+      INVOKESTATIC, "java/lang/Thread", "currentThread", "()Ljava/lang/Thread;", false);
     mv.visitMethodInsn(
-        INVOKEVIRTUAL,
-        "java/lang/Thread",
-        "getContextClassLoader",
-        "()Ljava/lang/ClassLoader;",
-        false);
+      INVOKEVIRTUAL,
+      "java/lang/Thread",
+      "getContextClassLoader",
+      "()Ljava/lang/ClassLoader;",
+      false);
     mv.visitLdcInsn(classname);
     mv.visitMethodInsn(
-        INVOKEVIRTUAL,
-        "java/lang/ClassLoader",
-        "loadClass",
-        "(Ljava/lang/String;)Ljava/lang/Class;",
-        false);
+      INVOKEVIRTUAL,
+      "java/lang/ClassLoader",
+      "loadClass",
+      "(Ljava/lang/String;)Ljava/lang/Class;",
+      false);
     mv.visitVarInsn(ASTORE, dst_idx);
   }
 
@@ -825,11 +832,11 @@ public abstract class CommonStub extends AdviceAdapter implements Opcodes {
 
     //    debug_print_offline("to getMethod...");
     mv.visitMethodInsn(
-        INVOKEVIRTUAL,
-        "java/lang/Class",
-        "getConstructor",
-        "([Ljava/lang/Class;)Ljava/lang/reflect/Constructor;",
-        false);
+      INVOKEVIRTUAL,
+      "java/lang/Class",
+      "getConstructor",
+      "([Ljava/lang/Class;)Ljava/lang/reflect/Constructor;",
+      false);
 
     mv.visitVarInsn(ASTORE, dst_idx);
   }
@@ -906,11 +913,11 @@ public abstract class CommonStub extends AdviceAdapter implements Opcodes {
 
     //    debug_print_offline("to getMethod...");
     mv.visitMethodInsn(
-        INVOKEVIRTUAL,
-        "java/lang/Class",
-        "getDeclaredMethod",
-        "(Ljava/lang/String;[Ljava/lang/Class;)Ljava/lang/reflect/Method;",
-        false);
+      INVOKEVIRTUAL,
+      "java/lang/Class",
+      "getDeclaredMethod",
+      "(Ljava/lang/String;[Ljava/lang/Class;)Ljava/lang/reflect/Method;",
+      false);
     mv.visitVarInsn(ASTORE, dst_idx);
 
     //    debug_print_offline("getDeclaredMethod done");
@@ -942,7 +949,7 @@ public abstract class CommonStub extends AdviceAdapter implements Opcodes {
     mv.visitLabel(if_body);
     mv.visitVarInsn(ALOAD, params_idx);
     mv.visitMethodInsn(
-        INVOKEVIRTUAL, "java/util/ArrayList", "toArray", "()[Ljava/lang/Object;", false);
+      INVOKEVIRTUAL, "java/util/ArrayList", "toArray", "()[Ljava/lang/Object;", false);
     mv.visitVarInsn(ASTORE, tmp_obj);
     mv.visitJumpInsn(GOTO, if_end);
 
@@ -958,11 +965,11 @@ public abstract class CommonStub extends AdviceAdapter implements Opcodes {
     mv.visitVarInsn(ALOAD, inst_idx);
     mv.visitVarInsn(ALOAD, tmp_obj);
     mv.visitMethodInsn(
-        INVOKEVIRTUAL,
-        "java/lang/reflect/Method",
-        "invoke",
-        "(Ljava/lang/Object;[Ljava/lang/Object;)Ljava/lang/Object;",
-        false);
+      INVOKEVIRTUAL,
+      "java/lang/reflect/Method",
+      "invoke",
+      "(Ljava/lang/Object;[Ljava/lang/Object;)Ljava/lang/Object;",
+      false);
     mv.visitVarInsn(ASTORE, dst_idx);
   }
 
@@ -984,7 +991,7 @@ public abstract class CommonStub extends AdviceAdapter implements Opcodes {
     mv.visitLabel(if_body);
     mv.visitVarInsn(ALOAD, params_idx);
     mv.visitMethodInsn(
-        INVOKEVIRTUAL, "java/util/ArrayList", "toArray", "()[Ljava/lang/Object;", false);
+      INVOKEVIRTUAL, "java/util/ArrayList", "toArray", "()[Ljava/lang/Object;", false);
     mv.visitVarInsn(ASTORE, tmp_obj);
     mv.visitJumpInsn(GOTO, if_end);
 
@@ -999,11 +1006,11 @@ public abstract class CommonStub extends AdviceAdapter implements Opcodes {
     mv.visitVarInsn(ALOAD, method_idx);
     mv.visitVarInsn(ALOAD, tmp_obj);
     mv.visitMethodInsn(
-        INVOKEVIRTUAL,
-        "java/lang/reflect/Constructor",
-        "newInstance",
-        "([Ljava/lang/Object;)Ljava/lang/Object;",
-        false);
+      INVOKEVIRTUAL,
+      "java/lang/reflect/Constructor",
+      "newInstance",
+      "([Ljava/lang/Object;)Ljava/lang/Object;",
+      false);
     mv.visitVarInsn(ASTORE, dst_idx);
   }
 
@@ -1019,19 +1026,19 @@ public abstract class CommonStub extends AdviceAdapter implements Opcodes {
       case T_SHORT:
         mv.visitVarInsn(ILOAD, obj_idx);
         mv.visitMethodInsn(
-            INVOKESTATIC, "java/lang/Short", "valueOf", "(S)Ljava/lang/Short;", false);
+          INVOKESTATIC, "java/lang/Short", "valueOf", "(S)Ljava/lang/Short;", false);
         break;
 
       case T_INT:
         mv.visitVarInsn(ILOAD, obj_idx);
         mv.visitMethodInsn(
-            INVOKESTATIC, "java/lang/Integer", "valueOf", "(I)Ljava/lang/Integer;", false);
+          INVOKESTATIC, "java/lang/Integer", "valueOf", "(I)Ljava/lang/Integer;", false);
         break;
 
       case T_BOOLEAN:
         mv.visitVarInsn(ILOAD, obj_idx);
         mv.visitMethodInsn(
-            INVOKESTATIC, "java/lang/Boolean", "valueOf", "(Z)Ljava/lang/Boolean;", false);
+          INVOKESTATIC, "java/lang/Boolean", "valueOf", "(Z)Ljava/lang/Boolean;", false);
         break;
 
       case T_CHAR:
@@ -1047,13 +1054,13 @@ public abstract class CommonStub extends AdviceAdapter implements Opcodes {
       case T_DOUBLE:
         mv.visitVarInsn(DLOAD, obj_idx);
         mv.visitMethodInsn(
-            INVOKESTATIC, "java/lang/Double", "valueOf", "(D)Ljava/lang/Double;", false);
+          INVOKESTATIC, "java/lang/Double", "valueOf", "(D)Ljava/lang/Double;", false);
         break;
 
       case T_FLOAT:
         mv.visitVarInsn(FLOAD, obj_idx);
         mv.visitMethodInsn(
-            INVOKESTATIC, "java/lang/Float", "valueOf", "(F)Ljava/lang/Float;", false);
+          INVOKESTATIC, "java/lang/Float", "valueOf", "(F)Ljava/lang/Float;", false);
         break;
 
       case T_OBJECT:
