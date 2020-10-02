@@ -4,7 +4,9 @@ import SecAgent.Conf.Config;
 import SecAgent.SecAsm.Stub.*;
 import SecAgent.SecAsm.Stub.Container.Tomcat.TomcatStub1;
 import SecAgent.SecAsm.Stub.Sql.MySqlStub;
-import SecAgent.SecAsm.Stub.Sql.MybatisStub;
+import SecAgent.SecAsm.Stub.Sql.Mybatis.MybatisSqlAStub;
+import SecAgent.SecAsm.Stub.Sql.Mybatis.MybatisSqlBStub;
+import SecAgent.SecAsm.Stub.Sql.Mybatis.MybatisValueStub;
 import SecAgent.SecAsm.Stub.Sql.OracleStub;
 import SecAgent.utils.DefaultLoggerHelper.DefaultLogger;
 import SecAgent.utils.ParamsInfo;
@@ -15,7 +17,7 @@ import org.objectweb.asm.Type;
 
 public class CommonAdapter extends ClassVisitor implements Opcodes {
   private static final DefaultLogger logger =
-      DefaultLogger.getLogger(CommonAdapter.class, Config.EXCEPTION_PATH);
+    DefaultLogger.getLogger(CommonAdapter.class, Config.EXCEPTION_PATH);
   private final String CLASSNAME;
 
   public CommonAdapter(final ClassVisitor cv, final String name) {
@@ -25,13 +27,13 @@ public class CommonAdapter extends ClassVisitor implements Opcodes {
 
   @Override
   public MethodVisitor visitMethod(
-      int access, String name, String descriptor, String signature, String[] exceptions) {
+    int access, String name, String descriptor, String signature, String[] exceptions) {
     MethodVisitor mv = null;
     try {
       mv = super.visitMethod(access, name, descriptor, signature, exceptions);
       ParamsInfo paramsInfo =
-          new ParamsInfo(
-              CLASSNAME, access, name, Type.getArgumentTypes(descriptor), descriptor, signature);
+        new ParamsInfo(
+          CLASSNAME, access, name, Type.getArgumentTypes(descriptor), descriptor, signature);
 
       switch (paramsInfo.toString()) {
         case Config.MYSQL_STUB:
@@ -40,8 +42,14 @@ public class CommonAdapter extends ClassVisitor implements Opcodes {
         case Config.ORACLE_STUB:
           return new OracleStub(this.api, mv, access, name, descriptor, paramsInfo);
 
-        case Config.MYBATIS_STUB:
-          return new MybatisStub(this.api, mv, access, name, descriptor, paramsInfo);
+        case Config.MYBATIS_VALUE_STUB:
+          return new MybatisValueStub(this.api, mv, access, name, descriptor, paramsInfo);
+
+        case Config.MYBATIS_SQLA_STUB:
+          return new MybatisSqlAStub(this.api, mv, access, name, descriptor, paramsInfo);
+
+        case Config.MYBATIS_SQLB_STUB:
+          return new MybatisSqlBStub(this.api, mv, access, name, descriptor, paramsInfo);
 
         case Config.TOMCAT_STUB:
           return new TomcatStub1(this.api, mv, access, name, descriptor, paramsInfo);
