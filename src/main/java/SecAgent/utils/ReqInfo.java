@@ -140,13 +140,14 @@ public class ReqInfo {
     ArrayList list = StubDatas.getOrDefault(type, new ArrayList());
     List list1 = new ArrayList();
     if (obj instanceof  ArrayList) {
-      String sql = (String) ((List) obj).get(0);
+      String sql = ((List) obj).get(0).toString();
 
       list1.add(sql);
-      list1.add(Arrays.asList(((List) obj).get(2)));
+      list1.add(((List) obj).get(1));
     }
 
     list.add(new StubData(throwable, list1));
+
     return list;
   }
 

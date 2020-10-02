@@ -7,34 +7,50 @@ import org.objectweb.asm.MethodVisitor;
 /**
  * just log sql in xxMapper.xml, maybe with ?/#
  */
-public class MybatisSqlStub extends CommonStub {
+public class MybatisValueStub extends CommonStub {
 
-  public MybatisSqlStub(
-      int api,
-      MethodVisitor methodVisitor,
-      int access,
-      String name,
-      String descriptor,
-      ParamsInfo paramsInfo) {
+  public MybatisValueStub(
+    int api,
+    MethodVisitor methodVisitor,
+    int access,
+    String name,
+    String descriptor,
+    ParamsInfo paramsInfo) {
     super(api, methodVisitor, access, name, descriptor, paramsInfo);
   }
 
   private void process() {
-//    debug_print_offline(String.format("[DEBUG] [MybatisStub]: %s", this.paramsInfo.toString()));
-//    newArrayList(params2_idx);
-//    addListElement(params2_idx, T_OBJECT, 2);
-//    addListElement(params2_idx, T_OBJECT, 3);
-//    addListElement(params2_idx, T_OBJECT, 4);
+    debug_print_offline(String.format("[DEBUG] [MybatisValueStub]: %s", this.paramsInfo.toString()));
 
-//    debug_print_online(T_OBJECT, params2_idx);
+    mv.visitVarInsn(ASTORE, bak_obj);
 
-    putStubData("SQL", T_OBJECT, 2);
+
+    newArrayList(params2_idx);
+    addListElement(params2_idx, T_OBJECT, 0);
+    addListElement(params2_idx, T_OBJECT, bak_obj);
+    findAndGetInstance("SecAgent.utils.Pair", new Class[]{Object.class, Object.class}, params2_idx, res_idx);
+
+    newArrayList(params2_idx);
+    mv.visitVarInsn(ALOAD, 0);
+    mv.visitFieldInsn(GETFIELD, "org/apache/ibatis/scripting/xmltags/TextSqlNode$BindingTokenParser", "context", "Lorg/apache/ibatis/scripting/xmltags/DynamicContext;");
+    mv.visitVarInsn(ASTORE, tmp_obj);
+
+    addListElement(params2_idx, T_OBJECT, tmp_obj);
+    addListElement(params2_idx, T_OBJECT, res_idx);
+
+    debug_print_online(T_OBJECT, tmp_obj);
+    debug_print_online(T_OBJECT, res_idx);
+
+    putStubData("MYBATIS", T_OBJECT, params2_idx);
+
+    mv.visitVarInsn(ALOAD, bak_obj);
+
+//    putStubData("SQL", T_OBJECT, 2);
   }
 
   @Override
   protected void onMethodEnter() {
     super.onMethodEnter();
-    process();
   }
 
   @Override
@@ -42,7 +58,9 @@ public class MybatisSqlStub extends CommonStub {
 
     //    mv.visitVarInsn(ALOAD, bak_obj);
     //    mv.visitVarInsn(ASTORE, 0);
+
     super.onMethodExit(opcode);
+    process();
   }
 
   @Override
