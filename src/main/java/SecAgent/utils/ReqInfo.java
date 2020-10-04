@@ -20,6 +20,10 @@ public class ReqInfo {
 
   // store throwable & parameter
   private final Map<String, ArrayList<StubData>> StubDatas = new HashMap<>();
+  /**
+   * for logging mybatis(template, input parameter, sql string)
+   */
+  private final Map<String, ArrayList<String>> MYBATIS_CACHES = new HashMap<>();
   /** reversed */
   private final Map<String, String> headers = new HashMap<>();
   /** request parameters (include url & body) */
@@ -107,7 +111,7 @@ public class ReqInfo {
 
     switch (type.toLowerCase()) {
       case "mybatis":
-        list = doPutMybatis(type, throwable, obj);
+        doPutMybatis(type, throwable, obj);
         break;
 
       case "xxe":
@@ -119,7 +123,7 @@ public class ReqInfo {
         break;
     }
 
-    StubDatas.put(type, list);
+    if (list == null) StubDatas.put(type, list);
   }
 
   private ArrayList doPutCommon(String type, Throwable throwable, Object obj) {
@@ -136,19 +140,30 @@ public class ReqInfo {
    * @param obj
    * @return
    */
-  private ArrayList doPutMybatis(String type, Throwable throwable, Object obj) {
-    ArrayList list = StubDatas.getOrDefault(type, new ArrayList());
-    List list1 = new ArrayList();
-    if (obj instanceof  ArrayList) {
-      String sql = ((List) obj).get(0).toString();
+  private void doPutMybatis(String type, Throwable throwable, Object obj) {
+    if (obj instanceof ArrayList){
+      String name = ((ArrayList<?>) obj).get(0).toString();
+      String _type = ((ArrayList<?>) obj).get(1).toString();
+      String value = ((ArrayList<?>) obj).get(2).toString();
 
-      list1.add(sql);
-      list1.add(((List) obj).get(1));
+      ArrayList list = MYBATIS_CACHES.getOrDefault(name, new ArrayList());
+
+      switch(_type) {
+        case "BEFORE":
+        case "AFTER":
+          list.add(value);
+          break;
+
+        case "PARAMETER":
+          list.add(String.format(String.format("%s: %s", _type, value)));
+        default:
+          break;
+      }
+
+      logger.debug(list);
+
+      MYBATIS_CACHES.put(name, list);
     }
-
-    list.add(new StubData(throwable, list1));
-
-    return list;
   }
 
   /**
