@@ -20,8 +20,6 @@ public class MybatisValueStub extends CommonStub {
   }
 
   private void process() {
-    debug_print_offline(String.format("[DEBUG] [MybatisValueStub]: %s", this.paramsInfo.toString()));
-
     mv.visitVarInsn(ASTORE, bak_obj);
 
     newArrayList(params2_idx);
@@ -35,16 +33,16 @@ public class MybatisValueStub extends CommonStub {
     mv.visitVarInsn(ASTORE, tmp_obj);
 
     addListElement(params2_idx, T_OBJECT, tmp_obj);
-    addListElement(params2_idx, T_OBJECT, res_idx);
 
-    debug_print_online(T_OBJECT, tmp_obj);
-    debug_print_online(T_OBJECT, res_idx);
+    mv.visitLdcInsn("PARAMETER");
+    mv.visitVarInsn(ASTORE, tmp_obj);
+    addListElement(params2_idx, T_OBJECT, tmp_obj);
+
+    addListElement(params2_idx, T_OBJECT, res_idx);
 
     putStubData("MYBATIS", T_OBJECT, params2_idx);
 
     mv.visitVarInsn(ALOAD, bak_obj);
-
-//    putStubData("SQL", T_OBJECT, 2);
   }
 
   @Override
