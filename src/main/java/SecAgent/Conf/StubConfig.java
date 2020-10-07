@@ -2,9 +2,7 @@ package SecAgent.Conf;
 
 import SecAgent.utils.Resources;
 
-public class Config {
-  public static final boolean DEBUG = true;
-
+public class StubConfig {
   public static final String DEBUG_PATH = Resources.getProperty("DEBUG_LOG_PATH");
   public static final String EXCEPTION_PATH = Resources.getProperty("INFORMATION_LOG_PATH");
   public static final String INFORMATION_PATH = Resources.getProperty("EXCEPTION_LOG_PATH");
