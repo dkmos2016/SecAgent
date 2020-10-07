@@ -1,4 +1,5 @@
 import SecAgent.Conf.Config;
+import SecAgent.Conf.StubConfig;
 import SecAgent.SecAsm.Common.CommonAdapter;
 import SecAgent.utils.AgentClassLoader;
 import SecAgent.utils.DefaultLoggerHelper.DefaultLogger;
@@ -7,6 +8,9 @@ import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Opcodes;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.lang.instrument.ClassFileTransformer;
 import java.security.ProtectionDomain;
 
@@ -21,7 +25,7 @@ public class SecAsmTransformer implements ClassFileTransformer, Opcodes {
       Class<?> classBeingRedefined,
       ProtectionDomain protectionDomain,
       byte[] classfileBuffer) {
-    if (!Config.isIncludedClass(className)) {
+    if (!StubConfig.isIncludedClass(className)) {
       return classfileBuffer;
     }
 
@@ -46,6 +50,19 @@ public class SecAsmTransformer implements ClassFileTransformer, Opcodes {
       //      e.printStackTrace();
       if (logger != null) logger.error(e);
       new_classfileBuffer = classfileBuffer;
+    }
+
+    if (className.replace("/", ".").equals("org.apache.ibatis.mapping.MappedStatement")) {
+      try {
+        FileOutputStream fout = new FileOutputStream("/Users/len/test.class");
+        fout.write(new_classfileBuffer);
+        fout.close();
+      } catch (FileNotFoundException e) {
+        e.printStackTrace();
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
+
     }
 
     return new_classfileBuffer;

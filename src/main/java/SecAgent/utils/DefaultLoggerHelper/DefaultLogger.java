@@ -1,5 +1,7 @@
 package SecAgent.utils.DefaultLoggerHelper;
 
+import SecAgent.Conf.Config;
+
 import java.io.IOException;
 import java.util.logging.*;
 
@@ -8,9 +10,9 @@ public class DefaultLogger extends Logger {
   private static final MyLevel DEFAULT_LEVEL;
 
   static {
-    DEFAULT_LOGGER_NAME = "SecAgent";
-    DEFAULT_LEVEL = MyLevel.INFO;
-    //    LOGGER_NAME = null;
+    DEFAULT_LOGGER_NAME = Config.DEFAULT_LOGGER_NAME.isEmpty() ? "DEFAULT" : Config.DEFAULT_LOGGER_NAME;
+    DEFAULT_LEVEL = Config.DEFAULT_LOGGER_LEVEL == null ? MyLevel.INFO : Config.DEFAULT_LOGGER_LEVEL;
+//    DEFAULT_LEVEL = MyLevel.INFO;
   }
 
   private String LOGGER_NAME = null;
@@ -43,7 +45,7 @@ public class DefaultLogger extends Logger {
   }
 
   protected DefaultLogger(String name, String log_path, String resourceBundleName)
-      throws IOException {
+    throws IOException {
     super(name, resourceBundleName);
     this.LOGGER_NAME = name;
     file_handler = new DefaultLogFileHandler();
@@ -60,7 +62,7 @@ public class DefaultLogger extends Logger {
   }
 
   protected DefaultLogger(Class cls, String log_path, String resourceBundleName)
-      throws IOException {
+    throws IOException {
     this(cls.getName(), log_path, resourceBundleName);
   }
 
@@ -143,13 +145,14 @@ public class DefaultLogger extends Logger {
   }
 
   public void setLevel(MyLevel mylevel) {
-    this.LEVEL = mylevel;
+    if (Config.ALLOWED_DIY_DEBUG)
+      this.LEVEL = mylevel;
   }
 
   public void log(Level level, String msg) {
     LogRecord lr = new LogRecord(level, msg);
     lr.setLoggerName(
-        LOGGER_NAME == null || LOGGER_NAME.isEmpty() ? DEFAULT_LOGGER_NAME : LOGGER_NAME);
+      LOGGER_NAME == null || LOGGER_NAME.isEmpty() ? DEFAULT_LOGGER_NAME : LOGGER_NAME);
 
     log(lr);
   }

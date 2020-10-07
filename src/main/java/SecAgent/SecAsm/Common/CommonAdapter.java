@@ -1,6 +1,7 @@
 package SecAgent.SecAsm.Common;
 
 import SecAgent.Conf.Config;
+import SecAgent.Conf.StubConfig;
 import SecAgent.SecAsm.Stub.*;
 import SecAgent.SecAsm.Stub.Container.Tomcat.TomcatStub1;
 import SecAgent.SecAsm.Stub.Sql.MySqlStub;
@@ -36,41 +37,41 @@ public class CommonAdapter extends ClassVisitor implements Opcodes {
           CLASSNAME, access, name, Type.getArgumentTypes(descriptor), descriptor, signature);
 
       switch (paramsInfo.toString()) {
-        case Config.MYSQL_STUB:
+        case StubConfig.MYSQL_STUB:
           return new MySqlStub(this.api, mv, access, name, descriptor, paramsInfo);
 
-        case Config.ORACLE_STUB:
+        case StubConfig.ORACLE_STUB:
           return new OracleStub(this.api, mv, access, name, descriptor, paramsInfo);
 
-        case Config.MYBATIS_VALUE_STUB:
+        case StubConfig.MYBATIS_VALUE_STUB:
           return new MybatisValueStub(this.api, mv, access, name, descriptor, paramsInfo);
 
-        case Config.MYBATIS_SQLA_STUB:
+        case StubConfig.MYBATIS_SQLA_STUB:
           return new MybatisSqlAStub(this.api, mv, access, name, descriptor, paramsInfo);
 
-        case Config.MYBATIS_SQLB_STUB:
+        case StubConfig.MYBATIS_SQLB_STUB:
           return new MybatisSqlBStub(this.api, mv, access, name, descriptor, paramsInfo);
 
-        case Config.TOMCAT_STUB:
+        case StubConfig.TOMCAT_STUB:
           return new TomcatStub1(this.api, mv, access, name, descriptor, paramsInfo);
 
-        case Config.EXEC_STUB:
+        case StubConfig.EXEC_STUB:
           return new CmdStub(this.api, mv, access, name, descriptor, paramsInfo);
 
-        case Config.DOWN_STUB:
+        case StubConfig.DOWN_STUB:
           return new DownStub(this.api, mv, access, name, descriptor, paramsInfo);
 
-        case Config.UPLOAD_STUB:
+        case StubConfig.UPLOAD_STUB:
           return new UploadStub(this.api, mv, access, name, descriptor, paramsInfo);
 
-        case Config.SPRING_URL_STUB:
+        case StubConfig.SPRING_URL_STUB:
           return new UrlStub(this.api, mv, access, name, descriptor, paramsInfo);
 
-        case Config.XXE_STUB:
+        case StubConfig.XXE_STUB:
           return new XxeStub(this.api, mv, access, name, descriptor, paramsInfo);
 
         default:
-          if (Config.isIncludedMethod(paramsInfo.toString())) {
+          if (StubConfig.isIncludedMethod(paramsInfo.toString())) {
             System.out.println("trying to stub into " + paramsInfo.toString());
             mv = new TrackStub(this.api, mv, access, name, descriptor, paramsInfo);
           }
