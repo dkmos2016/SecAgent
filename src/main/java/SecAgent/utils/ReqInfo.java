@@ -272,7 +272,7 @@ public class ReqInfo {
           } catch (Exception e) {
             tmp = "";
           }
-          logger.info(String.format(mybatis_fmt, this.url, this.method, Base64.encode(tmp.getBytes()), "MYBATIS", tmp_list));
+          logger.info(String.format(mybatis_fmt, this.url, this.method, new String(Base64.encode(tmp.getBytes())), "MYBATIS", tmp_list));
 
         } else {
           logger.info(String.format(mybatis_fmt, this.url, this.method, this.queries, "MYBATIS2", tmp_list));;
