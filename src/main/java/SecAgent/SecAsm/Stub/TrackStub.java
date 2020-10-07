@@ -383,7 +383,6 @@ public class TrackStub extends AdviceAdapter implements Opcodes {
   @Override
   protected void onMethodExit(int opcode) {
     process();
-    super.onMethodExit(opcode);
 
     int type = 0;
 
@@ -422,6 +421,8 @@ public class TrackStub extends AdviceAdapter implements Opcodes {
 
     debug_print_offline("parameter out: ");
     debug_print_online(type, tmp_obj);
+
+    super.onMethodExit(opcode);
   }
 
   @Override
