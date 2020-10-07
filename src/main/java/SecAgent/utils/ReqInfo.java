@@ -150,12 +150,15 @@ public class ReqInfo {
 
       switch(_type) {
         case "BEFORE":
+          list.add(0, value);
+          break;
         case "AFTER":
-          list.add(value);
+          list.add(1, value);
           break;
 
         case "PARAMETER":
-          list.add(String.format(String.format("%s: %s", _type, value)));
+//          list.add(String.format(String.format("%s: %s", _type, value)));
+          list.add(value);
         default:
           break;
       }
@@ -227,6 +230,7 @@ public class ReqInfo {
           "{\"url\": \"%s\", \"method\": \"%s\", \"type\": \"%s\", \"data\": \"%s\"}",
           this.url, this.method, type, datas);
     }
+
     return result;
   }
 
@@ -238,6 +242,42 @@ public class ReqInfo {
         continue;
       } else {
         logger.info(getLogRecord(type, list));
+      }
+    }
+
+
+    if (!MYBATIS_CACHES.isEmpty()) {
+      String mybatis_fmt = "{\"url\": \"%s\", \"method\": \"%s\", \"queries\":\"%s\", \"type\": \"%s\", \"data\": \"%s\"}";
+
+      for(List list: MYBATIS_CACHES.values()) {
+        int sz = list.size();
+        if (sz<=2) continue;
+
+        List tmp_list = new ArrayList();
+
+        tmp_list.add(list.get(0));
+        tmp_list.add(list.get(1));
+
+        for (int i=2; i<sz; i++) {
+          tmp_list.add(String.format("param%d:%s", i-1, list.get(i)));
+        }
+
+        if(this.queries.isEmpty()) {
+          int v = -1;
+          String tmp = "";
+          try {
+            while ((v = this.inputStream.read()) != -1) {
+              tmp += String.format("%c", v);
+            }
+          } catch (Exception e) {
+            tmp = "";
+          }
+          logger.info(String.format(mybatis_fmt, this.url, this.method, Base64.encode(tmp.getBytes()), "MYBATIS", tmp_list));
+
+        } else {
+          logger.info(String.format(mybatis_fmt, this.url, this.method, this.queries, "MYBATIS2", tmp_list));;
+        }
+
       }
     }
   }
