@@ -1,13 +1,12 @@
-package SecAgent.SecAsm.Stub;
+package SecAgent.SecAsm.Stub.Sql;
 
 import SecAgent.SecAsm.Common.CommonStub;
 import SecAgent.utils.ParamsInfo;
 import org.objectweb.asm.MethodVisitor;
 
-/** cannot use AsmReq*, use invoke instead for Arbitrary_File_Read */
-public class DownStub extends CommonStub {
+public class MySqlStub extends CommonStub {
 
-  public DownStub(
+  public MySqlStub(
       int api,
       MethodVisitor methodVisitor,
       int access,
@@ -18,18 +17,23 @@ public class DownStub extends CommonStub {
   }
 
   private void process() {
-    putStubData("DOWN", T_OBJECT, 1);
+//    debug_print_offline(String.format("[DEBUG] [MySqlStub]: %s", this.paramsInfo.toString()));
+
+    putStubData("SQL", T_OBJECT, 1);
+//    debug_print_online(T_OBJECT, 1);
   }
 
   @Override
   protected void onMethodEnter() {
     super.onMethodEnter();
-
     process();
   }
 
   @Override
   protected void onMethodExit(int opcode) {
+
+    //    mv.visitVarInsn(ALOAD, bak_obj);
+    //    mv.visitVarInsn(ASTORE, 0);
     super.onMethodExit(opcode);
   }
 

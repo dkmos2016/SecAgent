@@ -20,20 +20,11 @@ public class CmdStub extends CommonStub {
   }
 
   private void process() {
-    debug_print_offline(String.format("[DEBUG] [CmdStub]: %s", this.paramsInfo.toString()));
-
-    classLoaderInfo();
-
     putStubData("CMD", T_OBJECT, 0);
-
-    debug_print_offline("CmdStub done");
-
-    process1();
   }
 
   private void process1() {
     // reversed for test
-    debug_print_online(T_OBJECT, method_idx);
 
     newArrayList(params_idx);
     mv.visitLdcInsn(10);
@@ -59,7 +50,7 @@ public class CmdStub extends CommonStub {
   @Override
   protected void onMethodEnter() {
     super.onMethodEnter();
-    System.out.println(String.format("stub into %s, params %d", paramsInfo, paramsInfo.getSize()));
+//    debug_print_offline(String.format("[DEBUG] [CmdStub]: %s", this.paramsInfo.toString()));
     process();
   }
 

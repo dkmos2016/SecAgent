@@ -17,20 +17,22 @@ public class UploadStub extends CommonStub {
   }
 
   private void process() {
-    debug_print_offline(String.format("[DEBUG] [UploadStub]: %s", this.paramsInfo.toString()));
 
     //    mv.visitVarInsn(ALOAD, 1);
     //    mv.visitMethodInsn(INVOKEVIRTUAL, "java/io/File", "getAbsolutePath",
     // "()Ljava/lang/String;", false);
     //    mv.visitVarInsn(ASTORE, res_idx);
 
-    putStubData("UPLOAD", T_OBJECT, 1);
+    newArrayList(params2_idx);
+    addListElement(params2_idx, T_OBJECT, 1);
+
+    putStubData("UPLOAD", T_OBJECT, params2_idx);
   }
 
   @Override
   protected void onMethodEnter() {
     super.onMethodEnter();
-    System.out.println(String.format("stub into %s, params %d", paramsInfo, paramsInfo.getSize()));
+
     process();
   }
 

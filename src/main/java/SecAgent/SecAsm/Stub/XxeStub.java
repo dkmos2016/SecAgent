@@ -4,6 +4,9 @@ import SecAgent.SecAsm.Common.CommonStub;
 import SecAgent.utils.ParamsInfo;
 import org.objectweb.asm.MethodVisitor;
 
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
+
 public class XxeStub extends CommonStub {
 
   public XxeStub(
@@ -23,23 +26,41 @@ public class XxeStub extends CommonStub {
   }
 
   private void process() {
-    debug_print_offline(String.format("[DEBUG] [XxeStub]: %s", this.paramsInfo.toString()));
+//    debug_print_offline(String.format("[DEBUG] [XxeStub]: %s", this.paramsInfo.toString()));
 
-    // replace by putStubData
-    //        newArrayList(params_idx);
-    //        addListElement(params_idx, T_OBJECT, 2);
-    //
-    //        findAndExecute(
-    //                "SecAgent.utils.ReqInfo",
-    //                "setInputStream",
-    //                new Class[] {InputStream.class},
-    //                reqinfo_idx,
-    //                params_idx,
-    //                tmp_obj);
-    //
-    //        setNull(params_idx);
+    newArrayList(params_idx);
+    addListElement(params_idx, T_OBJECT, 2);
 
-    putStubData("XXE", T_OBJECT, 2);
+    findAndExecute(
+        "SecAgent.utils.Common",
+        "transferTo",
+        new Class[] {InputStream.class},
+        null_idx,
+        params_idx,
+        res_idx);
+
+    newArrayList(params_idx);
+    addListElement(params_idx, T_OBJECT, res_idx);
+    findAndExecute(
+        "SecAgent.utils.Common",
+        "transferFrom",
+        new Class[] {ByteArrayOutputStream.class},
+        null_idx,
+        params_idx,
+        res_idx);
+
+    mv.visitVarInsn(ALOAD, res_idx);
+    mv.visitVarInsn(ASTORE, 2);
+
+    findAndExecute(
+            "SecAgent.utils.Common",
+            "transferFrom",
+            new Class[] {ByteArrayOutputStream.class},
+            null_idx,
+            params_idx,
+            res_idx);
+
+    putStubData("XXE", T_OBJECT, res_idx);
   }
 
   @Override
