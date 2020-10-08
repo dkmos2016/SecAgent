@@ -26,7 +26,7 @@ public class XxeStub extends CommonStub {
   }
 
   private void process() {
-    debug_print_offline(String.format("[DEBUG] [XxeStub]: %s", this.paramsInfo.toString()));
+//    debug_print_offline(String.format("[DEBUG] [XxeStub]: %s", this.paramsInfo.toString()));
 
     newArrayList(params_idx);
     addListElement(params_idx, T_OBJECT, 2);

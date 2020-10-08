@@ -28,7 +28,7 @@ public class SecInstanceProxyFactory {
 
   public SecInstanceProxyFactory(Object object) {
     this.target = object;
-    System.out.println(object);
+//    System.out.println(object);
     logger.debug("SecInstanceProxyFactory.<init>");
   }
 
