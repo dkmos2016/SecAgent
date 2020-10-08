@@ -4,7 +4,6 @@ buildscript {
     }
 }
 
-
 plugins {
     id 'java'
 }
@@ -20,9 +19,9 @@ repositories {
 
 dependencies {
     implementation 'org.jetbrains:annotations:19.0.0'
-//    implementation fileTree(dir: "libs", includes: ["*.jar"], excludes: ["asm*9.0*.jar", "log*.jar"])
+    implementation fileTree(dir: "libs", includes: ["*.jar"], excludes: ["asm*9.0*.jar", "log*.jar"])
 //    compile group: 'org.ow2.asm', name: 'asm', version: '9.0-beta'
-    compile group: 'org.ow2.asm', name: 'asm-commons', version: '9.0-beta'
+    compile group: 'org.ow2.asm', name: 'asm-commons', version: '9.0'
 
 //    implementation 'com.github.jasync-sql:jasync-mysql:0.8.31'
 
@@ -37,7 +36,6 @@ dependencies {
     compile group: 'javax.servlet', name: 'javax.servlet-api', version: '4.0.1'
     implementation group: 'org.springframework', name: 'spring-jdbc', version: '5.2.8.RELEASE'
     implementation group: 'mysql', name: 'mysql-connector-java', version: '8.0.21'
-
 }
 
 jar {
@@ -66,5 +64,4 @@ jar {
         from 'assets'
     }
 }
-
 

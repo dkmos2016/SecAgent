@@ -63,19 +63,14 @@ public abstract class InputStream implements Closeable {
 }
 ```
 
-
 ### 方案
 
 1.使用filter过滤，复制Request
 ``` java
 
-
 ```
-
-
 
 2.向Request.class中插入（修改）方法
 ``` java
-
 
 ```

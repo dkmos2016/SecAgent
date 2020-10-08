@@ -16,7 +16,7 @@ public class testClassVisitor extends ClassVisitor implements Opcodes {
   public MethodVisitor visitMethod(
       int access, String name, String descriptor, String signature, String[] exceptions) {
     MethodVisitor mv = super.visitMethod(access, name, descriptor, signature, exceptions);
-    System.out.println(String.format("%s - %s", CLASSNAME, name));
+
     return mv;
   }
 }

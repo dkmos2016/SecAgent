@@ -1,16 +1,14 @@
 package SecAgent.utils.DefaultLoggerHelper;
 
-
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.logging.Formatter;
 import java.util.logging.LogRecord;
 
 public class DefaultLogFormat extends Formatter {
-  private static final String format = "%s [%s] %s - %s %s\n";
-  private final Date date = new Date();
+  private static final String format = "%s [%s] [%s] -- %s %s\n";
+  private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss:SSS");
 
   protected DefaultLogFormat() {
     super();
@@ -18,16 +16,6 @@ public class DefaultLogFormat extends Formatter {
 
   @Override
   public String format(LogRecord record) {
-
-    //        return record.getThreadID()+"::"+record.getSourceClassName()+"::"
-    //                +record.getSourceMethodName()+"::"
-    //                +new Date(record.getMillis())+"::"
-    //                +record.getMessage()+"\n";
-
-//            return new SimpleFormatter().format(record);
-    date.setTime(record.getMillis());
-
-    SimpleDateFormat sdf = new SimpleDateFormat("yyy/MM/dd hh:mm:ss:SSS");
 
     String source;
     if (record.getSourceClassName() != null) {
@@ -39,6 +27,7 @@ public class DefaultLogFormat extends Formatter {
     } else {
       source = record.getLoggerName();
     }
+
     String message = formatMessage(record);
     String throwable = "";
     if (record.getThrown() != null) {
@@ -52,10 +41,10 @@ public class DefaultLogFormat extends Formatter {
 
     return String.format(
         format,
-        sdf.format(date),
-//        source,
-        record.getLoggerName(),
+        sdf.format(record.getMillis()),
+        //        source,
         record.getLevel().getName(),
+        record.getLoggerName(),
         message,
         throwable);
   }

@@ -1,51 +1,24 @@
 package SecAgent.utils.DefaultLoggerHelper;
 
+import SecAgent.Conf.Config;
+
 import java.io.IOException;
 import java.util.logging.*;
 
 public class DefaultLogger extends Logger {
-  private final static String DEFAULT_LOGGER_NAME;
-  private static String LoggerName = null;
-  private static MyLevel DEFAULT_LEVEL;
-  private MyLevel LEVEL = null;
-
-  private Handler file_handler = null;
-  private Handler console_handler = null;
+  private static final String DEFAULT_LOGGER_NAME;
+  private static final MyLevel DEFAULT_LEVEL;
 
   static {
-    DEFAULT_LOGGER_NAME = "SecAgent";
-    DEFAULT_LEVEL = MyLevel.INFO;
-    LoggerName = null;
+    DEFAULT_LOGGER_NAME = Config.DEFAULT_LOGGER_NAME.isEmpty() ? "DEFAULT" : Config.DEFAULT_LOGGER_NAME;
+    DEFAULT_LEVEL = Config.DEFAULT_LOGGER_LEVEL == null ? MyLevel.INFO : Config.DEFAULT_LOGGER_LEVEL;
+//    DEFAULT_LEVEL = MyLevel.INFO;
   }
 
-  public enum MyLevel {
-    DEBUG(0), INFO(1),  WARN(2), ERROR(3),;
-    private int value;
-    MyLevel(int value) {
-      this.value = value;
-    }
-
-    public int getValue(){
-      return this.value;
-    }
-
-    public Level getLevel(){
-      switch (this) {
-        case DEBUG:
-          return DefaultLevel.DEBUG;
-
-        case WARN:
-          return DefaultLevel.WARNING;
-
-        case ERROR:
-          return DefaultLevel.ERROR;
-
-        case INFO:
-        default:
-          return Level.INFO;
-      }
-    }
-  }
+  private String LOGGER_NAME = null;
+  private MyLevel LEVEL = null;
+  private Handler file_handler = null;
+  private Handler console_handler = null;
 
   public DefaultLogger() throws IOException {
     super(DEFAULT_LOGGER_NAME, null);
@@ -55,24 +28,101 @@ public class DefaultLogger extends Logger {
     this.addDefaultHandle();
   }
 
-  public DefaultLogger(String log_path) throws IOException {
-    super(DEFAULT_LOGGER_NAME, null);
-    file_handler = new DefaultLogFileHandler(log_path);
-    console_handler = new DefaultLogConsoleHandler();
-    this.addDefaultHandle();
-  }
-
-  protected DefaultLogger(String name, String resourceBundleName) throws IOException {
-    super(name, resourceBundleName);
-    this.LoggerName = name;
+  public DefaultLogger(String name) throws IOException {
+    super(name, null);
+    this.LOGGER_NAME = name;
     file_handler = new DefaultLogFileHandler();
     console_handler = new DefaultLogConsoleHandler();
     this.addDefaultHandle();
   }
 
+  public DefaultLogger(String name, String log_path) throws IOException {
+    super(name, null);
+    this.LOGGER_NAME = name;
+    this.file_handler = new DefaultLogFileHandler(log_path);
+    this.console_handler = new DefaultLogConsoleHandler();
+    this.addDefaultHandle();
+  }
+
+  protected DefaultLogger(String name, String log_path, String resourceBundleName)
+    throws IOException {
+    super(name, resourceBundleName);
+    this.LOGGER_NAME = name;
+    file_handler = new DefaultLogFileHandler();
+    console_handler = new DefaultLogConsoleHandler();
+    this.addDefaultHandle();
+  }
+
+  public DefaultLogger(Class cls) throws IOException {
+    this(cls.getName());
+  }
+
+  public DefaultLogger(Class cls, String log_path) throws IOException {
+    this(cls.getName(), log_path);
+  }
+
+  protected DefaultLogger(Class cls, String log_path, String resourceBundleName)
+    throws IOException {
+    this(cls.getName(), log_path, resourceBundleName);
+  }
+
+  public static DefaultLogger getInstance(String name) {
+    DefaultLogger logger = DefaultLogger.getLogger(name);
+    logger.addDefaultHandle();
+    return logger;
+  }
+
+  public static DefaultLogger getInstance(Class cls) {
+    return getInstance(cls.getName());
+  }
+
+  public static DefaultLogger getLogger() {
+    DefaultLogger logger = null;
+    try {
+      logger = new DefaultLogger();
+    } catch (IOException e) {
+      System.out.println("getLogger(): ");
+      e.printStackTrace();
+    }
+    return logger;
+  }
+
+  public static DefaultLogger getLogger(String name) {
+    DefaultLogger logger = null;
+    try {
+      logger = new DefaultLogger(name, null);
+    } catch (IOException e) {
+      System.out.println("getLogger(String name): ");
+      e.printStackTrace();
+    }
+    return logger;
+  }
+
+  public static DefaultLogger getLogger(String name, String log_path) {
+    DefaultLogger logger = null;
+    try {
+      logger = new DefaultLogger(name, log_path);
+    } catch (IOException e) {
+      System.out.println("getLogger(String name, String log_path): ");
+      e.printStackTrace();
+      logger = null;
+    }
+
+    return logger;
+  }
+
+  public static DefaultLogger getLogger(Class cls) {
+    return getLogger(cls.getName());
+  }
+
+  public static DefaultLogger getLogger(Class cls, String log_path) {
+    return getLogger(cls.getName(), log_path);
+  }
+
   private void addDefaultHandle() {
-    this.addHandler(this.file_handler);
-    this.addHandler(this.console_handler);
+    if (this.file_handler != null) this.addHandler(this.file_handler);
+
+    if (this.console_handler != null) this.addHandler(this.console_handler);
   }
 
   public void setFormatter(Formatter formatter) throws IOException {
@@ -90,53 +140,20 @@ public class DefaultLogger extends Logger {
     this.addHandler(console_handler);
   }
 
-  public void setLevel(MyLevel mylevel) {
-    this.LEVEL = mylevel;
-  }
-
   public Level getLevel() {
-    return this.LEVEL == null? DEFAULT_LEVEL.getLevel():this.LEVEL.getLevel();
+    return this.LEVEL == null ? DEFAULT_LEVEL.getLevel() : this.LEVEL.getLevel();
   }
 
-  public static DefaultLogger getInstance(String name) {
-    DefaultLogger logger = DefaultLogger.getLogger(name);
-    logger.addDefaultHandle();
-    return logger;
-  }
-
-  public static DefaultLogger getInstance(Class cls) {
-    return getInstance(cls.getName());
-  }
-
-  public static DefaultLogger getLogger() {
-    DefaultLogger logger = null;
-    try{
-      logger = new DefaultLogger();
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
-    return logger;
-  }
-
-  public static DefaultLogger getLogger(String name) {
-    DefaultLogger logger = null;
-    try{
-      logger = new DefaultLogger(name, null);
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
-    return logger;
-
-  }
-
-  public static DefaultLogger getLogger(Class cls) {
-    return getLogger(cls.getName());
+  public void setLevel(MyLevel mylevel) {
+    if (Config.ALLOWED_DIY_DEBUG)
+      this.LEVEL = mylevel;
   }
 
   public void log(Level level, String msg) {
     LogRecord lr = new LogRecord(level, msg);
-    lr.setLoggerName(LoggerName == null || LoggerName.isEmpty()? DEFAULT_LOGGER_NAME : LoggerName);
-    System.out.println(lr.getLoggerName());
+    lr.setLoggerName(
+      LOGGER_NAME == null || LOGGER_NAME.isEmpty() ? DEFAULT_LOGGER_NAME : LOGGER_NAME);
+
     log(lr);
   }
 
@@ -150,7 +167,6 @@ public class DefaultLogger extends Logger {
         log(level.getLevel(), msg);
       }
     }
-
   }
 
   public void info(String msg) {
@@ -198,7 +214,7 @@ public class DefaultLogger extends Logger {
   }
 
   public void error(int v) {
-//    logger.info(String.format("%s", v));
+    //    logger.info(String.format("%s", v));
     error(String.format("%s", v));
   }
 
@@ -231,13 +247,13 @@ public class DefaultLogger extends Logger {
   }
 
   public void debug(Object obj) {
-//    logger.info(obj.toString());
-//    super.info("");
+    //    logger.info(obj.toString());
+    //    super.info("");
     debug(String.format("%s", obj));
   }
 
   public void debug(int v) {
-//    logger.info(String.format("%s", v));
+    //    logger.info(String.format("%s", v));
     debug(String.format("%s", v));
   }
 
@@ -301,18 +317,51 @@ public class DefaultLogger extends Logger {
     warn(String.format("%s", v));
   }
 
+  public enum MyLevel {
+    DEBUG(0),
+    INFO(1),
+    WARN(2),
+    ERROR(3),
+    ;
+    private final int value;
+
+    MyLevel(int value) {
+      this.value = value;
+    }
+
+    public int getValue() {
+      return this.value;
+    }
+
+    public Level getLevel() {
+      switch (this) {
+        case DEBUG:
+          return DefaultLevel.DEBUG;
+
+        case WARN:
+          return DefaultLevel.WARNING;
+
+        case ERROR:
+          return DefaultLevel.ERROR;
+
+        case INFO:
+        default:
+          return Level.INFO;
+      }
+    }
+  }
 
   private static final class DefaultLevel extends Level {
 
-    private static final String defaultBundle = "sun.util.logging.resources.logging";
     public static final Level ERROR;
     public static final Level DEBUG;
     public static final Level WARN;
     public static final Level INFO;
+    private static final String defaultBundle = "sun.util.logging.resources.logging";
 
     static {
       ERROR = new DefaultLevel("ERROR", Integer.MAX_VALUE);
-      DEBUG = new DefaultLevel("DEBUG", 0);
+      DEBUG = new DefaultLevel("DEBUG", Integer.MAX_VALUE);
       WARN = Level.WARNING;
       INFO = Level.INFO;
     }

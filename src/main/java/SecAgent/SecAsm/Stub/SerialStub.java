@@ -35,7 +35,6 @@ public class SerialStub extends AdviceAdapter implements Opcodes {
   }
 
   private void process() {
-    debug_print_offline(String.format("[DEBUG] [SerialStub]: %s", this.paramsInfo.toString()));
 
     mv.visitFieldInsn(GETSTATIC, "java/lang/System", "out", "Ljava/io/PrintStream;");
     mv.visitVarInsn(ALOAD, 1);
@@ -46,7 +45,7 @@ public class SerialStub extends AdviceAdapter implements Opcodes {
   @Override
   protected void onMethodEnter() {
     super.onMethodEnter();
-    System.out.println(String.format("stub into %s, params %d", paramsInfo, paramsInfo.getSize()));
+
     process();
   }
 
