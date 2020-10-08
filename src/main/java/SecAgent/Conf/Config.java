@@ -14,7 +14,7 @@ public class Config {
 
 
   static {
-    ALLOWED_DIY_DEBUG = true;
+    ALLOWED_DIY_DEBUG = false;
     DEFAULT_LOGGER_NAME = "SecAgent";
     DEFAULT_LOGGER_LEVEL = DefaultLogger.MyLevel.INFO;
 
