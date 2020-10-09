@@ -4,3 +4,9 @@ build/
 gradle/
 
 **/*.class
+bin/
+out/
+
+log.txt
+test.http
+*.log

@@ -50,8 +50,9 @@ public class SecInstanceProxyFactory {
                 while ((v = in.read()) > -1) {
                   byteArrayOutputStream.write(v);
                 }
-                byteArrayOutputStream.flush();
+                in.close();
 
+                byteArrayOutputStream.flush();
                 byteArrayInputStream =
                     new ByteArrayInputStream(byteArrayOutputStream.toByteArray());
 
@@ -82,6 +83,8 @@ public class SecInstanceProxyFactory {
                     }
                   };
             }
+            
+
             logger.debug("after invoke " + method.getName());
 
             return obj;
