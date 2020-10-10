@@ -122,7 +122,7 @@ public class DefaultLogger extends Logger {
   private void addDefaultHandle() {
     if (this.file_handler != null) this.addHandler(this.file_handler);
 
-    if (this.console_handler != null) this.addHandler(this.console_handler);
+    if (this.console_handler != null && Config.DEBUG) this.addHandler(this.console_handler);
   }
 
   public void setFormatter(Formatter formatter) throws IOException {
@@ -145,7 +145,7 @@ public class DefaultLogger extends Logger {
   }
 
   public void setLevel(MyLevel mylevel) {
-    if (Config.ALLOWED_DIY_DEBUG)
+    if (Config.ALLOWED_DIY_LEVEL)
       this.LEVEL = mylevel;
   }
 
