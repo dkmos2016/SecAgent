@@ -6,13 +6,21 @@ import SecAgent.utils.Encoder.Base64;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.*;
-import java.util.*;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class ReqInfo {
-  /** for log information */
+  /**
+   * for log information
+   */
   private static final DefaultLogger logger =
-      DefaultLogger.getLogger(ReqInfo.class, Config.INFORMATION_PATH);
+    DefaultLogger.getLogger(ReqInfo.class, Config.INFORMATION_PATH);
 
   static {
     if (logger != null) logger.setLevel(DefaultLogger.MyLevel.DEBUG);
@@ -24,27 +32,49 @@ public class ReqInfo {
    * for logging mybatis(template, input parameter, sql string)
    */
   private final Map<String, ArrayList<String>> MYBATIS_CACHES = new HashMap<>();
-  /** reversed */
+  /**
+   * reversed
+   */
   private final Map<String, String> headers = new HashMap<>();
-  /** request parameters (include url & body) */
-  private final Map queries = new HashMap<>();
+  /**
+   * request parameters (include url & body)
+   */
+  private Map queries = new HashMap<>();
   private int state_code = 0;
-  /** complete url */
+  /**
+   * complete url
+   */
   private String url;
-  /** with url */
+  /**
+   * with url
+   */
   private boolean ALLOWED_PUT_STUB = false;
-  /** http method, GET/POST... */
+  /**
+   * http method, GET/POST...
+   */
   private String method;
-  /** get queryString */
+  /**
+   * get queryString
+   */
   private String queryString;
-  /** getInpusteram */
+  /**
+   * getInpusteram
+   */
   private InputStream inputStream;
-  /** HttpServletRequest */
+  /**
+   * HttpServletRequest
+   */
   private HttpServletRequest request;
-  /** HttpServletRequest */
+  /**
+   * HttpServletRequest
+   */
   private HttpServletResponse response;
 
-  public ReqInfo() {}
+
+  private String inputBuffer = null;
+
+  public ReqInfo() {
+  }
 
   /**
    * just for test
@@ -52,7 +82,8 @@ public class ReqInfo {
    * @param a
    * @param b
    */
-  public static void doTest(int a, int b) {}
+  public static void doTest(int a, int b) {
+  }
 
   /**
    * is initialed url
@@ -68,21 +99,21 @@ public class ReqInfo {
     this.request = request;
 
     this.url =
-        request.getScheme()
-            + "://"
-            + request.getServerName()
-            + ":"
-            + request.getServerPort()
-            + request.getRequestURI();
+      request.getScheme()
+        + "://"
+        + request.getServerName()
+        + ":"
+        + request.getServerPort()
+        + request.getRequestURI();
     this.method = request.getMethod();
 
     //    this.queries = request.getParameterMap();
     this.queryString = request.getQueryString();
     this.state_code |=
-        ReqInfoState.PUTTED_URI
-            | ReqInfoState.PUTTED_QUERYSTRING
-            | ReqInfoState.PUTTED_METHOD
-            | ReqInfoState.PUTTED_INPUTSTREAM;
+      ReqInfoState.PUTTED_URI
+        | ReqInfoState.PUTTED_QUERYSTRING
+        | ReqInfoState.PUTTED_METHOD
+        | ReqInfoState.PUTTED_INPUTSTREAM;
 
     this.ALLOWED_PUT_STUB = true;
   }
@@ -96,6 +127,11 @@ public class ReqInfo {
     this.inputStream = inputStream;
   }
 
+  public void setQueries(Map queries) {
+    this.queries = queries;
+  }
+
+
   /**
    * for all stub to invoke setting stack info and params
    *
@@ -104,7 +140,7 @@ public class ReqInfo {
    * @param obj
    */
   public void putStubData(String type, Throwable throwable, Object obj) {
-    if (logger != null) logger.debug(obj);
+    if (logger != null) logger.debug("putStubData:" + obj);
     if (!this.ALLOWED_PUT_STUB) return;
 
     ArrayList list = null;
@@ -141,14 +177,14 @@ public class ReqInfo {
    * @return
    */
   private void doPutMybatis(String type, Throwable throwable, Object obj) {
-    if (obj instanceof ArrayList){
+    if (obj instanceof ArrayList) {
       String name = ((ArrayList<?>) obj).get(0).toString();
       String _type = ((ArrayList<?>) obj).get(1).toString();
       String value = ((ArrayList<?>) obj).get(2).toString();
 
       ArrayList list = MYBATIS_CACHES.getOrDefault(name, new ArrayList());
 
-      switch(_type) {
+      switch (_type) {
         case "BEFORE":
           list.add(0, value);
           break;
@@ -179,7 +215,7 @@ public class ReqInfo {
    */
   private ArrayList doPutXxe(String type, Throwable throwable, Object obj) {
     ArrayList list = StubDatas.getOrDefault(type, new ArrayList());
-    try{
+    try {
       if (obj instanceof InputStream) {
         list.add(new StubData(throwable, obj));
       }
@@ -210,8 +246,8 @@ public class ReqInfo {
   @Override
   public String toString() {
     return String.format(
-        "{\"url\":\"%s\",\"method\":\"%s\",\"queries\":\"%s\",\"StubData\": \"%s\"}",
-        url, method, queries, StubDatas);
+      "{\"url\":\"%s\",\"method\":\"%s\",\"queries\":\"%s\",\"StubData\": \"%s\"}",
+      url, method, queries, StubDatas);
   }
 
   private String getLogRecord(String type, ArrayList<StubData> datas) {
@@ -219,23 +255,44 @@ public class ReqInfo {
 
     if (method.toUpperCase().equals("GET")) {
       result = String.format(
-              "{\"url\": \"%s\", \"method\": \"%s\", \"queryString\":\"%s\", \"type\": \"%s\", \"data\": \"%s\"}",
-              this.url, this.method, this.queryString, type, datas);
+        "{\"url\": \"%s\", \"method\": \"%s\", \"queryString\":\"%s\", \"type\": \"%s\", \"data\": \"%s\"}",
+        this.url, this.method, this.queryString, type, datas);
     } else if (method.toUpperCase().equals("POST")) {
-      result = String.format(
-              "{\"url\": \"%s\", \"method\": \"%s\", \"queries\":\"%s\", \"type\": \"%s\", \"data\": \"%s\"}",
-              this.url, this.method, this.queries, type, datas);
+      String fmt = "{\"url\": \"%s\", \"method\": \"%s\", \"queries\":\"%s\", \"type\": \"%s\", \"data\": \"%s\"}";
+
+
+      if (this.inputBuffer == null) {
+        if (this.queries.isEmpty()) {
+          fmt = "{\"url\": \"%s\", \"method\": \"%s\", \"inputStream\":\"%s\", \"type\": \"%s\", \"data\": \"%s\"}";
+          int v = -1;
+          String tmp = "";
+          try {
+            while ((v = this.inputStream.read()) != -1) {
+              tmp += String.format("%c", v);
+            }
+          } catch (Exception e) {
+            tmp = "";
+          }
+          this.inputBuffer = tmp;
+          result = String.format(fmt, this.url, this.method, new String(Base64.encode(tmp.getBytes())), type, datas);
+        } else {
+          result = String.format(fmt, this.url, this.method, Common.MapToFormData(this.queries), type, datas);
+        }
+      } else {
+        fmt = "{\"url\": \"%s\", \"method\": \"%s\", \"queries\":\"%s\", \"type\": \"%s\", \"data\": \"%s\"}";
+        result = String.format(fmt, this.url, this.method, this.inputBuffer, type, datas);
+      }
     } else {
       result = String.format(
-          "{\"url\": \"%s\", \"method\": \"%s\", \"type\": \"%s\", \"data\": \"%s\"}",
-          this.url, this.method, type, datas);
+        "{\"url\": \"%s\", \"method\": \"%s\", \"type\": \"%s\", \"data\": \"%s\"}",
+        this.url, this.method, type, datas);
     }
 
     return result;
   }
 
   private void doLogRecords() {
-    for(Map.Entry<String, ArrayList<StubData>> entry: StubDatas.entrySet()) {
+    for (Map.Entry<String, ArrayList<StubData>> entry : StubDatas.entrySet()) {
       String type = entry.getKey();
       ArrayList list = entry.getValue();
       if (type == null || type.equals("") || list == null || list.size() == 0) {
@@ -249,45 +306,55 @@ public class ReqInfo {
     if (!MYBATIS_CACHES.isEmpty()) {
       String mybatis_fmt = "{\"url\": \"%s\", \"method\": \"%s\", \"queries\":\"%s\", \"type\": \"%s\", \"data\": \"%s\"}";
 
-      for(List list: MYBATIS_CACHES.values()) {
+      for (List list : MYBATIS_CACHES.values()) {
         int sz = list.size();
-        if (sz<=2) continue;
+        if (sz <= 2) continue;
 
         List tmp_list = new ArrayList();
 
         tmp_list.add(list.get(0));
         tmp_list.add(list.get(1));
 
-        for (int i=2; i<sz; i++) {
-          tmp_list.add(String.format("param%d:%s", i-1, list.get(i)));
+        for (int i = 2; i < sz; i++) {
+          tmp_list.add(String.format("param%d:%s", i - 1, list.get(i)));
         }
 
-        if(this.queries.isEmpty()) {
-          int v = -1;
-          String tmp = "";
-          try {
-            while ((v = this.inputStream.read()) != -1) {
-              tmp += String.format("%c", v);
-            }
-          } catch (Exception e) {
-            tmp = "";
-          }
-          logger.info(String.format(mybatis_fmt, this.url, this.method, new String(Base64.encode(tmp.getBytes())), "MYBATIS", tmp_list));
 
+        if (this.queries.isEmpty()) {
+          mybatis_fmt = "{\"url\": \"%s\", \"method\": \"%s\", \"inputStream\":\"%s\", \"type\": \"%s\", \"data\": \"%s\"}";
+          if (this.inputBuffer == null) {
+            int v = -1;
+            String tmp = "";
+            try {
+              while ((v = this.inputStream.read()) != -1) {
+                tmp += String.format("%c", v);
+              }
+            } catch (Exception e) {
+              tmp = "";
+            }
+
+            logger.info(String.format(mybatis_fmt, this.url, this.method, new String(Base64.encode(tmp.getBytes())), "MYBATIS", tmp_list));
+          } else {
+            logger.info(String.format(mybatis_fmt, this.url, this.method, new String(Base64.encode(this.inputBuffer.getBytes())), "MYBATIS", tmp_list));
+          }
         } else {
-          logger.info(String.format(mybatis_fmt, this.url, this.method, this.queries, "MYBATIS2", tmp_list));;
+          logger.info(String.format(mybatis_fmt, this.url, this.method, Common.MapToFormData(this.queries), "MYBATIS2", tmp_list));
         }
 
       }
     }
   }
 
-  /** for SecAgent to do some other jobs */
+  /**
+   * for SecAgent to do some other jobs
+   */
   public void doJob() {
     if (logger != null) doLogRecords();
   }
 
-  /** StubData: Stack info and Parameters */
+  /**
+   * StubData: Stack info and Parameters
+   */
   protected class StubData {
     protected Throwable throwable;
     Object object;
@@ -303,12 +370,12 @@ public class ReqInfo {
       for (StackTraceElement element : stackTraceElements) {
         String className = element.getClassName();
         if (className.startsWith("java.")
-            || className.startsWith("sun.")
-            || className.startsWith("javax.")
-            || className.startsWith("SecAgent.")
-            || className.startsWith("org.eclipse.")
-            || className.startsWith("org.junit")
-            || className.startsWith("org.apache.")) continue;
+          || className.startsWith("sun.")
+          || className.startsWith("javax.")
+          || className.startsWith("SecAgent.")
+          || className.startsWith("org.eclipse.")
+          || className.startsWith("org.junit")
+          || className.startsWith("org.apache.")) continue;
         sb.append(element.toString() + "\n");
       }
       return sb.toString();
@@ -324,11 +391,10 @@ public class ReqInfo {
           sb.append(o);
           sb.append(" ");
         }
-        return sb.substring(0, sb.length()-1);
+        return sb.substring(0, sb.length() - 1);
       } else if (object instanceof InputStream) {
-        return new String(Base64.encode(((ByteArrayOutputStream)Common.transferTo((InputStream) object)).toByteArray()));
-      }
-      else {
+        return new String(Base64.encode(((ByteArrayOutputStream) Common.transferTo((InputStream) object)).toByteArray()));
+      } else {
         return object.toString();
       }
     }
