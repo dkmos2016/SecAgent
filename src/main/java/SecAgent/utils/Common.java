@@ -81,7 +81,6 @@ public class Common {
 
   public static String MapToFormData(Map<String, Object> map) {
     StringBuilder sb = new StringBuilder();
-    sb.append("{");
     for (Map.Entry<String, Object> entry : map.entrySet()) {
       String key = entry.getKey();
       Object value = entry.getValue();
