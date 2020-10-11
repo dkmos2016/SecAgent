@@ -29,26 +29,18 @@ public class DefaultLogger extends Logger {
   }
 
   public DefaultLogger(String name) throws IOException {
-    super(name, null);
-    this.LOGGER_NAME = name;
-    file_handler = new DefaultLogFileHandler();
-    console_handler = new DefaultLogConsoleHandler();
-    this.addDefaultHandle();
+    this(name, null, null);
   }
 
   public DefaultLogger(String name, String log_path) throws IOException {
-    super(name, null);
-    this.LOGGER_NAME = name;
-    this.file_handler = new DefaultLogFileHandler(log_path);
-    this.console_handler = new DefaultLogConsoleHandler();
-    this.addDefaultHandle();
+    this(name, log_path, null);
   }
 
   protected DefaultLogger(String name, String log_path, String resourceBundleName)
     throws IOException {
     super(name, resourceBundleName);
     this.LOGGER_NAME = name;
-    file_handler = new DefaultLogFileHandler();
+    file_handler = new DefaultLogFileHandler(log_path);
     console_handler = new DefaultLogConsoleHandler();
     this.addDefaultHandle();
   }
