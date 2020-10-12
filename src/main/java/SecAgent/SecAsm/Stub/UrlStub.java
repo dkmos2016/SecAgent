@@ -9,7 +9,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.InputStream;
 
+
 /** log url */
+@SuppressWarnings("unused")
 public class UrlStub extends CommonStub {
   private final int instream_idx = newLocal(Type.getType(InputStream.class));
 
