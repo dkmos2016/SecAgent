@@ -10,6 +10,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.FutureTask;
 
+@SuppressWarnings("unused")
 public class ExceptionLoggerAsync {
   public static final ExecutorService es =
       Executors.newFixedThreadPool(Integer.parseInt(Resources.getProperty("MAX_THREAD")));

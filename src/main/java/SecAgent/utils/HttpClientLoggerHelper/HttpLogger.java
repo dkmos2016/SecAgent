@@ -2,6 +2,7 @@ package SecAgent.utils.HttpClientLoggerHelper;
 
 import SecAgent.utils.HttpClientHelper.HttpClientHelper;
 
+@SuppressWarnings("unused")
 public class HttpLogger implements Runnable {
   // java8 don't include httpclient
   private final Exception exception;

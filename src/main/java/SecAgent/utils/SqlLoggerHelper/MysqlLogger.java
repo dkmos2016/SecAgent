@@ -5,6 +5,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+@SuppressWarnings("unused")
 public class MysqlLogger {
   private static final MySqlConnectionPool pool; // = new MySqlConnectionPool(5);
 

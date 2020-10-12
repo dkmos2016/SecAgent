@@ -8,6 +8,7 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
+@SuppressWarnings("unused")
 public class HttpClientHelper {
   public static boolean JSON = false;
 

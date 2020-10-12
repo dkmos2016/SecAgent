@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletResponseWrapper;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
+@Deprecated
 public class CopyServletResponseWrapper extends HttpServletResponseWrapper {
   private final ByteArrayOutputStream baout = new ByteArrayOutputStream();
   /**

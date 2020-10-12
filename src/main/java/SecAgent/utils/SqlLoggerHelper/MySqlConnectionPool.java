@@ -8,6 +8,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+@SuppressWarnings("unused")
 public class MySqlConnectionPool {
   private final int size = Integer.parseInt(Resources.getProperty("MAX_CONNECTION"));
   private ArrayList<Connection> connectionArrayList;
