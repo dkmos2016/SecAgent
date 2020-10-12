@@ -12,9 +12,9 @@ public class AgentClassLoader extends URLClassLoader {
   }
 
   public AgentClassLoader(ClassLoader parent) {
-    super(new URL[]{}, parent);
-//    super(parent);
-        this.parent = parent;
+    super(new URL[] {}, parent);
+    //    super(parent);
+    this.parent = parent;
   }
 
   @Override

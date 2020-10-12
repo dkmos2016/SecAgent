@@ -26,7 +26,7 @@ public class XxeStub extends CommonStub {
   }
 
   private void process() {
-//    debug_print_offline(String.format("[DEBUG] [XxeStub]: %s", this.paramsInfo.toString()));
+    //    debug_print_offline(String.format("[DEBUG] [XxeStub]: %s", this.paramsInfo.toString()));
 
     newArrayList(params_idx);
     addListElement(params_idx, T_OBJECT, 2);
@@ -53,12 +53,12 @@ public class XxeStub extends CommonStub {
     mv.visitVarInsn(ASTORE, 2);
 
     findAndExecute(
-            "SecAgent.utils.Common",
-            "transferFrom",
-            new Class[] {ByteArrayOutputStream.class},
-            null_idx,
-            params_idx,
-            res_idx);
+        "SecAgent.utils.Common",
+        "transferFrom",
+        new Class[] {ByteArrayOutputStream.class},
+        null_idx,
+        params_idx,
+        res_idx);
 
     putStubData("XXE", T_OBJECT, res_idx);
   }

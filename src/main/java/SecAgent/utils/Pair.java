@@ -22,7 +22,6 @@ public class Pair {
     return value;
   }
 
-
   @Override
   public String toString() {
     return String.format("%s=%s", this.key, this.value);

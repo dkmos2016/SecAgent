@@ -2,6 +2,14 @@
 
 ## Change Logs:
 
+### **【1.0.0.1】**
+
+- 修复bug
+- 增加getQueries埋点
+- 优化logger
+- Common配置字段加入注释
+- 添加开源LICENSE
+
 ### **【1.0.0】**
 
 - 使用动态代理方式实现HttpRequest.getInputStream多次读取

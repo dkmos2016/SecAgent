@@ -32,13 +32,14 @@ public class SecAsmTransformer implements ClassFileTransformer, Opcodes {
     ClassReader cr = new ClassReader(classfileBuffer);
 
     // fix
-    ClassWriter cw = new ClassWriter(cr, ClassWriter.COMPUTE_FRAMES) {
-      @Override
-      protected ClassLoader getClassLoader() {
-        return new AgentClassLoader(loader);
-//        return loader;
-      }
-    };
+    ClassWriter cw =
+        new ClassWriter(cr, ClassWriter.COMPUTE_FRAMES) {
+          @Override
+          protected ClassLoader getClassLoader() {
+            return new AgentClassLoader(loader);
+            //        return loader;
+          }
+        };
     //    ClassVisitor cv = new testClassVisitor(cw, className);
     ClassVisitor cv = new CommonAdapter(cw, className);
     byte[] new_classfileBuffer;
@@ -62,7 +63,6 @@ public class SecAsmTransformer implements ClassFileTransformer, Opcodes {
       } catch (IOException e) {
         e.printStackTrace();
       }
-
     }
 
     return new_classfileBuffer;

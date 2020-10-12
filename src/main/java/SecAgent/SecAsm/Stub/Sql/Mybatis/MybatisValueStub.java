@@ -4,18 +4,16 @@ import SecAgent.SecAsm.Common.CommonStub;
 import SecAgent.utils.ParamsInfo;
 import org.objectweb.asm.MethodVisitor;
 
-/**
- * just log sql in xxMapper.xml, maybe with ?/#
- */
+/** just log sql in xxMapper.xml, maybe with ?/# */
 public class MybatisValueStub extends CommonStub {
 
   public MybatisValueStub(
-    int api,
-    MethodVisitor methodVisitor,
-    int access,
-    String name,
-    String descriptor,
-    ParamsInfo paramsInfo) {
+      int api,
+      MethodVisitor methodVisitor,
+      int access,
+      String name,
+      String descriptor,
+      ParamsInfo paramsInfo) {
     super(api, methodVisitor, access, name, descriptor, paramsInfo);
   }
 
@@ -25,11 +23,16 @@ public class MybatisValueStub extends CommonStub {
     newArrayList(params2_idx);
     addListElement(params2_idx, T_OBJECT, 1);
     addListElement(params2_idx, T_OBJECT, bak_obj);
-    findAndGetInstance("SecAgent.utils.Pair", new Class[]{Object.class, Object.class}, params2_idx, res_idx);
+    findAndGetInstance(
+        "SecAgent.utils.Pair", new Class[] {Object.class, Object.class}, params2_idx, res_idx);
 
     newArrayList(params2_idx);
     mv.visitVarInsn(ALOAD, 0);
-    mv.visitFieldInsn(GETFIELD, "org/apache/ibatis/scripting/xmltags/TextSqlNode$BindingTokenParser", "context", "Lorg/apache/ibatis/scripting/xmltags/DynamicContext;");
+    mv.visitFieldInsn(
+        GETFIELD,
+        "org/apache/ibatis/scripting/xmltags/TextSqlNode$BindingTokenParser",
+        "context",
+        "Lorg/apache/ibatis/scripting/xmltags/DynamicContext;");
     mv.visitVarInsn(ASTORE, tmp_obj);
 
     addListElement(params2_idx, T_OBJECT, tmp_obj);

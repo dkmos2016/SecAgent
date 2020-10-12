@@ -16,11 +16,9 @@ import java.util.List;
 import java.util.Map;
 
 public class ReqInfo {
-  /**
-   * for log information
-   */
+  /** for log information */
   private static final DefaultLogger logger =
-    DefaultLogger.getLogger(ReqInfo.class, Config.INFORMATION_PATH);
+      DefaultLogger.getLogger(ReqInfo.class, Config.INFORMATION_PATH);
 
   static {
     if (logger != null) logger.setLevel(DefaultLogger.MyLevel.DEBUG);
@@ -28,53 +26,35 @@ public class ReqInfo {
 
   // store throwable & parameter
   private final Map<String, ArrayList<StubData>> StubDatas = new HashMap<>();
-  /**
-   * for logging mybatis(template, input parameter, sql string)
-   */
+  /** for logging mybatis(template, input parameter, sql string) */
   private final Map<String, ArrayList<String>> MYBATIS_CACHES = new HashMap<>();
-  /**
-   * reversed
-   */
+  /** reversed */
   private final Map<String, String> headers = new HashMap<>();
-  /**
-   * request parameters (include url & body)
-   */
+  /** request parameters (include url & body) */
   private Map queries = new HashMap<>();
+
   private int state_code = 0;
-  /**
-   * complete url
-   */
+  /** complete url */
   private String url;
-  /**
-   * with url
-   */
+  /** with url */
   private boolean ALLOWED_PUT_STUB = false;
-  /**
-   * http method, GET/POST...
-   */
+  /** http method, GET/POST... */
   private String method;
-  /**
-   * get queryString
-   */
+  /** get queryString */
   private String queryString;
-  /**
-   * getInpusteram
-   */
+  /** getInpusteram */
   private InputStream inputStream;
-  /**
-   * HttpServletRequest
-   */
+  /** HttpServletRequest */
   private HttpServletRequest request;
-  /**
-   * HttpServletRequest
-   */
+  /** HttpServletRequest */
   private HttpServletResponse response;
 
-
+  /**
+   * inputstream's content
+   */
   private String inputBuffer = null;
 
-  public ReqInfo() {
-  }
+  public ReqInfo() {}
 
   /**
    * just for test
@@ -82,38 +62,43 @@ public class ReqInfo {
    * @param a
    * @param b
    */
-  public static void doTest(int a, int b) {
-  }
+  public static void doTest(int a, int b) {}
 
   /**
    * is initialed url
    *
    * @return
    */
+  @Deprecated
   public boolean isALLOWED_PUT_STUB() {
     return this.ALLOWED_PUT_STUB;
   }
 
+  /**
+   * for inoke to set Request
+   * @param request
+   * @throws IOException
+   */
   public void setHttpServletRequest(HttpServletRequest request) throws IOException {
     if (request == null) return;
     this.request = request;
 
     this.url =
-      request.getScheme()
-        + "://"
-        + request.getServerName()
-        + ":"
-        + request.getServerPort()
-        + request.getRequestURI();
+        request.getScheme()
+            + "://"
+            + request.getServerName()
+            + ":"
+            + request.getServerPort()
+            + request.getRequestURI();
     this.method = request.getMethod();
 
     //    this.queries = request.getParameterMap();
     this.queryString = request.getQueryString();
     this.state_code |=
-      ReqInfoState.PUTTED_URI
-        | ReqInfoState.PUTTED_QUERYSTRING
-        | ReqInfoState.PUTTED_METHOD
-        | ReqInfoState.PUTTED_INPUTSTREAM;
+        ReqInfoState.PUTTED_URI
+            | ReqInfoState.PUTTED_QUERYSTRING
+            | ReqInfoState.PUTTED_METHOD
+            | ReqInfoState.PUTTED_INPUTSTREAM;
 
     this.ALLOWED_PUT_STUB = true;
   }
@@ -130,7 +115,6 @@ public class ReqInfo {
   public void setQueries(Map queries) {
     this.queries = queries;
   }
-
 
   /**
    * for all stub to invoke setting stack info and params
@@ -193,7 +177,7 @@ public class ReqInfo {
           break;
 
         case "PARAMETER":
-//          list.add(String.format(String.format("%s: %s", _type, value)));
+          //          list.add(String.format(String.format("%s: %s", _type, value)));
           list.add(value);
         default:
           break;
@@ -246,24 +230,26 @@ public class ReqInfo {
   @Override
   public String toString() {
     return String.format(
-      "{\"url\":\"%s\",\"method\":\"%s\",\"queries\":\"%s\",\"StubData\": \"%s\"}",
-      url, method, queries, StubDatas);
+        "{\"url\":\"%s\",\"method\":\"%s\",\"queries\":\"%s\",\"StubData\": \"%s\"}",
+        url, method, queries, StubDatas);
   }
 
   private String getLogRecord(String type, ArrayList<StubData> datas) {
     String result = null;
 
     if (method.toUpperCase().equals("GET")) {
-      result = String.format(
-        "{\"url\": \"%s\", \"method\": \"%s\", \"queryString\":\"%s\", \"type\": \"%s\", \"data\": \"%s\"}",
-        this.url, this.method, this.queryString, type, datas);
+      result =
+          String.format(
+              "{\"url\": \"%s\", \"method\": \"%s\", \"queryString\":\"%s\", \"type\": \"%s\", \"data\": \"%s\"}",
+              this.url, this.method, this.queryString, type, datas);
     } else if (method.toUpperCase().equals("POST")) {
-      String fmt = "{\"url\": \"%s\", \"method\": \"%s\", \"queries\":\"%s\", \"type\": \"%s\", \"data\": \"%s\"}";
-
+      String fmt =
+          "{\"url\": \"%s\", \"method\": \"%s\", \"queries\":\"%s\", \"type\": \"%s\", \"data\": \"%s\"}";
 
       if (this.inputBuffer == null) {
         if (this.queries.isEmpty()) {
-          fmt = "{\"url\": \"%s\", \"method\": \"%s\", \"inputStream\":\"%s\", \"type\": \"%s\", \"data\": \"%s\"}";
+          fmt =
+              "{\"url\": \"%s\", \"method\": \"%s\", \"inputStream\":\"%s\", \"type\": \"%s\", \"data\": \"%s\"}";
           int v = -1;
           String tmp = "";
           try {
@@ -274,18 +260,29 @@ public class ReqInfo {
             tmp = "";
           }
           this.inputBuffer = tmp;
-          result = String.format(fmt, this.url, this.method, new String(Base64.encode(tmp.getBytes())), type, datas);
+          result =
+              String.format(
+                  fmt,
+                  this.url,
+                  this.method,
+                  new String(Base64.encode(tmp.getBytes())),
+                  type,
+                  datas);
         } else {
-          result = String.format(fmt, this.url, this.method, Common.MapToFormData(this.queries), type, datas);
+          result =
+              String.format(
+                  fmt, this.url, this.method, Common.MapToFormData(this.queries), type, datas);
         }
       } else {
-        fmt = "{\"url\": \"%s\", \"method\": \"%s\", \"queries\":\"%s\", \"type\": \"%s\", \"data\": \"%s\"}";
+        fmt =
+            "{\"url\": \"%s\", \"method\": \"%s\", \"queries\":\"%s\", \"type\": \"%s\", \"data\": \"%s\"}";
         result = String.format(fmt, this.url, this.method, this.inputBuffer, type, datas);
       }
     } else {
-      result = String.format(
-        "{\"url\": \"%s\", \"method\": \"%s\", \"type\": \"%s\", \"data\": \"%s\"}",
-        this.url, this.method, type, datas);
+      result =
+          String.format(
+              "{\"url\": \"%s\", \"method\": \"%s\", \"type\": \"%s\", \"data\": \"%s\"}",
+              this.url, this.method, type, datas);
     }
 
     return result;
@@ -302,9 +299,9 @@ public class ReqInfo {
       }
     }
 
-
     if (!MYBATIS_CACHES.isEmpty()) {
-      String mybatis_fmt = "{\"url\": \"%s\", \"method\": \"%s\", \"queries\":\"%s\", \"type\": \"%s\", \"data\": \"%s\"}";
+      String mybatis_fmt =
+          "{\"url\": \"%s\", \"method\": \"%s\", \"queries\":\"%s\", \"type\": \"%s\", \"data\": \"%s\"}";
 
       for (List list : MYBATIS_CACHES.values()) {
         int sz = list.size();
@@ -319,9 +316,9 @@ public class ReqInfo {
           tmp_list.add(String.format("param%d:%s", i - 1, list.get(i)));
         }
 
-
         if (this.queries.isEmpty()) {
-          mybatis_fmt = "{\"url\": \"%s\", \"method\": \"%s\", \"inputStream\":\"%s\", \"type\": \"%s\", \"data\": \"%s\"}";
+          mybatis_fmt =
+              "{\"url\": \"%s\", \"method\": \"%s\", \"inputStream\":\"%s\", \"type\": \"%s\", \"data\": \"%s\"}";
           if (this.inputBuffer == null) {
             int v = -1;
             String tmp = "";
@@ -333,28 +330,44 @@ public class ReqInfo {
               tmp = "";
             }
 
-            logger.info(String.format(mybatis_fmt, this.url, this.method, new String(Base64.encode(tmp.getBytes())), "MYBATIS", tmp_list));
+            logger.info(
+                String.format(
+                    mybatis_fmt,
+                    this.url,
+                    this.method,
+                    new String(Base64.encode(tmp.getBytes())),
+                    "MYBATIS",
+                    tmp_list));
           } else {
-            logger.info(String.format(mybatis_fmt, this.url, this.method, new String(Base64.encode(this.inputBuffer.getBytes())), "MYBATIS", tmp_list));
+            logger.info(
+                String.format(
+                    mybatis_fmt,
+                    this.url,
+                    this.method,
+                    new String(Base64.encode(this.inputBuffer.getBytes())),
+                    "MYBATIS",
+                    tmp_list));
           }
         } else {
-          logger.info(String.format(mybatis_fmt, this.url, this.method, Common.MapToFormData(this.queries), "MYBATIS2", tmp_list));
+          logger.info(
+              String.format(
+                  mybatis_fmt,
+                  this.url,
+                  this.method,
+                  Common.MapToFormData(this.queries),
+                  "MYBATIS2",
+                  tmp_list));
         }
-
       }
     }
   }
 
-  /**
-   * for SecAgent to do some other jobs
-   */
+  /** for SecAgent to do some other jobs */
   public void doJob() {
     if (logger != null) doLogRecords();
   }
 
-  /**
-   * StubData: Stack info and Parameters
-   */
+  /** StubData: Stack info and Parameters */
   protected class StubData {
     protected Throwable throwable;
     Object object;
@@ -370,12 +383,12 @@ public class ReqInfo {
       for (StackTraceElement element : stackTraceElements) {
         String className = element.getClassName();
         if (className.startsWith("java.")
-          || className.startsWith("sun.")
-          || className.startsWith("javax.")
-          || className.startsWith("SecAgent.")
-          || className.startsWith("org.eclipse.")
-          || className.startsWith("org.junit")
-          || className.startsWith("org.apache.")) continue;
+            || className.startsWith("sun.")
+            || className.startsWith("javax.")
+            || className.startsWith("SecAgent.")
+            || className.startsWith("org.eclipse.")
+            || className.startsWith("org.junit")
+            || className.startsWith("org.apache.")) continue;
         sb.append(element.toString() + "\n");
       }
       return sb.toString();
@@ -393,7 +406,9 @@ public class ReqInfo {
         }
         return sb.substring(0, sb.length() - 1);
       } else if (object instanceof InputStream) {
-        return new String(Base64.encode(((ByteArrayOutputStream) Common.transferTo((InputStream) object)).toByteArray()));
+        return new String(
+            Base64.encode(
+                ((ByteArrayOutputStream) Common.transferTo((InputStream) object)).toByteArray()));
       } else {
         return object.toString();
       }

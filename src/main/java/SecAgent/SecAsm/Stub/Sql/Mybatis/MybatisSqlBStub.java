@@ -4,18 +4,16 @@ import SecAgent.SecAsm.Common.CommonStub;
 import SecAgent.utils.ParamsInfo;
 import org.objectweb.asm.MethodVisitor;
 
-/**
- * just log sql in xxMapper.xml, maybe with ?/#
- */
+/** just log sql in xxMapper.xml, maybe with ?/# */
 public class MybatisSqlBStub extends CommonStub {
 
   public MybatisSqlBStub(
-    int api,
-    MethodVisitor methodVisitor,
-    int access,
-    String name,
-    String descriptor,
-    ParamsInfo paramsInfo) {
+      int api,
+      MethodVisitor methodVisitor,
+      int access,
+      String name,
+      String descriptor,
+      ParamsInfo paramsInfo) {
     super(api, methodVisitor, access, name, descriptor, paramsInfo);
   }
 
@@ -41,7 +39,6 @@ public class MybatisSqlBStub extends CommonStub {
     super.onMethodEnter();
     process();
   }
-
 
   @Override
   protected void onMethodExit(int opcode) {

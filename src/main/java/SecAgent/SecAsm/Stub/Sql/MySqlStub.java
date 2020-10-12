@@ -17,10 +17,10 @@ public class MySqlStub extends CommonStub {
   }
 
   private void process() {
-//    debug_print_offline(String.format("[DEBUG] [MySqlStub]: %s", this.paramsInfo.toString()));
+    //    debug_print_offline(String.format("[DEBUG] [MySqlStub]: %s", this.paramsInfo.toString()));
 
     putStubData("SQL", T_OBJECT, 1);
-//    debug_print_online(T_OBJECT, 1);
+    //    debug_print_online(T_OBJECT, 1);
   }
 
   @Override
