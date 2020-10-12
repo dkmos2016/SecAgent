@@ -1,5 +1,6 @@
 package SecAgent.utils.DefaultLoggerHelper;
 
+import SecAgent.Conf.Config;
 import SecAgent.utils.Resources;
 
 import java.io.FileOutputStream;
@@ -10,7 +11,6 @@ import java.util.logging.LogRecord;
 
 /** Default file handle read filepath from config.properties */
 public class DefaultLogFileHandler extends FileHandler {
-  private static final String DEFAULT_LOG_PATH = Resources.getProperty("INFORMATION_LOG_PATH");
 
   /**
    * construct DefaultLogFileHandler with DefaultLogFormatter
@@ -21,7 +21,7 @@ public class DefaultLogFileHandler extends FileHandler {
     super();
 
     setFormatter(new DefaultLogFormat());
-    setOutputStream(new FileOutputStream(DEFAULT_LOG_PATH));
+    setOutputStream(new FileOutputStream(Config.INFORMATION_PATH));
   }
 
   public DefaultLogFileHandler(Formatter formatter) throws IOException, SecurityException {
@@ -33,7 +33,7 @@ public class DefaultLogFileHandler extends FileHandler {
     super();
 
     if (log_path == null || log_path.equals("")) {
-      setOutputStream(new FileOutputStream(DEFAULT_LOG_PATH));
+      setOutputStream(new FileOutputStream(Config.INFORMATION_PATH));
     } else {
       setOutputStream(new FileOutputStream(log_path));
     }

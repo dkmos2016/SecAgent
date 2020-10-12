@@ -33,13 +33,13 @@ public class Config {
     DEFAULT_LOGGER_LEVEL = DefaultLogger.MyLevel.INFO;
 
     DEBUG_PATH = Resources.getProperty("DEBUG_LOG_PATH");
-    EXCEPTION_PATH =
-        DEBUG
-            ? Resources.getProperty("INFORMATION_LOG_PATH")
-            : (Resources.getProperty("LOG_DIR") + Resources.getProperty("INFORMATION_LOG_PATH"));
     INFORMATION_PATH =
         DEBUG
             ? Resources.getProperty("INFORMATION_LOG_PATH")
-            : Resources.getProperty("LOG_DIR") + Resources.getProperty("EXCEPTION_LOG_PATH");
+            : (Resources.getProperty("LOG_DIR") + Resources.getProperty("INFORMATION_LOG_PATH"));
+    EXCEPTION_PATH =
+        DEBUG
+            ? Resources.getProperty("EXCEPTION_LOG_PATH")
+            : (Resources.getProperty("LOG_DIR") + Resources.getProperty("EXCEPTION_LOG_PATH"));
   }
 }
