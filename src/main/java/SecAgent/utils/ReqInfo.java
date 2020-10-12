@@ -6,10 +6,7 @@ import SecAgent.utils.Encoder.Base64;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -53,6 +50,11 @@ public class ReqInfo {
    * inputstream's content
    */
   private String inputBuffer = null;
+
+  /**
+   * OutputStream
+   */
+  private ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
 
   public ReqInfo() {}
 
@@ -105,6 +107,11 @@ public class ReqInfo {
 
   public void setHttpServletResponse(HttpServletResponse response) throws IOException {
     this.response = response;
+  }
+
+  public OutputStream getOutputStream() throws IOException {
+//    this.response = response;
+    return this.byteArrayOutputStream;
   }
 
   public void setInputStream(InputStream inputStream) throws IOException {

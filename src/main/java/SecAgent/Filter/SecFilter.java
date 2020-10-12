@@ -2,10 +2,11 @@ package SecAgent.Filter;
 
 import SecAgent.Conf.Config;
 import SecAgent.utils.DefaultLoggerHelper.DefaultLogger;
+import SecAgent.utils.ReqLocal;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+
 import java.io.IOException;
 
 public class SecFilter implements Filter {
@@ -19,12 +20,23 @@ public class SecFilter implements Filter {
     try {
       //      CopyServletRequestWrapper new_request =
       //          new CopyServletRequestWrapper((HttpServletRequest) request);
-      CopyServletResponseWrapper new_response =
-          new CopyServletResponseWrapper((HttpServletResponse) response);
+//      CopyServletResponseWrapper new_response =
+//          new CopyServletResponseWrapper((HttpServletResponse) response);
 
-      HttpServletRequest new_request =
-          (HttpServletRequest) new SecInstanceProxyFactory(request).getProxyInstance();
+      ReqLocal.getReqInfo().setHttpServletRequest((HttpServletRequest) request);
+
+      ServletRequest new_request =
+          (ServletRequest) new SecInstanceProxyFactory(request).getProxyInstance();
+
+      ServletResponse new_response =
+              (ServletResponse) new SecInstanceProxyFactory(response).getProxyInstance();
+
+
       chain.doFilter(new_request, new_response);
+
+
+      ReqLocal.getReqInfo().doJob();
+      ReqLocal.clear();
 
     } catch (Exception e) {
       if (logger != null) logger.error(e);
