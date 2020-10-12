@@ -1,6 +1,5 @@
 package SecAgent.utils.HttpClientLoggerHelper;
 
-
 import SecAgent.utils.HttpClientHelper.HttpClientHelper;
 
 public class HttpLogger implements Runnable {

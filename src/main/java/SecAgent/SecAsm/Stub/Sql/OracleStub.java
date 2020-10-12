@@ -17,10 +17,11 @@ public class OracleStub extends CommonStub {
   }
 
   private void process() {
-//    debug_print_offline(String.format("[DEBUG] [OracleStub]: %s", this.paramsInfo.toString()));
+    //    debug_print_offline(String.format("[DEBUG] [OracleStub]: %s",
+    // this.paramsInfo.toString()));
 
     putStubData("SQL", T_OBJECT, 0);
-//    debug_print_online(T_OBJECT, 1);
+    //    debug_print_online(T_OBJECT, 1);
   }
 
   @Override

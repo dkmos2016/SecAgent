@@ -4,24 +4,23 @@ import SecAgent.SecAsm.Common.CommonStub;
 import SecAgent.utils.ParamsInfo;
 import org.objectweb.asm.MethodVisitor;
 
-/**
- * just log sql in xxMapper.xml, maybe with ?/#
- */
+/** just log sql in xxMapper.xml, maybe with ?/# */
 public class MybatisSqlAStub extends CommonStub {
 
   public MybatisSqlAStub(
-    int api,
-    MethodVisitor methodVisitor,
-    int access,
-    String name,
-    String descriptor,
-    ParamsInfo paramsInfo) {
+      int api,
+      MethodVisitor methodVisitor,
+      int access,
+      String name,
+      String descriptor,
+      ParamsInfo paramsInfo) {
     super(api, methodVisitor, access, name, descriptor, paramsInfo);
   }
 
   private void process() {
     mv.visitVarInsn(ALOAD, 0);
-    mv.visitFieldInsn(GETFIELD, "org/apache/ibatis/scripting/xmltags/TextSqlNode", "text", "Ljava/lang/String;");
+    mv.visitFieldInsn(
+        GETFIELD, "org/apache/ibatis/scripting/xmltags/TextSqlNode", "text", "Ljava/lang/String;");
     mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/String", "trim", "()Ljava/lang/String;", false);
     mv.visitVarInsn(ASTORE, res_idx);
 
@@ -50,6 +49,5 @@ public class MybatisSqlAStub extends CommonStub {
     //    mv.visitVarInsn(ASTORE, 0);
 
     super.onMethodExit(opcode);
-
   }
 }

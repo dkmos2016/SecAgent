@@ -155,7 +155,7 @@ public class Common {
       int v = -1;
       while ((v = in.read()) > -1) ba.write(v);
     } catch (Exception e) {
-;
+      ;
     }
     return ba;
   }

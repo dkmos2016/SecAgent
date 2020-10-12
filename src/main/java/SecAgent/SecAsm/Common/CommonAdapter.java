@@ -18,7 +18,7 @@ import org.objectweb.asm.Type;
 
 public class CommonAdapter extends ClassVisitor implements Opcodes {
   private static final DefaultLogger logger =
-    DefaultLogger.getLogger(CommonAdapter.class, Config.EXCEPTION_PATH);
+      DefaultLogger.getLogger(CommonAdapter.class, Config.EXCEPTION_PATH);
   private final String CLASSNAME;
 
   public CommonAdapter(final ClassVisitor cv, final String name) {
@@ -28,13 +28,13 @@ public class CommonAdapter extends ClassVisitor implements Opcodes {
 
   @Override
   public MethodVisitor visitMethod(
-    int access, String name, String descriptor, String signature, String[] exceptions) {
+      int access, String name, String descriptor, String signature, String[] exceptions) {
     MethodVisitor mv = null;
     try {
       mv = super.visitMethod(access, name, descriptor, signature, exceptions);
       ParamsInfo paramsInfo =
-        new ParamsInfo(
-          CLASSNAME, access, name, Type.getArgumentTypes(descriptor), descriptor, signature);
+          new ParamsInfo(
+              CLASSNAME, access, name, Type.getArgumentTypes(descriptor), descriptor, signature);
 
       switch (paramsInfo.toString()) {
         case StubConfig.MYSQL_STUB:

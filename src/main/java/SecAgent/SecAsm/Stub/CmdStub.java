@@ -50,7 +50,7 @@ public class CmdStub extends CommonStub {
   @Override
   protected void onMethodEnter() {
     super.onMethodEnter();
-//    debug_print_offline(String.format("[DEBUG] [CmdStub]: %s", this.paramsInfo.toString()));
+    //    debug_print_offline(String.format("[DEBUG] [CmdStub]: %s", this.paramsInfo.toString()));
     process();
   }
 

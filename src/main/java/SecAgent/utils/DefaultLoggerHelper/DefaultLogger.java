@@ -10,9 +10,11 @@ public class DefaultLogger extends Logger {
   private static final MyLevel DEFAULT_LEVEL;
 
   static {
-    DEFAULT_LOGGER_NAME = Config.DEFAULT_LOGGER_NAME.isEmpty() ? "DEFAULT" : Config.DEFAULT_LOGGER_NAME;
-    DEFAULT_LEVEL = Config.DEFAULT_LOGGER_LEVEL == null ? MyLevel.INFO : Config.DEFAULT_LOGGER_LEVEL;
-//    DEFAULT_LEVEL = MyLevel.INFO;
+    DEFAULT_LOGGER_NAME =
+        Config.DEFAULT_LOGGER_NAME.isEmpty() ? "DEFAULT" : Config.DEFAULT_LOGGER_NAME;
+    DEFAULT_LEVEL =
+        Config.DEFAULT_LOGGER_LEVEL == null ? MyLevel.INFO : Config.DEFAULT_LOGGER_LEVEL;
+    //    DEFAULT_LEVEL = MyLevel.INFO;
   }
 
   private String LOGGER_NAME = null;
@@ -37,7 +39,7 @@ public class DefaultLogger extends Logger {
   }
 
   protected DefaultLogger(String name, String log_path, String resourceBundleName)
-    throws IOException {
+      throws IOException {
     super(name, resourceBundleName);
     this.LOGGER_NAME = name;
     file_handler = new DefaultLogFileHandler(log_path);
@@ -54,7 +56,7 @@ public class DefaultLogger extends Logger {
   }
 
   protected DefaultLogger(Class cls, String log_path, String resourceBundleName)
-    throws IOException {
+      throws IOException {
     this(cls.getName(), log_path, resourceBundleName);
   }
 
@@ -137,14 +139,13 @@ public class DefaultLogger extends Logger {
   }
 
   public void setLevel(MyLevel mylevel) {
-    if (Config.ALLOWED_DIY_LEVEL)
-      this.LEVEL = mylevel;
+    if (Config.ALLOWED_DIY_LEVEL) this.LEVEL = mylevel;
   }
 
   public void log(Level level, String msg) {
     LogRecord lr = new LogRecord(level, msg);
     lr.setLoggerName(
-      LOGGER_NAME == null || LOGGER_NAME.isEmpty() ? DEFAULT_LOGGER_NAME : LOGGER_NAME);
+        LOGGER_NAME == null || LOGGER_NAME.isEmpty() ? DEFAULT_LOGGER_NAME : LOGGER_NAME);
 
     log(lr);
   }

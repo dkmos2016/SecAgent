@@ -133,7 +133,7 @@ public class TrackStub extends AdviceAdapter implements Opcodes {
     mv.visitFieldInsn(GETSTATIC, "java/lang/System", "out", "Ljava/io/PrintStream;");
     mv.visitLdcInsn(msg);
     mv.visitMethodInsn(
-            INVOKEVIRTUAL, "java/io/PrintStream", "println", "(Ljava/lang/String;)V", false);
+        INVOKEVIRTUAL, "java/io/PrintStream", "println", "(Ljava/lang/String;)V", false);
   }
 
   private void debug_print_online(int type, int obj_idx) {
@@ -386,7 +386,7 @@ public class TrackStub extends AdviceAdapter implements Opcodes {
 
     int type = 0;
 
-    switch(opcode) {
+    switch (opcode) {
       case ARETURN:
         type = T_OBJECT;
         mv.visitVarInsn(ASTORE, tmp_obj);

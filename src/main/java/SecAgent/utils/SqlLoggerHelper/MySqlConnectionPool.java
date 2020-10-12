@@ -21,16 +21,24 @@ public class MySqlConnectionPool {
   private void initialize() {
     System.out.println("initialize");
     try {
-      Class.forName("com.mysql.cj.jdbc.Driver", true, new AgentClassLoader(Thread.currentThread().getContextClassLoader()));
+      Class.forName(
+          "com.mysql.cj.jdbc.Driver",
+          true,
+          new AgentClassLoader(Thread.currentThread().getContextClassLoader()));
 
       for (int i = 0; i < this.size; i++) {
         try {
           System.out.println("try to getConnection");
           Connection connection =
-            DriverManager.getConnection(
-              String.format("jdbc:mysql://%s:%s/%s?useSSL=%s&allowPublicKeyRetrieval=true&serverTimezone=UTC", Resources.getProperty("DB_HOST"), Resources.getProperty("DB_PORT"), Resources.getProperty("DB_NAME"), Resources.getProperty("DB_SSL")),
-              Resources.getProperty("DB_USER"),
-              Resources.getProperty("DB_PASSWORD"));
+              DriverManager.getConnection(
+                  String.format(
+                      "jdbc:mysql://%s:%s/%s?useSSL=%s&allowPublicKeyRetrieval=true&serverTimezone=UTC",
+                      Resources.getProperty("DB_HOST"),
+                      Resources.getProperty("DB_PORT"),
+                      Resources.getProperty("DB_NAME"),
+                      Resources.getProperty("DB_SSL")),
+                  Resources.getProperty("DB_USER"),
+                  Resources.getProperty("DB_PASSWORD"));
 
           this.connectionArrayList.add(connection);
         } catch (SQLException e) {
@@ -39,7 +47,7 @@ public class MySqlConnectionPool {
 
     } catch (ClassNotFoundException e) {
       this.connectionArrayList = null;
-//      e.printStackTrace();
+      //      e.printStackTrace();
     }
 
     if (this.connectionArrayList.size() == 0) {

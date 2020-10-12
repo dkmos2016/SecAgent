@@ -11,12 +11,13 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.FutureTask;
 
 public class ExceptionLoggerAsync {
-  public static final ExecutorService es = Executors.newFixedThreadPool(Integer.parseInt(Resources.getProperty("MAX_THREAD")));
+  public static final ExecutorService es =
+      Executors.newFixedThreadPool(Integer.parseInt(Resources.getProperty("MAX_THREAD")));
 
   public static void doExpLog(Exception e) {
     System.out.println("doExpLog: ");
-        e.printStackTrace();
-//    MysqlLogger.execute("select id, name from test");
+    e.printStackTrace();
+    //    MysqlLogger.execute("select id, name from test");
     // todo async
   }
 
@@ -61,7 +62,8 @@ public class ExceptionLoggerAsync {
    * @param e
    */
   public static void doExcLogAsync(Exception e) {
-    FutureTask futureTask = new FutureTask(new HttpLogger(Resources.getProperty("EXCEP_LOGGER_SERVER"), e), null);
+    FutureTask futureTask =
+        new FutureTask(new HttpLogger(Resources.getProperty("EXCEP_LOGGER_SERVER"), e), null);
     es.execute(futureTask);
   }
 

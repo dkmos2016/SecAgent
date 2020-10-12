@@ -65,8 +65,6 @@ public class UrlStub extends CommonStub {
     newArrayList(params_idx);
     findAndExecute(
         "SecAgent.utils.ReqInfo", "doJob", new Class[] {}, reqinfo_idx, params_idx, tmp_obj);
-    // TODO remove ThreadLocal
-    //    AsmReqLocalOp.clearReqInfo(mv);
 
     findAndExecute(
         "SecAgent.utils.ReqLocal", "clear", new Class[] {}, reqinfo_idx, params_idx, tmp_obj);

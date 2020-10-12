@@ -29,55 +29,50 @@ public class SecInstanceProxyFactory {
 
   public SecInstanceProxyFactory(Object object) {
     this.target = object;
-//    System.out.println(object);
+    //    System.out.println(object);
     logger.debug("SecInstanceProxyFactory.<init>");
   }
 
-  private Object proxyGetInputStream(Object obj) throws Throwable {
-    Object ret = null;
-      ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+  private Object proxyGetInputStream(Object obj) throws IOException {
+    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
 
-      if (byteArrayInputStream == null) {
-        InputStream in = (InputStream) obj;
-        int v = -1;
-        while ((v = in.read()) > -1) {
-          byteArrayOutputStream.write(v);
-        }
-        in.close();
+    if (byteArrayInputStream == null) {
+      InputStream in = (InputStream) obj;
+      int v = -1;
+      while ((v = in.read()) > -1) {
+        byteArrayOutputStream.write(v);
+      }
+      in.close();
 
-        byteArrayOutputStream.flush();
-        byteArrayInputStream =
-          new ByteArrayInputStream(byteArrayOutputStream.toByteArray());
+      byteArrayOutputStream.flush();
+      byteArrayInputStream = new ByteArrayInputStream(byteArrayOutputStream.toByteArray());
 
-        //                    System.out.println(new
-        // String(byteArrayOutputStream.toByteArray()));
-        ReqLocal.getReqInfo()
+      ReqLocal.getReqInfo()
           .setInputStream(new ByteArrayInputStream(byteArrayOutputStream.toByteArray()));
+    }
+
+    return new ServletInputStream() {
+      @Override
+      public boolean isFinished() {
+        return false;
       }
 
-      return
-        new ServletInputStream() {
-          @Override
-          public boolean isFinished() {
-            return false;
-          }
+      @Override
+      public boolean isReady() {
+        return false;
+      }
 
-          @Override
-          public boolean isReady() {
-            return false;
-          }
+      @Override
+      public void setReadListener(ReadListener readListener) {}
 
-          @Override
-          public void setReadListener(ReadListener readListener) {}
-
-          @Override
-          public int read() throws IOException {
-            return byteArrayInputStream.read();
-          }
-        };
+      @Override
+      public int read() throws IOException {
+        return byteArrayInputStream.read();
+      }
+    };
   }
 
-  private void proxyGetParameterMap (Object obj) {
+  private void proxyGetParameterMap(Object obj) {
     logger.debug("proxyGetParameterMap");
     ReqLocal.getReqInfo().setQueries((Map) obj);
   }
@@ -88,17 +83,19 @@ public class SecInstanceProxyFactory {
         target.getClass().getInterfaces(),
         new InvocationHandler() {
           @Override
-          public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+          public Object invoke(Object proxy, Method method, Object[] args) {
             logger.debug("before invoke " + method.getName());
-            Object obj = method.invoke(target, args);
-            Object ret = obj;
-            try {
-              if (obj instanceof InputStream) {
-                ret = proxyGetInputStream(obj);
-              }
 
-              if (obj instanceof Map && method.getName().equals("getParameterMap")) {
+            Object ret = null;
+            try {
+              Object obj = method.invoke(target, args);
+              String method_name = method.getName();
+              if (obj instanceof InputStream && method_name.equals("getInputStream")) {
+                ret = proxyGetInputStream(obj);
+              } else if (obj instanceof Map && method.getName().equals("getParameterMap")) {
                 proxyGetParameterMap(obj);
+              } else {
+                ret = obj;
               }
 
               logger.debug("after invoke " + method.getName());
