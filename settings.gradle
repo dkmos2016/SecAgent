@@ -1,2 +1,5 @@
 rootProject.name = 'SecAgent'
 
+
+include 'SecAgent-Boot', 'SecAgent-Core'
+

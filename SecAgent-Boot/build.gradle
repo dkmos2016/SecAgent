@@ -1,0 +1,44 @@
+plugins {
+    id 'java'
+}
+
+group 'com.pab'
+version '1.0.0-SNAPSHOT-BEAT'
+
+repositories {
+    mavenCentral()
+    jcenter()
+}
+
+dependencies {
+//    testCompile group: 'junit', name: 'junit', version: '4.12'
+
+    testImplementation project(":SecAgent-Core")
+}
+
+
+jar {
+    configurations.compile.each { println it.path }
+    println "========="
+
+    manifest {
+        attributes(
+                'Premain-Class': 'AgentDemo',
+                'Agent-Class': 'AgentDemo',
+                'Can-Redefine-Classes': 'true',
+                'Can-Retransform-Classes': 'true',
+                'Can-Set-Native-Method-Prefix': 'true',
+//                'Implementation-Title': "ClassLogger",
+                'Implementation-Version': rootProject.version,
+//                'Class-Path': jarInClasspath.join(' ')
+        )
+    }
+
+//    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+//    into('assets') {
+//        from 'assets'
+//    }
+    from {
+        configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+}

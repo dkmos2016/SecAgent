@@ -1,9 +1,3 @@
-buildscript {
-    repositories {
-        jcenter()
-    }
-}
-
 plugins {
     id 'java'
 }
@@ -12,7 +6,6 @@ group 'com.pab'
 version '1.0.0-SNAPSHOT-BEAT'
 
 repositories {
-//    google()
     mavenCentral()
     jcenter()
 }
@@ -20,41 +13,37 @@ repositories {
 dependencies {
 //    implementation 'org.jetbrains:annotations:19.0.0'
 //    implementation fileTree(dir: "libs", includes: ["*.jar"], excludes: ["asm*9.0*.jar", "log*.jar"])
-//    compile group: 'org.ow2.asm', name: 'asm', version: '9.0-beta'
-
+    compile group: 'org.ow2.asm', name: 'asm', version: '9.0-beta'
+    compile group: 'org.ow2.asm', name: 'asm-commons', version: '9.0'
+    compile group: 'javax.servlet', name: 'javax.servlet-api', version: '4.0.1'
 
 //    implementation 'com.github.jasync-sql:jasync-mysql:0.8.31'
 
 //    compile group: 'com.squareup.okhttp3', name: 'okhttp', version: '4.8.1'
 
-//    compile group: 'apache-httpclient', name: 'commons-httpclient', version: '2.0.2'
-//    compile group: 'javax.servlet', name: 'javax.servlet-api', version: '4.0.1'
-//    compile group: 'org.ow2.asm', name: 'asm-commons', version: '9.0'
-
-    compile project(":SecAgent-Boot")
-//    compile project(":SecAgent-Core")
-
+    testImplementation group: 'apache-httpclient', name: 'commons-httpclient', version: '2.0.2'
+//
 //    implementation group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.13.3'
 //    implementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.13.3'
-
+//
 //    implementation group: 'org.apache.tomcat', name: 'tomcat-catalina', version: '10.0.0-M7'
-
+//
 //    implementation group: 'org.springframework', name: 'spring-jdbc', version: '5.2.8.RELEASE'
 //    implementation group: 'mysql', name: 'mysql-connector-java', version: '8.0.21'
 }
 
 jar {
-//    configurations.runtime.each { println it.path }
-//    println "========="
-//    configurations.compile.each { println it.path }
-//    println "========="
+    configurations.runtime.each { println it.path }
+    println "========="
+    configurations.compile.each { println it.path }
+    println "========="
 
-    archiveName("${rootProject.name}-${rootProject.version}.jar")
+    archiveName("${project.name}-${version}.jar")
 
     manifest {
         attributes(
-                'Premain-Class': 'SecAgent.SecAgent_Boot.AgentDemo',
-                'Agent-Class': 'SecAgent.SecAgent_Boot.AgentDemo',
+//                'Premain-Class': 'AgentDemo',
+//                'Agent-Class': 'AgentDemo',
                 'Can-Redefine-Classes': 'true',
                 'Can-Retransform-Classes': 'true',
                 'Can-Set-Native-Method-Prefix': 'true',
@@ -63,14 +52,9 @@ jar {
 //                'Class-Path': jarInClasspath.join(' ')
         )
     }
-
+//
     from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
-//    into('libs') {
-//        from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
-//    }
-
     into('libs') {
-        from 'SecAgent-Core/build/libs/'
+        from 'lib'
     }
 }
-
