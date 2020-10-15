@@ -27,21 +27,15 @@ public class SecFilter implements Filter {
 
       ServletRequest new_request =
           (ServletRequest) new SecInstanceProxyFactory(request).getProxyInstance();
-
       ServletResponse new_response =
               (ServletResponse) new SecInstanceProxyFactory(response).getProxyInstance();
-
-
       chain.doFilter(new_request, new_response);
-
 
       ReqLocal.getReqInfo().doJob();
       ReqLocal.clear();
-
     } catch (Exception e) {
       if (logger != null) logger.error(e);
-      e.printStackTrace();
-      //      throw new ServletException(e);
+      throw new ServletException(e);
     }
   }
 }

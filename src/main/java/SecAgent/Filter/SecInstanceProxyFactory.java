@@ -2,10 +2,13 @@ package SecAgent.Filter;
 
 import SecAgent.Conf.Config;
 import SecAgent.utils.DefaultLoggerHelper.DefaultLogger;
+import SecAgent.utils.ReqInfo;
 import SecAgent.utils.ReqLocal;
 
 import javax.servlet.ReadListener;
 import javax.servlet.ServletInputStream;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.WriteListener;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -77,6 +80,28 @@ public class SecInstanceProxyFactory {
     ReqLocal.getReqInfo().setQueries((Map) obj);
   }
 
+  @SuppressWarnings("unused")
+  private ServletOutputStream proxyGetOutputStream(Object obj) throws IOException {
+    return new ServletOutputStream() {
+      @Override
+      public boolean isReady() {
+        return false;
+      }
+
+      @Override
+      public void setWriteListener(WriteListener writeListener) {
+
+      }
+
+      @Override
+      public void write(int b) throws IOException {
+        ((ServletOutputStream)obj).write(b);
+        ReqLocal.getReqInfo().getOutputStream().write(b);
+      }
+
+    };
+  }
+
   public Object getProxyInstance() {
     return Proxy.newProxyInstance(
         target.getClass().getClassLoader(),
@@ -94,6 +119,8 @@ public class SecInstanceProxyFactory {
                 ret = proxyGetInputStream(obj);
               } else if (obj instanceof Map && method.getName().equals("getParameterMap")) {
                 proxyGetParameterMap(obj);
+              } else if (obj instanceof Map && method.getName().equals("getParameterMap")) {
+                ret = proxyGetOutputStream(obj);
               } else {
                 ret = obj;
               }
