@@ -23,7 +23,7 @@ public class SecFilter implements Filter {
 //      CopyServletResponseWrapper new_response =
 //          new CopyServletResponseWrapper((HttpServletResponse) response);
 
-      ReqLocal.getReqInfo().setHttpServletRequest((HttpServletRequest) request);
+      ReqLocal.getReqInfo().setHttpServletRequest(request);
 
       ServletRequest new_request =
           (ServletRequest) new SecInstanceProxyFactory(request).getProxyInstance();

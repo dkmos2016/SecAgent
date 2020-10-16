@@ -4,9 +4,10 @@ import SecAgent.Conf.Config;
 import SecAgent.utils.DefaultLoggerHelper.DefaultLogger;
 import SecAgent.utils.Encoder.Base64;
 
-import javax.servlet.http.HttpServletRequest;
+import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -42,9 +43,12 @@ public class ReqInfo {
   /** getInpusteram */
   private InputStream inputStream;
   /** HttpServletRequest */
-  private HttpServletRequest request;
+  private ServletRequest request;
   /** HttpServletRequest */
   private HttpServletResponse response;
+
+
+  private static Map<String, Method> methods = new HashMap();
 
   /**
    * inputstream's content
@@ -77,32 +81,57 @@ public class ReqInfo {
   }
 
   /**
+   * find and save method with zero parameter. eg: System.currentMills()
+   */
+  private Method doGetOrFindMethod(Object obj, String methodname) {
+    Method method = methods.getOrDefault(methodname, null);
+
+    if (method == null) {
+      try {
+        method = obj.getClass().getMethod(methodname);
+        methods.put(methodname, method);
+      } catch (Exception e) {
+        logger.error(e);
+        method = null;
+      }
+    }
+
+    return method;
+  }
+
+  /**
    * for inoke to set Request
    * @param request
    * @throws IOException
    */
-  public void setHttpServletRequest(HttpServletRequest request) throws IOException {
+  public void setHttpServletRequest(ServletRequest request) throws IOException {
     if (request == null) return;
     this.request = request;
 
-    this.url =
+    try {
+      this.url =
         request.getScheme()
-            + "://"
-            + request.getServerName()
-            + ":"
-            + request.getServerPort()
-            + request.getRequestURI();
-    this.method = request.getMethod();
+          + "://"
+          + request.getServerName()
+          + ":"
+          + request.getServerPort()
+          + doGetOrFindMethod(request, "getRequestURI").invoke(request);
+      this.method = "" + doGetOrFindMethod(request, "getMethod").invoke(request);
 
-    //    this.queries = request.getParameterMap();
-    this.queryString = request.getQueryString();
-    this.state_code |=
+      //    this.queries = request.getParameterMap();
+      this.queryString = "" + doGetOrFindMethod(request, "getQueryString").invoke(request);
+
+      this.state_code |=
         ReqInfoState.PUTTED_URI
-            | ReqInfoState.PUTTED_QUERYSTRING
-            | ReqInfoState.PUTTED_METHOD
-            | ReqInfoState.PUTTED_INPUTSTREAM;
+          | ReqInfoState.PUTTED_QUERYSTRING
+          | ReqInfoState.PUTTED_METHOD
+          | ReqInfoState.PUTTED_INPUTSTREAM;
 
-    this.ALLOWED_PUT_STUB = true;
+    } catch (Exception e) {
+      logger.error(e);
+    } finally {
+      this.ALLOWED_PUT_STUB = true;
+    }
   }
 
   public void setHttpServletResponse(HttpServletResponse response) throws IOException {
