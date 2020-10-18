@@ -26,7 +26,7 @@ public class Config {
   public static final String INFORMATION_PATH;
 
   static {
-    DEBUG = false;
+    DEBUG = true;
     ALLOWED_DIY_LEVEL = false;
 
     DEFAULT_LOGGER_NAME = "SecAgent";

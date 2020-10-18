@@ -8,6 +8,7 @@ import org.objectweb.asm.Type;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.InputStream;
+import java.util.HashMap;
 
 
 /** log url */
@@ -23,6 +24,75 @@ public class UrlStub extends CommonStub {
       String descriptor,
       ParamsInfo paramsInfo) {
     super(api, methodVisitor, access, name, descriptor, paramsInfo);
+  }
+
+  private void genFullUrl(int dst_idx){
+    newStringBuilder(tmp_sb);
+
+    // scheme
+    mv.visitVarInsn(ALOAD, 1);
+    mv.visitMethodInsn(
+      INVOKEINTERFACE, "javax/servlet/http/HttpServletRequest", "getScheme", "()Ljava/lang/String;", true);
+    mv.visitVarInsn(ASTORE, tmp_obj);
+
+    append(tmp_sb, tmp_obj);
+    append(tmp_sb, "://");
+
+    // host
+    mv.visitVarInsn(ALOAD, 1);
+    mv.visitMethodInsn(
+      INVOKEINTERFACE, "javax/servlet/http/HttpServletRequest", "getServerName", "()Ljava/lang/String;", true);
+    mv.visitVarInsn(ASTORE, tmp_obj);
+
+    append(tmp_sb, tmp_obj);
+    append(tmp_sb, ":");
+
+    // port
+    mv.visitVarInsn(ALOAD, tmp_sb);
+    mv.visitVarInsn(ALOAD, 1);
+    mv.visitMethodInsn(
+      INVOKEINTERFACE, "javax/servlet/http/HttpServletRequest", "getServerPort", "()I", true);
+    mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/StringBuilder", "append", "(I)Ljava/lang/StringBuilder;", false);
+    mv.visitInsn(POP);
+
+    // Uri
+    mv.visitVarInsn(ALOAD, 1);
+    mv.visitMethodInsn(
+      INVOKEINTERFACE, "javax/servlet/http/HttpServletRequest", "getRequestURI", "()Ljava/lang/String;", true);
+
+    mv.visitVarInsn(ASTORE, tmp_obj);
+    append(tmp_sb, tmp_obj);
+
+    toStr(tmp_sb, dst_idx);
+  }
+
+  private void getQueries(int dst_idx){
+    mv.visitVarInsn(ALOAD, 1);
+    mv.visitMethodInsn(
+      INVOKEINTERFACE, "javax/servlet/http/HttpServletRequest", "getParameterMap", "()Ljava/util/Map;", true);
+    mv.visitVarInsn(ASTORE, dst_idx);
+  }
+
+  private void getMethod(int dst_idx){
+    mv.visitVarInsn(ALOAD, 1);
+    mv.visitMethodInsn(
+      INVOKEINTERFACE, "javax/servlet/http/HttpServletRequest", "getMethod", "()Ljava/lang/String;", true);
+    mv.visitVarInsn(ASTORE, dst_idx);
+  }
+
+  @Deprecated
+  private void getInputStream(int dst_idx){
+    mv.visitVarInsn(ALOAD, 1);
+    mv.visitMethodInsn(
+      INVOKEINTERFACE, "javax/servlet/http/HttpServletRequest", "getInputStream", "()Ljavax/servlet/ServletInputStream;", true);
+    mv.visitVarInsn(ASTORE, dst_idx);
+  }
+
+  private void getQueryString(int dst_idx) {
+    mv.visitVarInsn(ALOAD, 1);
+    mv.visitMethodInsn(
+      INVOKEINTERFACE, "javax/servlet/http/HttpServletRequest", "getQueryString", "()Ljava/lang/String;", true);
+    mv.visitVarInsn(ASTORE, dst_idx);
   }
 
   private void process() {
@@ -53,11 +123,23 @@ public class UrlStub extends CommonStub {
         tmp_obj);
   }
 
+  private void process2() {
+    debug_print_offline("process2: ");
+    newInstance(HashMap.class, res_idx);
+
+    genFullUrl(tmp_obj);
+
+    put(res_idx, "url", T_OBJECT, tmp_obj);
+
+    debug_print_online(T_OBJECT, tmp_obj);
+  }
+
   @Override
   protected void onMethodEnter() {
     super.onMethodEnter();
 
-    process();
+//    process();
+    process2();
   }
 
   @Override

@@ -15,22 +15,23 @@ import java.util.ArrayList;
 public abstract class CommonStub extends AdviceAdapter implements Opcodes {
   protected static final int T_OBJECT = 1111111;
   // new Throwable()
+  protected final int tmp_sb = newLocal(Type.getType(StringBuilder.class));
   private final int stk_idx = newLocal(Type.getType(Throwable.class));
   private final int cls_idx = newLocal(Type.getType(Class.class));
   private final int method_idx = newLocal(Type.getType(Method.class));
-  protected int tmp_obj = newLocal(Type.getType(Object.class));
-  protected int bak_obj = newLocal(Type.getType(Object.class));
-  protected int flag_idx = newLocal(Type.getType(int.class));
-  protected int res_idx = newLocal(Type.getType(Object.class));
-  protected int reqinfo_idx = newLocal(Type.getType(ReqInfo.class));
-  protected ParamsInfo paramsInfo;
+  protected final int tmp_obj = newLocal(Type.getType(Object.class));
+  protected final int bak_obj = newLocal(Type.getType(Object.class));
+  protected final int flag_idx = newLocal(Type.getType(int.class));
+  protected final int res_idx = newLocal(Type.getType(Object.class));
+  protected final int reqinfo_idx = newLocal(Type.getType(ReqInfo.class));
+  protected final ParamsInfo paramsInfo;
   /** for invoke (nonestatic) */
-  protected int inst_idx = newLocal(Type.getType(Object.class));
+  protected final int inst_idx = newLocal(Type.getType(Object.class));
   /** for invoke */
-  protected int params_idx = newLocal(Type.getType(Object[].class));
+  protected final int params_idx = newLocal(Type.getType(Object[].class));
   /** for mybatis */
-  protected int params2_idx = newLocal(Type.getType(Object[].class));
-  protected int null_idx = newLocal(Type.getType(Object[].class));
+  protected final int params2_idx = newLocal(Type.getType(Object[].class));
+  protected final int null_idx = newLocal(Type.getType(Object[].class));
 
   /**
    * Constructs a new {@link AdviceAdapter}.
@@ -152,6 +153,22 @@ public abstract class CommonStub extends AdviceAdapter implements Opcodes {
   }
 
   /**
+   * generate new instance of cls, and saved to target
+   *
+   * @param cls: classname, ex: java/lang/StringBuilder
+   * @param target: index of instance, ex: tmp_sb
+   */
+  protected void newInstance(Class cls, int target) {
+    String classname = cls.getName().replace('.', '/');
+//    mv.visitTypeInsn(NEW, name);
+//    mv.visitInsn(DUP);
+//    mv.visitMethodInsn(INVOKESPECIAL, name, "<init>", "()V", false);
+//    mv.visitVarInsn(ASTORE, target);
+
+    newInstance(classname, target);
+  }
+
+  /**
    * new StringBuilder()
    *
    * @param sb_idx
@@ -209,6 +226,51 @@ public abstract class CommonStub extends AdviceAdapter implements Opcodes {
     mv.visitInsn(POP);
   }
 
+  private Type getType(int type) {
+    switch (type) {
+      case T_INT:
+        return Type.INT_TYPE;
+
+      case T_DOUBLE:
+        return Type.DOUBLE_TYPE;
+
+      case T_FLOAT:
+        return Type.FLOAT_TYPE;
+
+      case T_LONG:
+        return Type.LONG_TYPE;
+
+      case T_BOOLEAN:
+        return Type.BOOLEAN_TYPE;
+
+      case T_SHORT:
+        return Type.SHORT_TYPE;
+
+      case T_CHAR:
+        return Type.CHAR_TYPE;
+
+      case T_BYTE:
+        return Type.BYTE_TYPE;
+
+      case T_OBJECT:
+        return Type
+    }
+  }
+  /**
+   * map.put(xx)
+   * @param map_idx HashMap's index
+   * @param key     value's key
+   * @param type    value's type
+   * @param obj_idx value's index
+   */
+  protected void put(int map_idx, String key, int type, int obj_idx) {
+    mv.visitVarInsn(type, obj_idx);
+    mv.visitLdcInsn(key);
+
+    mv.visitVarInsn(ALOAD, map_idx);
+    Type.getMethodDescriptor(Type.VOID_TYPE, new Type[]{Type.get});
+    mv.visitMethodInsn(INVOKEINTERFACE, "java/util/map", "put", "(Ljava/lang/Object;)V", true);
+  }
   /**
    * sb.appent(o)
    *

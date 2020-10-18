@@ -64,8 +64,8 @@ public class CommonAdapter extends ClassVisitor implements Opcodes {
         case StubConfig.UPLOAD_STUB:
           return new UploadStub(this.api, mv, access, name, descriptor, paramsInfo);
 
-//        case StubConfig.SPRING_URL_STUB:
-//          return new UrlStub(this.api, mv, access, name, descriptor, paramsInfo);
+        case StubConfig.SPRING_URL_STUB:
+          return new UrlStub(this.api, mv, access, name, descriptor, paramsInfo);
 
         case StubConfig.XXE_STUB:
           return new XxeStub(this.api, mv, access, name, descriptor, paramsInfo);
