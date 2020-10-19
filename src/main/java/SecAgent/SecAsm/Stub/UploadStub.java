@@ -17,16 +17,10 @@ public class UploadStub extends CommonStub {
   }
 
   private void process() {
+    newArrayList(params_idx);
+    addListElement(params_idx, T_OBJECT, 1);
 
-    //    mv.visitVarInsn(ALOAD, 1);
-    //    mv.visitMethodInsn(INVOKEVIRTUAL, "java/io/File", "getAbsolutePath",
-    // "()Ljava/lang/String;", false);
-    //    mv.visitVarInsn(ASTORE, res_idx);
-
-    newArrayList(params2_idx);
-    addListElement(params2_idx, T_OBJECT, 1);
-
-    putStubData("UPLOAD", T_OBJECT, params2_idx);
+    putStubData("UPLOAD", T_OBJECT, params_idx);
   }
 
   @Override

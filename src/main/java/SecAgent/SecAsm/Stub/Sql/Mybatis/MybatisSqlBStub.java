@@ -18,20 +18,20 @@ public class MybatisSqlBStub extends CommonStub {
   }
 
   private void process() {
-    newArrayList(params2_idx);
-    addListElement(params2_idx, T_OBJECT, 0);
+    newArrayList(params_idx);
+    addListElement(params_idx, T_OBJECT, 0);
 
     mv.visitLdcInsn("AFTER");
     mv.visitVarInsn(ASTORE, tmp_obj);
-    addListElement(params2_idx, T_OBJECT, tmp_obj);
+    addListElement(params_idx, T_OBJECT, tmp_obj);
 
     mv.visitVarInsn(ALOAD, 1);
     mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/String", "trim", "()Ljava/lang/String;", false);
     mv.visitVarInsn(ASTORE, tmp_obj);
 
-    addListElement(params2_idx, T_OBJECT, tmp_obj);
+    addListElement(params_idx, T_OBJECT, tmp_obj);
 
-    putStubData("MyBatis", T_OBJECT, params2_idx);
+    putStubData("MyBatis", T_OBJECT, params_idx);
   }
 
   @Override

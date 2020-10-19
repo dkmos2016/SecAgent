@@ -24,16 +24,16 @@ public class MybatisSqlAStub extends CommonStub {
     mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/String", "trim", "()Ljava/lang/String;", false);
     mv.visitVarInsn(ASTORE, res_idx);
 
-    newArrayList(params2_idx);
-    addListElement(params2_idx, T_OBJECT, 1);
+    newArrayList(params_idx);
+    addListElement(params_idx, T_OBJECT, 1);
 
     mv.visitLdcInsn("BEFORE");
     mv.visitVarInsn(ASTORE, tmp_obj);
-    addListElement(params2_idx, T_OBJECT, tmp_obj);
+    addListElement(params_idx, T_OBJECT, tmp_obj);
 
-    addListElement(params2_idx, T_OBJECT, res_idx);
+    addListElement(params_idx, T_OBJECT, res_idx);
 
-    putStubData("MyBatis", T_OBJECT, params2_idx);
+    putStubData("MyBatis", T_OBJECT, params_idx);
   }
 
   @Override
