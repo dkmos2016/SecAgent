@@ -21,7 +21,7 @@ public class DefaultLogFileHandler extends FileHandler {
     super();
 
     setFormatter(new DefaultLogFormat());
-    setOutputStream(new FileOutputStream(Config.INFORMATION_PATH));
+    setOutputStream(new FileOutputStream(Config.INFORMATION_PATH, true));
   }
 
   public DefaultLogFileHandler(Formatter formatter) throws IOException, SecurityException {
@@ -33,9 +33,9 @@ public class DefaultLogFileHandler extends FileHandler {
     super();
 
     if (log_path == null || log_path.equals("")) {
-      setOutputStream(new FileOutputStream(Config.INFORMATION_PATH));
+      setOutputStream(new FileOutputStream(Config.INFORMATION_PATH, true));
     } else {
-      setOutputStream(new FileOutputStream(log_path));
+      setOutputStream(new FileOutputStream(log_path, true));
     }
 
     setFormatter(new DefaultLogFormat());

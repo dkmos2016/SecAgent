@@ -1,6 +1,7 @@
 import SecAgent.Conf.Config;
 import SecAgent.utils.DefaultLoggerHelper.DefaultLogger;
 
+import java.io.FileOutputStream;
 import java.lang.instrument.Instrumentation;
 import java.lang.instrument.UnmodifiableClassException;
 import java.security.SecureClassLoader;
@@ -42,6 +43,18 @@ public class AgentDemo {
         new String[] {
           "com.mysql.cj.jdbc.StatementImpl",
         };
+
+    initilize();
+  }
+
+  public static void initilize() {
+    try {
+      /* Override SecAgentInfo.log/SecAgentError.log */
+      new FileOutputStream(Config.INFORMATION_PATH);
+      new FileOutputStream(Config.EXCEPTION_PATH);
+    } catch (Exception e) {
+      if (logger != null) logger.error(e);
+    }
   }
 
   public static void premain(String args, Instrumentation instrumentation)
