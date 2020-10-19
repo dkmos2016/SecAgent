@@ -1,0 +1,33 @@
+plugins {
+    id 'java'
+}
+
+group 'com.pab'
+version '1.0.0-SNAPSHOT-BEAT'
+
+repositories {
+    mavenCentral()
+    jcenter()
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+    compile group: 'javax.servlet', name: 'javax.servlet-api', version: '4.0.1'
+
+    implementation project(":SecAgent-Utils")
+}
+
+
+jar {
+    configurations.runtime.each { println it.path }
+    println "========="
+    configurations.compile.each { println it.path }
+    println "========="
+
+    archiveName("${project.name}-${version}.jar")
+
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    into('libs') {
+        from 'lib'
+    }
+}

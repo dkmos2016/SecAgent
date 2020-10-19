@@ -1,0 +1,19 @@
+plugins {
+    id 'java'
+}
+
+group 'com.pab'
+version '1.0.0-SNAPSHOT-BEAT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile group: 'org.ow2.asm', name: 'asm-commons', version: '9.0'
+}
+
+
+jar {
+
+}

@@ -1,34 +1,29 @@
-buildscript {
-    repositories {
-        jcenter()
-    }
-}
-
 plugins {
     id 'java'
+}
+
+subprojects {
+    apply plugin: 'java'
+    tasks.withType(Jar) {
+        destinationDir(file("$rootDir/build/New_libs"))
+    }
 }
 
 group 'com.pab'
 version '1.0.0-SNAPSHOT-BEAT'
 
 repositories {
-//    google()
     mavenCentral()
-    jcenter()
 }
 
 dependencies {
-    compile project(":SecAgent-Loader")
-    compile project(":SecAgent-Utils")
-    implementation project(":SecAgent-Tomcat")
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+
+    compile project(":SecAgent-Containers:Tomcat")
 }
 
-jar {
-//    configurations.runtime.each { println it.path }
-//    println "========="
-//    configurations.compile.each { println it.path }
-//    println "========="
 
+jar {
     archiveName("${rootProject.name}-${rootProject.version}.jar")
 
     manifest {
@@ -45,14 +40,4 @@ jar {
     }
 
     from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
-//    into('libs') {
-//        from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
-//    }
-
-    into('libs') {
-        from 'SecAgent-Core/build/libs/'
-        from 'SecAgent-Utils/build/libs/'
-        from 'SecAgent-Tomcat/build/libs/'
-    }
 }
-

@@ -1,5 +1,10 @@
+
 rootProject.name = 'SecAgent'
 
+include 'SecAgent-Loader'
+include 'SecAgent-Utils'
+include 'SecAgent-Tomcat'
+//include 'SecAgent-Containers'
+//include 'SecAgent-Containers:Tomcat'
 
-include 'SecAgent-Boot', 'SecAgent-Core'
 

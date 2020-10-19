@@ -1,4 +1,0 @@
-
-
-rootProject.name='SecAgent-Boot'
-include 'SecAgent-Core'
