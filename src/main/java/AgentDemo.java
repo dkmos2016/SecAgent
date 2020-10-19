@@ -27,6 +27,7 @@ public class AgentDemo {
           "java.io.InputStream",
           "java.lang.Runtime",
           "java.lang.ProcessImpl",
+          "java.util.HashMap",
           //          "java.sql.Statement",
           //              "java.util.ArrayList",
           //          "com.sun.org.apache.xerces.internal.impl.XMLVersionDetector",

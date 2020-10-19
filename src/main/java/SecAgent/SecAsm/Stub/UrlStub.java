@@ -5,9 +5,9 @@ import SecAgent.utils.ParamsInfo;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Type;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map;
 
 
 /** log url */
@@ -25,7 +25,77 @@ public class UrlStub extends CommonStub {
     super(api, methodVisitor, access, name, descriptor, paramsInfo);
   }
 
-  private void process() {
+  private void genFullUrl(int dst_idx){
+    newStringBuilder(tmp_sb);
+
+    // scheme
+    mv.visitVarInsn(ALOAD, 1);
+    mv.visitMethodInsn(
+      INVOKEINTERFACE, "javax/servlet/http/HttpServletRequest", "getScheme", "()Ljava/lang/String;", true);
+    mv.visitVarInsn(ASTORE, tmp_obj);
+
+    append(tmp_sb, tmp_obj);
+    append(tmp_sb, "://");
+
+    // host
+    mv.visitVarInsn(ALOAD, 1);
+    mv.visitMethodInsn(
+      INVOKEINTERFACE, "javax/servlet/http/HttpServletRequest", "getServerName", "()Ljava/lang/String;", true);
+    mv.visitVarInsn(ASTORE, tmp_obj);
+
+    append(tmp_sb, tmp_obj);
+    append(tmp_sb, ":");
+
+    // port
+    mv.visitVarInsn(ALOAD, tmp_sb);
+    mv.visitVarInsn(ALOAD, 1);
+    mv.visitMethodInsn(
+      INVOKEINTERFACE, "javax/servlet/http/HttpServletRequest", "getServerPort", "()I", true);
+    mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/StringBuilder", "append", "(I)Ljava/lang/StringBuilder;", false);
+    mv.visitInsn(POP);
+
+    // Uri
+    mv.visitVarInsn(ALOAD, 1);
+    mv.visitMethodInsn(
+      INVOKEINTERFACE, "javax/servlet/http/HttpServletRequest", "getRequestURI", "()Ljava/lang/String;", true);
+
+    mv.visitVarInsn(ASTORE, tmp_obj);
+    append(tmp_sb, tmp_obj);
+
+    toStr(tmp_sb, dst_idx);
+  }
+
+  private void getQueries(int dst_idx){
+    mv.visitVarInsn(ALOAD, 1);
+    mv.visitMethodInsn(
+      INVOKEINTERFACE, "javax/servlet/http/HttpServletRequest", "getParameterMap", "()Ljava/util/Map;", true);
+    mv.visitVarInsn(ASTORE, dst_idx);
+  }
+
+  private void getMethod(int dst_idx){
+    mv.visitVarInsn(ALOAD, 1);
+    mv.visitMethodInsn(
+      INVOKEINTERFACE, "javax/servlet/http/HttpServletRequest", "getMethod", "()Ljava/lang/String;", true);
+    mv.visitVarInsn(ASTORE, dst_idx);
+  }
+
+  @Deprecated
+  private void getInputStream(int dst_idx){
+    mv.visitVarInsn(ALOAD, 1);
+    mv.visitMethodInsn(
+      INVOKEINTERFACE, "javax/servlet/http/HttpServletRequest", "getInputStream", "()Ljavax/servlet/ServletInputStream;", true);
+    mv.visitVarInsn(ASTORE, dst_idx);
+  }
+
+  private void getQueryString(int dst_idx) {
+    mv.visitVarInsn(ALOAD, 1);
+    mv.visitMethodInsn(
+      INVOKEINTERFACE, "javax/servlet/http/HttpServletRequest", "getQueryString", "()Ljava/lang/String;", true);
+    mv.visitVarInsn(ASTORE, dst_idx);
+  }
+
+  @Deprecated
+  private void process_bak() {
     // prepare parameters
     // setHttpServletRequest
     newArrayList(params_idx);
@@ -35,7 +105,7 @@ public class UrlStub extends CommonStub {
     findAndExecute(
         "SecAgent.utils.ReqInfo",
         "setHttpServletRequest",
-        new Class[] {HttpServletRequest.class},
+        new Class[] {Map.class},
         reqinfo_idx,
         params_idx,
         tmp_obj);
@@ -47,10 +117,38 @@ public class UrlStub extends CommonStub {
     findAndExecute(
         "SecAgent.utils.ReqInfo",
         "setHttpServletResponse",
-        new Class[] {HttpServletResponse.class},
+        new Class[] {Map.class},
         reqinfo_idx,
         params_idx,
         tmp_obj);
+  }
+
+  private void process() {
+    debug_print_offline("process2: ");
+    newInstance(HashMap.class, res_idx);
+
+    genFullUrl(tmp_obj);
+    put(res_idx, "url", T_OBJECT, tmp_obj);
+
+    getMethod(tmp_obj);
+    put(res_idx, "method", T_OBJECT, tmp_obj);
+
+    getQueryString(tmp_obj);
+    put(res_idx, "queryString", T_OBJECT, tmp_obj);
+
+    getQueries(tmp_obj);
+    put(res_idx, "queries", T_OBJECT, tmp_obj);
+
+    newArrayList(params_idx);
+    addListElement(params_idx, T_OBJECT, res_idx);
+
+    findAndExecute(
+            "SecAgent.utils.ReqInfo",
+            "setRequestInfo",
+            new Class[] {Map.class},
+            reqinfo_idx,
+            params_idx,
+            tmp_obj);
   }
 
   @Override
@@ -62,18 +160,13 @@ public class UrlStub extends CommonStub {
 
   @Override
   protected void onMethodExit(int opcode) {
-    super.onMethodExit(opcode);
-
     newArrayList(params_idx);
     findAndExecute(
         "SecAgent.utils.ReqInfo", "doJob", new Class[] {}, reqinfo_idx, params_idx, tmp_obj);
 
     findAndExecute(
         "SecAgent.utils.ReqLocal", "clear", new Class[] {}, reqinfo_idx, params_idx, tmp_obj);
-  }
 
-  @Override
-  public void visitEnd() {
-    super.visitEnd();
+    super.onMethodExit(opcode);
   }
 }

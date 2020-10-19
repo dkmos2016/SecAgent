@@ -20,13 +20,13 @@ public class MybatisValueStub extends CommonStub {
   private void process() {
     mv.visitVarInsn(ASTORE, bak_obj);
 
-    newArrayList(params2_idx);
-    addListElement(params2_idx, T_OBJECT, 1);
-    addListElement(params2_idx, T_OBJECT, bak_obj);
+    newArrayList(params_idx);
+    addListElement(params_idx, T_OBJECT, 1);
+    addListElement(params_idx, T_OBJECT, bak_obj);
     findAndGetInstance(
-        "SecAgent.utils.Pair", new Class[] {Object.class, Object.class}, params2_idx, res_idx);
+        "SecAgent.utils.Pair", new Class[] {Object.class, Object.class}, params_idx, res_idx);
 
-    newArrayList(params2_idx);
+    newArrayList(params_idx);
     mv.visitVarInsn(ALOAD, 0);
     mv.visitFieldInsn(
         GETFIELD,
@@ -35,15 +35,15 @@ public class MybatisValueStub extends CommonStub {
         "Lorg/apache/ibatis/scripting/xmltags/DynamicContext;");
     mv.visitVarInsn(ASTORE, tmp_obj);
 
-    addListElement(params2_idx, T_OBJECT, tmp_obj);
+    addListElement(params_idx, T_OBJECT, tmp_obj);
 
     mv.visitLdcInsn("PARAMETER");
     mv.visitVarInsn(ASTORE, tmp_obj);
-    addListElement(params2_idx, T_OBJECT, tmp_obj);
+    addListElement(params_idx, T_OBJECT, tmp_obj);
 
-    addListElement(params2_idx, T_OBJECT, res_idx);
+    addListElement(params_idx, T_OBJECT, res_idx);
 
-    putStubData("MYBATIS", T_OBJECT, params2_idx);
+    putStubData("MYBATIS", T_OBJECT, params_idx);
 
     mv.visitVarInsn(ALOAD, bak_obj);
   }
