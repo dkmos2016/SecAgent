@@ -5,10 +5,9 @@ import SecAgent.utils.ParamsInfo;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Type;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.InputStream;
 import java.util.HashMap;
+import java.util.Map;
 
 
 /** log url */
@@ -95,7 +94,8 @@ public class UrlStub extends CommonStub {
     mv.visitVarInsn(ASTORE, dst_idx);
   }
 
-  private void process() {
+  @Deprecated
+  private void process_bak() {
     // prepare parameters
     // setHttpServletRequest
     newArrayList(params_idx);
@@ -105,7 +105,7 @@ public class UrlStub extends CommonStub {
     findAndExecute(
         "SecAgent.utils.ReqInfo",
         "setHttpServletRequest",
-        new Class[] {HttpServletRequest.class},
+        new Class[] {Map.class},
         reqinfo_idx,
         params_idx,
         tmp_obj);
@@ -117,45 +117,56 @@ public class UrlStub extends CommonStub {
     findAndExecute(
         "SecAgent.utils.ReqInfo",
         "setHttpServletResponse",
-        new Class[] {HttpServletResponse.class},
+        new Class[] {Map.class},
         reqinfo_idx,
         params_idx,
         tmp_obj);
   }
 
-  private void process2() {
+  private void process() {
     debug_print_offline("process2: ");
     newInstance(HashMap.class, res_idx);
 
     genFullUrl(tmp_obj);
-
     put(res_idx, "url", T_OBJECT, tmp_obj);
 
-    debug_print_online(T_OBJECT, tmp_obj);
+    getMethod(tmp_obj);
+    put(res_idx, "method", T_OBJECT, tmp_obj);
+
+    getQueryString(tmp_obj);
+    put(res_idx, "queryString", T_OBJECT, tmp_obj);
+
+    getQueries(tmp_obj);
+    put(res_idx, "queries", T_OBJECT, tmp_obj);
+
+    newArrayList(params_idx);
+    addListElement(params_idx, T_OBJECT, res_idx);
+
+    findAndExecute(
+            "SecAgent.utils.ReqInfo",
+            "setRequestInfo",
+            new Class[] {Map.class},
+            reqinfo_idx,
+            params_idx,
+            tmp_obj);
   }
 
   @Override
   protected void onMethodEnter() {
     super.onMethodEnter();
 
-//    process();
-    process2();
+    process();
   }
 
   @Override
   protected void onMethodExit(int opcode) {
-    super.onMethodExit(opcode);
-
     newArrayList(params_idx);
     findAndExecute(
         "SecAgent.utils.ReqInfo", "doJob", new Class[] {}, reqinfo_idx, params_idx, tmp_obj);
 
     findAndExecute(
         "SecAgent.utils.ReqLocal", "clear", new Class[] {}, reqinfo_idx, params_idx, tmp_obj);
-  }
 
-  @Override
-  public void visitEnd() {
-    super.visitEnd();
+    super.onMethodExit(opcode);
   }
 }

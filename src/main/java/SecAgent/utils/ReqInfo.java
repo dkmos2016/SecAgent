@@ -4,8 +4,6 @@ import SecAgent.Conf.Config;
 import SecAgent.utils.DefaultLoggerHelper.DefaultLogger;
 import SecAgent.utils.Encoder.Base64;
 
-import javax.servlet.ServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -16,7 +14,7 @@ import java.util.Map;
 public class ReqInfo {
   /** for log information */
   private static final DefaultLogger logger =
-      DefaultLogger.getLogger(ReqInfo.class, Config.INFORMATION_PATH);
+          DefaultLogger.getLogger(ReqInfo.class, Config.INFORMATION_PATH);
 
   static {
     if (logger != null) logger.setLevel(DefaultLogger.MyLevel.DEBUG);
@@ -42,10 +40,7 @@ public class ReqInfo {
   private String queryString;
   /** getInpusteram */
   private InputStream inputStream;
-  /** HttpServletRequest */
-  private ServletRequest request;
-  /** HttpServletRequest */
-  private HttpServletResponse response;
+
 
 
   private static Map<String, Method> methods = new HashMap();
@@ -54,11 +49,6 @@ public class ReqInfo {
    * inputstream's content
    */
   private String inputBuffer = null;
-
-  /**
-   * OutputStream
-   */
-  private ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
 
   public ReqInfo() {}
 
@@ -91,6 +81,7 @@ public class ReqInfo {
         method = obj.getClass().getMethod(methodname);
         methods.put(methodname, method);
       } catch (Exception e) {
+        System.out.println(obj.getClass().getName());
         logger.error(e);
         method = null;
       }
@@ -100,32 +91,53 @@ public class ReqInfo {
   }
 
   /**
+   * printStack
+   */
+
+  private void printStack() {
+    StringBuilder sb = new StringBuilder();
+    for (StackTraceElement element: new Throwable().getStackTrace()) {
+      sb.append(element.toString()+"\n");
+    }
+    System.out.println(sb.toString()+"\n");
+  }
+
+  public void setRequestInfo(Map map) {
+    this.url = (String) map.getOrDefault("url", "");
+    this.method = (String) map.getOrDefault("method", "");
+    this.queryString = (String) map.getOrDefault("queryString", "");
+    this.queries = (Map) map.getOrDefault("queries", new HashMap<>());
+  }
+
+  /**
    * for inoke to set Request
    * @param request
    * @throws IOException
    */
-  public void setHttpServletRequest(ServletRequest request) throws IOException {
+  public void setHttpServletRequest(Object request) {
     if (request == null) return;
-    this.request = request;
+
+    logger.debug("setHttpServletRequest: ");
+    printStack();
 
     try {
-      this.url =
-        request.getScheme()
-          + "://"
-          + request.getServerName()
-          + ":"
-          + request.getServerPort()
-          + doGetOrFindMethod(request, "getRequestURI").invoke(request);
+      this.url = ""
+              + doGetOrFindMethod(request, "getScheme").invoke(request)
+              + "://"
+              + doGetOrFindMethod(request, "getServerPort").invoke(request)
+              + ":"
+              + doGetOrFindMethod(request, "getServerPort").invoke(request)
+              + doGetOrFindMethod(request, "getRequestURI").invoke(request);
       this.method = "" + doGetOrFindMethod(request, "getMethod").invoke(request);
 
       //    this.queries = request.getParameterMap();
       this.queryString = "" + doGetOrFindMethod(request, "getQueryString").invoke(request);
 
       this.state_code |=
-        ReqInfoState.PUTTED_URI
-          | ReqInfoState.PUTTED_QUERYSTRING
-          | ReqInfoState.PUTTED_METHOD
-          | ReqInfoState.PUTTED_INPUTSTREAM;
+              ReqInfoState.PUTTED_URI
+                      | ReqInfoState.PUTTED_QUERYSTRING
+                      | ReqInfoState.PUTTED_METHOD
+                      | ReqInfoState.PUTTED_INPUTSTREAM;
 
     } catch (Exception e) {
       logger.error(e);
@@ -134,19 +146,6 @@ public class ReqInfo {
     }
   }
 
-  public void setHttpServletResponse(HttpServletResponse response) throws IOException {
-    this.response = response;
-  }
-
-  public OutputStream getOutputStream() throws IOException {
-//    this.response = response;
-    return this.byteArrayOutputStream;
-  }
-
-  public void setInputStream(InputStream inputStream) throws IOException {
-    if (inputStream.available() <= 0) return;
-    this.inputStream = inputStream;
-  }
 
   public void setQueries(Map queries) {
     this.queries = queries;
@@ -266,8 +265,8 @@ public class ReqInfo {
   @Override
   public String toString() {
     return String.format(
-        "{\"url\":\"%s\",\"method\":\"%s\",\"queries\":\"%s\",\"StubData\": \"%s\"}",
-        url, method, queries, StubDatas);
+            "{\"url\":\"%s\",\"method\":\"%s\",\"queries\":\"%s\",\"StubData\": \"%s\"}",
+            url, method, queries, StubDatas);
   }
 
   private String getLogRecord(String type, ArrayList<StubData> datas) {
@@ -275,17 +274,17 @@ public class ReqInfo {
 
     if (method.toUpperCase().equals("GET")) {
       result =
-          String.format(
-              "{\"url\": \"%s\", \"method\": \"%s\", \"queryString\":\"%s\", \"type\": \"%s\", \"data\": \"%s\"}",
-              this.url, this.method, this.queryString, type, datas);
+              String.format(
+                      "{\"url\": \"%s\", \"method\": \"%s\", \"queryString\":\"%s\", \"type\": \"%s\", \"data\": \"%s\"}",
+                      this.url, this.method, this.queryString, type, datas);
     } else if (method.toUpperCase().equals("POST")) {
       String fmt =
-          "{\"url\": \"%s\", \"method\": \"%s\", \"queries\":\"%s\", \"type\": \"%s\", \"data\": \"%s\"}";
+              "{\"url\": \"%s\", \"method\": \"%s\", \"queries\":\"%s\", \"type\": \"%s\", \"data\": \"%s\"}";
 
       if (this.inputBuffer == null) {
         if (this.queries.isEmpty()) {
           fmt =
-              "{\"url\": \"%s\", \"method\": \"%s\", \"inputStream\":\"%s\", \"type\": \"%s\", \"data\": \"%s\"}";
+                  "{\"url\": \"%s\", \"method\": \"%s\", \"inputStream\":\"%s\", \"type\": \"%s\", \"data\": \"%s\"}";
           int v = -1;
           String tmp = "";
           try {
@@ -297,28 +296,28 @@ public class ReqInfo {
           }
           this.inputBuffer = tmp;
           result =
-              String.format(
-                  fmt,
-                  this.url,
-                  this.method,
-                  new String(Base64.encode(tmp.getBytes())),
-                  type,
-                  datas);
+                  String.format(
+                          fmt,
+                          this.url,
+                          this.method,
+                          new String(Base64.encode(tmp.getBytes())),
+                          type,
+                          datas);
         } else {
           result =
-              String.format(
-                  fmt, this.url, this.method, Common.MapToFormData(this.queries), type, datas);
+                  String.format(
+                          fmt, this.url, this.method, Common.MapToFormData(this.queries), type, datas);
         }
       } else {
         fmt =
-            "{\"url\": \"%s\", \"method\": \"%s\", \"queries\":\"%s\", \"type\": \"%s\", \"data\": \"%s\"}";
+                "{\"url\": \"%s\", \"method\": \"%s\", \"queries\":\"%s\", \"type\": \"%s\", \"data\": \"%s\"}";
         result = String.format(fmt, this.url, this.method, this.inputBuffer, type, datas);
       }
     } else {
       result =
-          String.format(
-              "{\"url\": \"%s\", \"method\": \"%s\", \"type\": \"%s\", \"data\": \"%s\"}",
-              this.url, this.method, type, datas);
+              String.format(
+                      "{\"url\": \"%s\", \"method\": \"%s\", \"type\": \"%s\", \"data\": \"%s\"}",
+                      this.url, this.method, type, datas);
     }
 
     return result;
@@ -337,7 +336,7 @@ public class ReqInfo {
 
     if (!MYBATIS_CACHES.isEmpty()) {
       String mybatis_fmt =
-          "{\"url\": \"%s\", \"method\": \"%s\", \"queries\":\"%s\", \"type\": \"%s\", \"data\": \"%s\"}";
+              "{\"url\": \"%s\", \"method\": \"%s\", \"queries\":\"%s\", \"type\": \"%s\", \"data\": \"%s\"}";
 
       for (List list : MYBATIS_CACHES.values()) {
         int sz = list.size();
@@ -354,7 +353,7 @@ public class ReqInfo {
 
         if (this.queries.isEmpty()) {
           mybatis_fmt =
-              "{\"url\": \"%s\", \"method\": \"%s\", \"inputStream\":\"%s\", \"type\": \"%s\", \"data\": \"%s\"}";
+                  "{\"url\": \"%s\", \"method\": \"%s\", \"inputStream\":\"%s\", \"type\": \"%s\", \"data\": \"%s\"}";
           if (this.inputBuffer == null) {
             int v = -1;
             String tmp = "";
@@ -367,32 +366,32 @@ public class ReqInfo {
             }
 
             logger.info(
-                String.format(
-                    mybatis_fmt,
-                    this.url,
-                    this.method,
-                    new String(Base64.encode(tmp.getBytes())),
-                    "MYBATIS",
-                    tmp_list));
+                    String.format(
+                            mybatis_fmt,
+                            this.url,
+                            this.method,
+                            new String(Base64.encode(tmp.getBytes())),
+                            "MYBATIS",
+                            tmp_list));
           } else {
             logger.info(
-                String.format(
-                    mybatis_fmt,
-                    this.url,
-                    this.method,
-                    new String(Base64.encode(this.inputBuffer.getBytes())),
-                    "MYBATIS",
-                    tmp_list));
+                    String.format(
+                            mybatis_fmt,
+                            this.url,
+                            this.method,
+                            new String(Base64.encode(this.inputBuffer.getBytes())),
+                            "MYBATIS",
+                            tmp_list));
           }
         } else {
           logger.info(
-              String.format(
-                  mybatis_fmt,
-                  this.url,
-                  this.method,
-                  Common.MapToFormData(this.queries),
-                  "MYBATIS2",
-                  tmp_list));
+                  String.format(
+                          mybatis_fmt,
+                          this.url,
+                          this.method,
+                          Common.MapToFormData(this.queries),
+                          "MYBATIS2",
+                          tmp_list));
         }
       }
     }
@@ -400,7 +399,8 @@ public class ReqInfo {
 
   /** for SecAgent to do some other jobs */
   public void doJob() {
-    if (logger != null) doLogRecords();
+    if (logger != null) logger.debug("doJob: ");
+    doLogRecords();
   }
 
   /** StubData: Stack info and Parameters */
@@ -419,12 +419,12 @@ public class ReqInfo {
       for (StackTraceElement element : stackTraceElements) {
         String className = element.getClassName();
         if (className.startsWith("java.")
-            || className.startsWith("sun.")
-            || className.startsWith("javax.")
-            || className.startsWith("SecAgent.")
-            || className.startsWith("org.eclipse.")
-            || className.startsWith("org.junit")
-            || className.startsWith("org.apache.")) continue;
+                || className.startsWith("sun.")
+                || className.startsWith("javax.")
+                || className.startsWith("SecAgent.")
+                || className.startsWith("org.eclipse.")
+                || className.startsWith("org.junit")
+                || className.startsWith("org.apache.")) continue;
         sb.append(element.toString() + "\n");
       }
       return sb.toString();
@@ -443,8 +443,8 @@ public class ReqInfo {
         return sb.substring(0, sb.length() - 1);
       } else if (object instanceof InputStream) {
         return new String(
-            Base64.encode(
-                ((ByteArrayOutputStream) Common.transferTo((InputStream) object)).toByteArray()));
+                Base64.encode(
+                        ((ByteArrayOutputStream) Common.transferTo((InputStream) object)).toByteArray()));
       } else {
         return object.toString();
       }
