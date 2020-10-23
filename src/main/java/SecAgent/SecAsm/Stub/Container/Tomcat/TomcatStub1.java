@@ -6,7 +6,6 @@ import org.objectweb.asm.MethodVisitor;
 
 // for request.getInputSteam;
 public class TomcatStub1 extends CommonStub {
-  private final ParamsInfo paramsInfo;
 
   public TomcatStub1(
       int api,
@@ -16,8 +15,6 @@ public class TomcatStub1 extends CommonStub {
       String descriptor,
       ParamsInfo paramsInfo) {
     super(api, methodVisitor, access, name, descriptor, paramsInfo);
-
-    this.paramsInfo = paramsInfo;
   }
 
   private void process() {

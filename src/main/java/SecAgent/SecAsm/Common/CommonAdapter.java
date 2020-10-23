@@ -3,6 +3,8 @@ package SecAgent.SecAsm.Common;
 import SecAgent.Conf.Config;
 import SecAgent.Conf.StubConfig;
 import SecAgent.SecAsm.Stub.*;
+import SecAgent.SecAsm.Stub.Container.Dubbo.DubboStub;
+import SecAgent.SecAsm.Stub.Container.Pafa5.Pafa5Stub;
 import SecAgent.SecAsm.Stub.Container.Tomcat.TomcatStub1;
 import SecAgent.SecAsm.Stub.Sql.MySqlStub;
 import SecAgent.SecAsm.Stub.Sql.Mybatis.MybatisSqlAStub;
@@ -64,8 +66,15 @@ public class CommonAdapter extends ClassVisitor implements Opcodes {
         case StubConfig.UPLOAD_STUB:
           return new UploadStub(this.api, mv, access, name, descriptor, paramsInfo);
 
-        case StubConfig.SPRING_URL_STUB:
+        case StubConfig.TOMCAT_URL_STUB:
           return new UrlStub(this.api, mv, access, name, descriptor, paramsInfo);
+
+//        case StubConfig.PAFA5_HANDLE_REQUEST:
+//        case StubConfig.PAFA5_HANDLE_WEB_REQUEST:
+//          return new Pafa5Stub(this.api, mv, access, name, descriptor, paramsInfo);
+
+        case StubConfig.DUBBO_STUB:
+          return new DubboStub(this.api, mv, access, name, descriptor, paramsInfo);
 
         case StubConfig.XXE_STUB:
           return new XxeStub(this.api, mv, access, name, descriptor, paramsInfo);

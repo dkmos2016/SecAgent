@@ -2,6 +2,7 @@ package SecAgent.SecAsm.Stub;
 
 import SecAgent.SecAsm.Common.CommonStub;
 import SecAgent.utils.ParamsInfo;
+import SecAgent.utils.ReqInfo.Protocol;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Type;
 
@@ -161,9 +162,14 @@ public class UrlStub extends CommonStub {
   @Override
   protected void onMethodExit(int opcode) {
     newArrayList(params_idx);
-    findAndExecute(
-        "SecAgent.utils.ReqInfo", "doJob", new Class[] {}, reqinfo_idx, params_idx, tmp_obj);
+    mv.visitLdcInsn(Protocol.HTTP.getName());
+    mv.visitVarInsn(ASTORE, tmp_obj);
+    addListElement(params_idx, T_OBJECT, tmp_obj);
 
+    findAndExecute(
+        "SecAgent.utils.ReqInfo", "doJob", new Class[] {String.class}, reqinfo_idx, params_idx, tmp_obj);
+
+    newArrayList(params_idx);
     findAndExecute(
         "SecAgent.utils.ReqLocal", "clear", new Class[] {}, reqinfo_idx, params_idx, tmp_obj);
 

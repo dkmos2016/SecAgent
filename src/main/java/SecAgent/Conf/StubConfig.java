@@ -37,9 +37,15 @@ public class StubConfig {
   public static final String UPLOAD_STUB = "java.io.FileOutputStream.<init>(Ljava.io.File;Z)V";
   //    public static final String SPRING_URL_STUB =
   // "org.springframework.web.servlet.DispatcherServlet.doService(Ljavax.servlet.http.HttpServletRequest;Ljavax.servlet.http.HttpServletResponse;)V";\
-  public static final String SPRING_URL_STUB =
+  public static final String TOMCAT_URL_STUB =
       "javax.servlet.http.HttpServlet.service(Ljavax.servlet.http.HttpServletRequest;Ljavax.servlet.http.HttpServletResponse;)V";
 
+  public static final String PAFA5_HANDLE_REQUEST = "com.pingan.pafa.papp.sar.SARContextBean.handleRequest(Lcom/paic/pafa/app/dto/ServiceRequest;)Lcom/paic/pafa/app/dto/ServiceResponse;";
+  public static final String PAFA5_HANDLE_WEB_REQUEST = "com.pingan.pafa.papp.sar.SARContextBean.handleWebRequest(Ljavax/servlet/http/HttpServletRequest;Ljavax/servlet/http/HttpServletResponse;)Z";
+
+//  public static final String DUBBO_STUB = "com.alibaba.dubbo.rpc.RpcInvocation.<init>(Ljava.lang.String;[Ljava.lang.Class;[Ljava.lang.Object;Ljava.util.Map;Lcom.alibaba.dubbo.rpc.Invoker;)V";
+
+  public static final String DUBBO_STUB = "com.alibaba.dubbo.remoting.transport.DecodeHandler.received(Lcom.alibaba.dubbo.remoting.Channel;Ljava.lang.Object;)V";
   // doing
 
   public static final String XXE_STUB =
@@ -103,6 +109,12 @@ public class StubConfig {
           "org.apache.ibatis.scripting.xmltags.TextSqlNode",
           "org.apache.ibatis.scripting.xmltags.TextSqlNode$BindingTokenParser",
           "org.apache.ibatis.scripting.xmltags.DynamicContext",
+//
+//                "com.pingan.pafa.papp.sar.SARContextBean",
+//                "com.pingan.pafa.papp.esa.annotation.MethodESADispatcher",
+//                "com.pingan.pafa.papp.sar.context.DefaultSARDispatcherBean",
+          "com.alibaba.dubbo.rpc.RpcInvocation",
+          "com.alibaba.dubbo.remoting.transport.DecodeHandler",
         };
 
     include_methods =
@@ -144,6 +156,16 @@ public class StubConfig {
           //        "org.apache.ibatis.scripting.xmltags.DynamicContext.appendSql",
           //
           // "org.apache.ibatis.scripting.xmltags.TextSqlNode$BindingTokenParser.handleToken",
+//                "com.pingan.pafa.papp.sar.SARContextBean.handle",
+//                "com.pingan.pafa.papp.esa.annotation.MethodESADispatcher.handle",
+//                "com.pingan.pafa.papp.sar.context.DefaultSARDispatcherBean.handle",
+
+                // sender
+//                "com.alibaba.dubbo.rpc.RpcInvocation",
+//                "com.alibaba.dubbo.rpc.RpcInvocation.<init>(Ljava.lang.String;[Ljava.lang.Class;[Ljava.lang.Object;Ljava.util.Map;Lcom.alibaba.dubbo.rpc.Invoker;)V",
+
+                // receiver
+//                "com.alibaba.dubbo.remoting.transport.DecodeHandler.received",
         };
   }
 

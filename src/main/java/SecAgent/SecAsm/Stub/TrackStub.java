@@ -376,7 +376,7 @@ public class TrackStub extends AdviceAdapter implements Opcodes {
   @Override
   protected void onMethodEnter() {
     super.onMethodEnter();
-    System.out.println(String.format("stub into %s, params %d", paramsInfo, paramsInfo.getSize()));
+//    System.out.println(String.format("stub into %s, params %d", paramsInfo, paramsInfo.getSize()));
     debug_print_offline(String.format("[DEBUG] [TrackStub]: %s", this.paramsInfo.toString()));
   }
 
