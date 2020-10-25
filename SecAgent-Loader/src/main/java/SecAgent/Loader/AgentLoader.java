@@ -6,9 +6,28 @@ import java.net.URLClassLoader;
 
 public class AgentLoader extends URLClassLoader {
 
+    private final static String[] JAR_FILEs;
+
+    static {
+        JAR_FILEs = new String[] {
+          "SecAgent-Tomcat.jar",
+          "SecAgent-Dubbo.jar",
+          "SecAgent-Jboss.jar",
+        };
+    }
 
     public AgentLoader(URL[] urls) {
         super(urls, AgentLoader.getSystemClassLoader().getParent());
+    }
+
+    /**
+     * unzip containers' jar from SecAgent.jar
+     */
+    private void initilize() {
+        JarUtils.doReleaseJar("", "");
+        for (String file_name: JAR_FILEs) {
+            JarUtils.doReleaseJar(file_name, null);
+        }
     }
 
     @Override
