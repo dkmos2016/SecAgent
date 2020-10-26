@@ -49,7 +49,7 @@ jar {
 //        from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
 //    }
 
-    into('libs') {
+    into('libs/contianer/') {
         from 'SecAgent-Core/build/libs/'
         from 'SecAgent-Utils/build/libs/'
         from 'SecAgent-Tomcat/build/libs/'

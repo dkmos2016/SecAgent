@@ -20,6 +20,7 @@ import org.objectweb.asm.Type;
 import java.io.File;
 import java.lang.reflect.Constructor;
 import java.util.HashMap;
+import java.lang.reflect.Class;
 
 public class CommonAdapter extends ClassVisitor implements Opcodes {
   private static final DefaultLogger logger =
@@ -33,22 +34,17 @@ public class CommonAdapter extends ClassVisitor implements Opcodes {
     constructors.put(StubConfig.DOWN_STUB, getStubConstructor(DownStub.class));
     constructors.put(StubConfig.UPLOAD_STUB, getStubConstructor(UploadStub.class));
     constructors.put(StubConfig.MYSQL_STUB, getStubConstructor(MySqlStub.class));
-
     constructors.put(StubConfig.ORACLE_STUB, getStubConstructor(OracleStub.class));
-
     constructors.put(StubConfig.MYBATIS_SQLA_STUB, getStubConstructor(MybatisSqlAStub.class));
     constructors.put(StubConfig.MYBATIS_SQLB_STUB, getStubConstructor(MybatisSqlBStub.class));
     constructors.put(StubConfig.MYBATIS_VALUE_STUB, getStubConstructor(MybatisValueStub.class));
-
     constructors.put(StubConfig.XXE_STUB, getStubConstructor(XxeStub.class));
-
     constructors.put("DEFAULT", getStubConstructor(TrackStub.class));
   }
 
   public static Constructor getStubConstructor(Class cls){
     Constructor constructor = null;
     try{
-
       constructor = cls.getConstructor(int.class, MethodVisitor.class, int.class, String.class, String.class, ParamsInfo.class);
     } catch (Exception e){
       logger.error(e);
@@ -78,21 +74,27 @@ public class CommonAdapter extends ClassVisitor implements Opcodes {
         /**
          * todo load container's jar
          */
-//        try {
-//          new JarClassLoader(new File("urls/"+))
-//        }
+        try {
+//          Class cls = C;
+//          Config.jarLoader.addURL();
+
+        }  catch (Exception e) {
+          logger.error(e);
+        }
+      } else {
+//        constructor.newInstance(this.api, mv, access, name, descriptor, paramsInfo);
       }
 
       /* Deprecated */
 
       switch (paramsInfo.toString()) {
         case StubConfig.MYSQL_STUB:
-          return new MySqlStub(this.api, mv, access, name, descriptor, paramsInfo);
+          ret
+        case StubConfurn new MySqlStub(this.api, mv, access, name, descriptor, paramsInfo);
 
         case StubConfig.ORACLE_STUB:
           return new OracleStub(this.api, mv, access, name, descriptor, paramsInfo);
-
-        case StubConfig.MYBATIS_VALUE_STUB:
+        ig.MYBATIS_VALUE_STUB:
           return new MybatisValueStub(this.api, mv, access, name, descriptor, paramsInfo);
 
         case StubConfig.MYBATIS_SQLA_STUB:

@@ -1,6 +1,7 @@
 package SecAgent.Utils.Conf;
 
 import SecAgent.Utils.utils.DefaultLoggerHelper.DefaultLogger;
+import SecAgent.Utils.utils.JarClassLoader;
 import SecAgent.Utils.utils.Resources;
 
 public class Config {
@@ -25,6 +26,9 @@ public class Config {
   /** logger.info redirect to file */
   public static final String INFORMATION_PATH;
 
+
+  public static final JarClassLoader jarLoader;
+
   static {
     DEBUG = false;
     ALLOWED_DIY_LEVEL = false;
@@ -41,5 +45,8 @@ public class Config {
         DEBUG
             ? Resources.getProperty("EXCEPTION_LOG_PATH")
             : (Resources.getProperty("LOG_DIR") + Resources.getProperty("EXCEPTION_LOG_PATH"));
+
+    jarLoader = new JarClassLoader();
+    jarLoader.setBaseUrl(Config.class.getProtectionDomain().getCodeSource().getLocation().getPath());
   }
 }

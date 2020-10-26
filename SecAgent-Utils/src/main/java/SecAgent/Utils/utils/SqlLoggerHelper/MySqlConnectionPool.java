@@ -1,8 +1,9 @@
 package SecAgent.Utils.utils.SqlLoggerHelper;
 
+import SecAgent.Utils.utils.JarClassLoader;
 import SecAgent.Utils.utils.Resources;
-import SecAgent.Utils.utils.AgentClassLoader;
 
+import java.net.URL;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -25,7 +26,7 @@ public class MySqlConnectionPool {
       Class.forName(
           "com.mysql.cj.jdbc.Driver",
           true,
-          new AgentClassLoader(Thread.currentThread().getContextClassLoader()));
+          new JarClassLoader(new URL[]{}, Thread.currentThread().getContextClassLoader()));
 
       for (int i = 0; i < this.size; i++) {
         try {

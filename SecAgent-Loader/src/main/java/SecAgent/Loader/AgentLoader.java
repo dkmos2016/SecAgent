@@ -1,15 +1,18 @@
 package SecAgent.Loader;
 
+
 import java.net.URL;
 import java.net.URLClassLoader;
+
+import SecAgent.Utils.Conf.Config;
 
 
 public class AgentLoader extends URLClassLoader {
 
-    private final static String[] JAR_FILEs;
+    private final static String[] JAR_FILE_NAMEs;
 
     static {
-        JAR_FILEs = new String[] {
+        JAR_FILE_NAMEs = new String[] {
           "SecAgent-Tomcat.jar",
           "SecAgent-Dubbo.jar",
           "SecAgent-Jboss.jar",
@@ -25,8 +28,13 @@ public class AgentLoader extends URLClassLoader {
      */
     private void initilize() {
         JarUtils.doReleaseJar("", "");
-        for (String file_name: JAR_FILEs) {
-            JarUtils.doReleaseJar(file_name, null);
+        for (String file_name: JAR_FILE_NAMEs) {
+            if (JarUtils.doReleaseJar(file_name, null)) {
+                ;
+                // todo addUrl (JarClassLoader)
+                Config.jarLoader.addURL("");
+            }
+
         }
     }
 
