@@ -32,6 +32,7 @@ public class ReqInfo {
      * for logging mybatis(template, input parameter, sql string)
      */
     private final Map<String, ArrayList<String>> MYBATIS_CACHES = new HashMap<>();
+//    private final Map<String, Map<String, ArrayList<String>>> MYBATIS_CACHES = new HashMap<>();
     /**
      * reversed
      */
@@ -137,7 +138,6 @@ public class ReqInfo {
         if (map == null || map.isEmpty()) return;
         this.dubbo_url = (String) map.getOrDefault("invoker", "");
 
-
 //        System.out.println("[DEBUG] " + map);
 //        System.out.println("[DEBUG] setDubboInfo done.");
         Object object;
@@ -187,7 +187,7 @@ public class ReqInfo {
         if (request == null) return;
 
         logger.debug("setHttpServletRequest: ");
-        printStack();
+//        printStack();
 
         try {
             this.url = ""
@@ -232,6 +232,7 @@ public class ReqInfo {
      */
     public void putStubData(String type, Throwable throwable, Object obj) {
         if (logger != null) logger.debug("tid "+Thread.currentThread().getId()+", putStubData:" + obj);
+//        printStack();
 
         if (!this.ALLOWED_PUT_STUB) return;
 
@@ -276,9 +277,11 @@ public class ReqInfo {
     private void doPutMybatis(String type, Throwable throwable, Object obj) {
         StringBuilder sb = new StringBuilder();
         if (obj instanceof ArrayList) {
-            String name = ((ArrayList<?>) obj).get(0).toString();
-            String _type = ((ArrayList<?>) obj).get(1).toString();
-            String value = ((ArrayList<?>) obj).get(2).toString();
+            String name = ""+((ArrayList<?>) obj).get(0);
+            String _type = ""+((ArrayList<?>) obj).get(1);
+            String value = ""+((ArrayList<?>) obj).get(2);
+
+            if(value == null || value.isEmpty()) return;
 
             ArrayList list = MYBATIS_CACHES.getOrDefault(name, new ArrayList());
             sb.append("\\\"");
@@ -287,10 +290,9 @@ public class ReqInfo {
 
             value = sb.toString();
 
-            if(value == null || value.isEmpty()) return;
-
             switch (_type) {
                 case "BEFORE":
+                    value = "B:" + value;
                     if (list.size() > 0) {
                         list.add(0, value);
                     } else {
@@ -299,6 +301,7 @@ public class ReqInfo {
                     break;
 
                 case "AFTER":
+                    value = "A:" + value;
                     if (list.size() >= 1) {
                         list.add(1, value);
                     } else {
@@ -308,6 +311,7 @@ public class ReqInfo {
                     break;
 
                 case "PARAMETER":
+                    value = "P:" + value;
                     //          list.add(String.format(String.format("%s: %s", _type, value)));
                     list.add(value);
                     break;
@@ -441,9 +445,9 @@ public class ReqInfo {
         }
 
         sb.append(getFormatedData("type", type));
-        sb.append(", ");
 
         if (!(this.dubbo_url == null || this.dubbo_url.isEmpty() || this.dubbo_msg == null || this.dubbo_msg.isEmpty())) {
+            sb.append(", ");
             sb.append(getFormatedData("dubbo_url", this.dubbo_url));
             sb.append(",");
             sb.append(getFormatedData("dubbo_msg", this.dubbo_msg));
@@ -497,7 +501,8 @@ public class ReqInfo {
      */
     public void doJob(String name) {
         if (logger != null) logger.debug("tid "+Thread.currentThread().getId()+", doJob: ");
-//        System.out.println("[DEBUG] doJob: ");
+//        printStack();
+
         if (this.current_protocol != null && this.current_protocol.getName().equals(name)) {
             doLogRecords();
         }
@@ -566,9 +571,7 @@ public class ReqInfo {
                 }
                 return sb.substring(0, sb.length() - 1);
             } else if (object instanceof InputStream) {
-                return new String(
-                        Base64.encode(
-                                ((ByteArrayOutputStream) Common.transferTo((InputStream) object)).toByteArray()));
+                return new String(((ByteArrayOutputStream) Common.transferTo((InputStream) object)).toByteArray());
             } else {
                 return object.toString();
             }
