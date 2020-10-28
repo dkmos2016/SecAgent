@@ -34,6 +34,8 @@ public class JarClassLoader extends URLClassLoader {
 
   public void addURL(String url) {
     URL nurl = null;
+    if (url==null || url.isEmpty()) return;
+
     try {
       nurl = new URL(baseUrl + File.separator + url);
     } catch (MalformedURLException e) {

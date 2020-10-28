@@ -2,3 +2,4 @@
 
 rootProject.name='Tomcat'
 include 'SecAgent-Utils'
+include 'SecAgent-SecASM'

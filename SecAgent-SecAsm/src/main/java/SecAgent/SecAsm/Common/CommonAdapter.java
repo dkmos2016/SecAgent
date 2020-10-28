@@ -1,7 +1,6 @@
 package SecAgent.SecAsm.Common;
 
 import SecAgent.SecAsm.Stub.*;
-import SecAgent.SecAsm.Stub.Container.Tomcat.TomcatStub1;
 import SecAgent.SecAsm.Stub.Sql.MySqlStub;
 import SecAgent.SecAsm.Stub.Sql.Mybatis.MybatisSqlAStub;
 import SecAgent.SecAsm.Stub.Sql.Mybatis.MybatisSqlBStub;
@@ -10,14 +9,12 @@ import SecAgent.SecAsm.Stub.Sql.OracleStub;
 import SecAgent.Utils.Conf.Config;
 import SecAgent.Utils.Conf.StubConfig;
 import SecAgent.Utils.utils.DefaultLoggerHelper.DefaultLogger;
-import SecAgent.Utils.utils.JarClassLoader;
 import SecAgent.Utils.utils.ParamsInfo;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
 
-import java.io.File;
 import java.lang.reflect.Constructor;
 import java.util.HashMap;
 
@@ -73,16 +70,30 @@ public class CommonAdapter extends ClassVisitor implements Opcodes {
         /**
          * todo load container's jar
          */
-//        try {
-////          Class cls = C;
-////          Config.jarLoader.addURL();
-//
-//        }  catch (Exception e) {
-//          logger.error(e);
-//        }
-      } else {
-//        constructor.newInstance(this.api, mv, access, name, descriptor, paramsInfo);
+
+        if (methodname.equals(StubConfig.TOMCAT_STUB) || methodname.equals(StubConfig.TOMCAT_URL_STUB) ){
+          Config.jarLoader.addURL(Config.CONTAINER_JAR_FILE_NAMEs.getOrDefault("TOMCAT", null));
+          Class cls = Config.jarLoader.loadClass("SecAgent.Container.Tomcat.Stub.TomcatStub1");
+          constructors.put(StubConfig.TOMCAT_STUB, getStubConstructor(cls));
+
+          cls = Config.jarLoader.loadClass("SecAgent.Container.Tomcat.Stub.TomcatUrlStub");
+          constructors.put(StubConfig.TOMCAT_URL_STUB, getStubConstructor(cls));
+
+        } else if (methodname.equals(StubConfig.DUBBO_STUB)) {
+          Config.jarLoader.addURL(Config.CONTAINER_JAR_FILE_NAMEs.getOrDefault("DUBBO", null));
+          Class cls = Config.jarLoader.loadClass("SecAgent.Container.DUBBO.Stub.DubboStub");
+          constructors.put(StubConfig.DUBBO_STUB, getStubConstructor(cls));
+        } else {
+
+        }
+
+        constructor = constructors.get(methodname);
+        if (constructor == null) {
+          constructor = constructors.get("DEFAULT");
+        }
       }
+
+      mv = (MethodVisitor) constructor.newInstance(this.api, mv, access, name, descriptor, paramsInfo);
 
       /* Deprecated */
       /**

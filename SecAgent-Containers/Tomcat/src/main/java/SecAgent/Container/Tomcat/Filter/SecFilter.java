@@ -30,7 +30,7 @@ public class SecFilter implements Filter {
 //              (ServletResponse) new SecInstanceProxyFactory(response).getProxyInstance();
       chain.doFilter(new_request, response);
 
-      ReqLocal.getReqInfo().doJob();
+      ReqLocal.getReqInfo().doJob("HTTP");
       ReqLocal.clear();
     } catch (Exception e) {
       if (logger != null) logger.error(e);

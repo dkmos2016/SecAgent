@@ -21,7 +21,7 @@ dependencies {
     compile project(":SecAgent-Loader")
     compile project(":SecAgent-Utils")
     compile project(":SecAgent-SecAsm")
-    implementation project(":SecAgent-Tomcat")
+//    implementation project(":SecAgent-Tomcat")
 }
 
 jar {
