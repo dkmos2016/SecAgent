@@ -25,7 +25,7 @@ public class StubConfig {
       "org.apache.ibatis.scripting.xmltags.TextSqlNode.apply(Lorg.apache.ibatis.scripting.xmltags.DynamicContext;)Z";
 
   public static final String MYBATIS_SQLB_STUB =
-      "org.apache.ibatis.scripting.xmltags.DynamicContext.appendSql(Ljava.lang.String;)V";
+      "org.apache.ibatis.scripting.xmltags.DynamicSqlSource.getBoundSql(Ljava.lang.Object;)Lorg.apache.ibatis.mapping.BoundSql;";
 
   public static final String MYBATIS_VALUE_STUB =
       "org.apache.ibatis.scripting.xmltags.TextSqlNode$BindingTokenParser.handleToken(Ljava.lang.String;)Ljava.lang.String;";
@@ -109,6 +109,7 @@ public class StubConfig {
           "org.apache.ibatis.scripting.xmltags.TextSqlNode",
           "org.apache.ibatis.scripting.xmltags.TextSqlNode$BindingTokenParser",
           "org.apache.ibatis.scripting.xmltags.DynamicContext",
+                "org.apache.ibatis.scripting.xmltags.DynamicSqlSource",
 //
 //                "com.pingan.pafa.papp.sar.SARContextBean",
 //                "com.pingan.pafa.papp.esa.annotation.MethodESADispatcher",
