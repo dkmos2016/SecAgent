@@ -118,19 +118,25 @@ public class ReqInfo {
         logger.debug(sb.toString() + "\n");
     }
 
+    public void setQueries(Map queries) {
+        this.queries = queries;
+    }
+
     public void setRequestInfo(Map map) {
 //        System.out.println(String.format("[DEBUG] %d setRequestInfo: ", Thread.currentThread().getId()));
 
         this.url = (String) map.getOrDefault("url", "");
         this.method = (String) map.getOrDefault("method", "");
         this.queryString = (String) map.getOrDefault("queryString", "");
-        this.queries = (Map) map.getOrDefault("queries", new HashMap<>());
+
+//        this.queryString = (String) map.getOrDefault("queries", "");
 
         this.ALLOWED_PUT_STUB = true;
 
         Protocol protocol = Protocol.HTTP;
         this.current_protocol = this.current_protocol == null ? protocol : (this.current_protocol.getTimestamp() > protocol.getTimestamp() ? protocol : this.current_protocol);
     }
+
 
     public void setDubboInfo(Map map) {
 //        System.out.println(String.format("[DEBUG] %d setDubboInfo: ", Thread.currentThread().getId()));
@@ -218,10 +224,6 @@ public class ReqInfo {
         }
     }
 
-
-    public void setQueries(Map queries) {
-        this.queries = queries;
-    }
 
     /**
      * for all stub to invoke setting stack info and params
@@ -411,6 +413,7 @@ public class ReqInfo {
             sb.append(getFormatedData("method", this.method));
             sb.append(", ");
 
+
             if (method.toUpperCase().equals("GET")) {
                 sb.append(getFormatedData("queryString", this.queryString));
                 sb.append(", ");
@@ -430,7 +433,6 @@ public class ReqInfo {
                         sb.append(getFormatedData("inputStream", new String(Base64.encode(tmp.getBytes()))));
                         sb.append(", ");
                     } else {
-
                         sb.append(getFormatedData("queries", Common.MapToFormData(this.queries)));
                         sb.append(", ");
                     }

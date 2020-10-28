@@ -125,7 +125,6 @@ public class UrlStub extends CommonStub {
   }
 
   private void process() {
-    debug_print_offline("process2: ");
     newInstance(HashMap.class, res_idx);
 
     genFullUrl(tmp_obj);
@@ -137,9 +136,6 @@ public class UrlStub extends CommonStub {
     getQueryString(tmp_obj);
     put(res_idx, "queryString", T_OBJECT, tmp_obj);
 
-    getQueries(tmp_obj);
-    put(res_idx, "queries", T_OBJECT, tmp_obj);
-
     newArrayList(params_idx);
     addListElement(params_idx, T_OBJECT, res_idx);
 
@@ -150,6 +146,7 @@ public class UrlStub extends CommonStub {
             reqinfo_idx,
             params_idx,
             tmp_obj);
+
   }
 
   @Override
@@ -161,6 +158,12 @@ public class UrlStub extends CommonStub {
 
   @Override
   protected void onMethodExit(int opcode) {
+    newArrayList(params_idx);
+    getQueries(tmp_obj);
+    addListElement(params_idx, T_OBJECT, tmp_obj);
+    findAndExecute(
+            "SecAgent.utils.ReqInfo", "setQueries", new Class[] {Map.class}, reqinfo_idx, params_idx, tmp_obj);
+
     newArrayList(params_idx);
     mv.visitLdcInsn(Protocol.HTTP.getName());
     mv.visitVarInsn(ASTORE, tmp_obj);
