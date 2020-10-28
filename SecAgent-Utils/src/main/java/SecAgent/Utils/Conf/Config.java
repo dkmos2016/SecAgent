@@ -4,6 +4,9 @@ import SecAgent.Utils.utils.DefaultLoggerHelper.DefaultLogger;
 import SecAgent.Utils.utils.JarClassLoader;
 import SecAgent.Utils.utils.Resources;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class Config {
   /** allow to show log to console */
   public static final boolean DEBUG;
@@ -26,8 +29,13 @@ public class Config {
   /** logger.info redirect to file */
   public static final String INFORMATION_PATH;
 
+  public static final String JAR_PATH;
+
+  public static final Map CONTAINER_JAR_PATHs = new HashMap<>();
 
   public static final JarClassLoader jarLoader;
+
+  public final static Map<String, String> CONTAINER_JAR_FILE_NAMEs = new HashMap();
 
   static {
     DEBUG = false;
@@ -38,13 +46,26 @@ public class Config {
 
     DEBUG_PATH = Resources.getProperty("DEBUG_LOG_PATH");
     INFORMATION_PATH =
-        DEBUG
-            ? Resources.getProperty("INFORMATION_LOG_PATH")
-            : (Resources.getProperty("LOG_DIR") + Resources.getProperty("INFORMATION_LOG_PATH"));
+      DEBUG
+        ? Resources.getProperty("INFORMATION_LOG_PATH")
+        : (Resources.getProperty("LOG_DIR") + Resources.getProperty("INFORMATION_LOG_PATH"));
     EXCEPTION_PATH =
-        DEBUG
-            ? Resources.getProperty("EXCEPTION_LOG_PATH")
-            : (Resources.getProperty("LOG_DIR") + Resources.getProperty("EXCEPTION_LOG_PATH"));
+      DEBUG
+        ? Resources.getProperty("EXCEPTION_LOG_PATH")
+        : (Resources.getProperty("LOG_DIR") + Resources.getProperty("EXCEPTION_LOG_PATH"));
+
+  }
+
+  /**
+   * for container's jar
+   */
+  static {
+
+    CONTAINER_JAR_FILE_NAMEs.put("TOMCAT", "SecAgent-Tomcat-1.0.0-SNAPSHOT-BEAT.jar");
+    CONTAINER_JAR_FILE_NAMEs.put("DUBBO", "SecAgent-Dubbo.jar");
+    CONTAINER_JAR_FILE_NAMEs.put("JBOSS",  "SecAgent-Dubbo.jar");
+
+    JAR_PATH = Config.class.getProtectionDomain().getCodeSource().getLocation().getPath();
 
     jarLoader = new JarClassLoader();
     jarLoader.setBaseUrl(Config.class.getProtectionDomain().getCodeSource().getLocation().getPath());

@@ -20,6 +20,7 @@ repositories {
 dependencies {
     compile project(":SecAgent-Loader")
     compile project(":SecAgent-Utils")
+    compile project(":SecAgent-SecAsm")
     implementation project(":SecAgent-Tomcat")
 }
 
@@ -33,8 +34,8 @@ jar {
 
     manifest {
         attributes(
-                'Premain-Class': 'SecAgent.Loader.AgentDemo',
-                'Agent-Class': 'SecAgent.Loader.AgentDemo',
+                'Premain-Class': 'SecAgent.Loader.SecAgent',
+                'Agent-Class': 'SecAgent.Loader.SecAgent',
                 'Can-Redefine-Classes': 'true',
                 'Can-Retransform-Classes': 'true',
                 'Can-Set-Native-Method-Prefix': 'true',
@@ -49,9 +50,7 @@ jar {
 //        from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
 //    }
 
-    into('libs/contianer/') {
-        from 'SecAgent-Core/build/libs/'
-        from 'SecAgent-Utils/build/libs/'
+    into('libs/container/') {
         from 'SecAgent-Tomcat/build/libs/'
     }
 }

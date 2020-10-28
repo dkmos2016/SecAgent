@@ -29,9 +29,10 @@ public class AgentLoader extends URLClassLoader {
     private void initilize() {
         JarUtils.doReleaseJar("", "");
         for (String file_name: JAR_FILE_NAMEs) {
-            if (JarUtils.doReleaseJar(file_name, null)) {
+            if (JarUtils.doReleaseJar(file_name, null) != null) {
                 ;
                 // todo addUrl (JarClassLoader)
+
                 Config.jarLoader.addURL("");
             }
 

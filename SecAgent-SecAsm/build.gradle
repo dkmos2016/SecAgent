@@ -13,7 +13,7 @@ dependencies {
 //    testCompile group: 'junit', name: 'junit', version: '4.12'
     compile group: 'org.ow2.asm', name: 'asm-commons', version: '9.0'
 
-    compile project(":SecAgent-Utils")
+    implementation project(":SecAgent-Utils")
 }
 
 

@@ -21,7 +21,7 @@ public class JarClassLoader extends URLClassLoader {
   }
 
   public JarClassLoader() {
-    super(null);
+    super(new URL[0]);
   }
 
   public JarClassLoader(URL[] urls, ClassLoader parent) {

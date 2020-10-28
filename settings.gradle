@@ -3,6 +3,7 @@ rootProject.name = 'SecAgent'
 
 include 'SecAgent-Loader'
 include 'SecAgent-Utils'
+include 'SecAgent-SecAsm'
 include 'SecAgent-Tomcat'
 //include 'SecAgent-Containers'
 //include 'SecAgent-Containers:Tomcat'
