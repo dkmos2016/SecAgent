@@ -17,6 +17,7 @@ public class SecFilter implements Filter {
       throws IOException, ServletException {
     if (logger != null) logger.debug("doFilter: ");
     try {
+      System.out.println("doFilter:");
       //      CopyServletRequestWrapper new_request =
       //          new CopyServletRequestWrapper((HttpServletRequest) request);
 //      CopyServletResponseWrapper new_response =

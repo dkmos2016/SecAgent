@@ -16,7 +16,7 @@ public class ReqInfo {
    * for log information
    */
   private static final DefaultLogger logger =
-    DefaultLogger.getLogger(ReqInfo.class, Config.INFORMATION_PATH);
+          DefaultLogger.getLogger(ReqInfo.class, Config.INFORMATION_PATH);
   private static final Map<String, Method> methods = new HashMap();
 
   static {
@@ -63,7 +63,7 @@ public class ReqInfo {
    * getInpusteram
    */
   private InputStream inputStream;
-  private OutputStream outputStream = new ByteArrayOutputStream();
+  private ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
   /**
    * inputstream's content
    */
@@ -196,22 +196,22 @@ public class ReqInfo {
 
     try {
       this.url = ""
-        + doGetOrFindMethod(request, "getScheme").invoke(request)
-        + "://"
-        + doGetOrFindMethod(request, "getServerPort").invoke(request)
-        + ":"
-        + doGetOrFindMethod(request, "getServerPort").invoke(request)
-        + doGetOrFindMethod(request, "getRequestURI").invoke(request);
+              + doGetOrFindMethod(request, "getScheme").invoke(request)
+              + "://"
+              + doGetOrFindMethod(request, "getServerPort").invoke(request)
+              + ":"
+              + doGetOrFindMethod(request, "getServerPort").invoke(request)
+              + doGetOrFindMethod(request, "getRequestURI").invoke(request);
       this.method = "" + doGetOrFindMethod(request, "getMethod").invoke(request);
 
       //    this.queries = request.getParameterMap();
       this.queryString = "" + doGetOrFindMethod(request, "getQueryString").invoke(request);
 
       this.state_code |=
-        ReqInfoState.PUTTED_URI
-          | ReqInfoState.PUTTED_QUERYSTRING
-          | ReqInfoState.PUTTED_METHOD
-          | ReqInfoState.PUTTED_INPUTSTREAM;
+              ReqInfoState.PUTTED_URI
+                      | ReqInfoState.PUTTED_QUERYSTRING
+                      | ReqInfoState.PUTTED_METHOD
+                      | ReqInfoState.PUTTED_INPUTSTREAM;
 
     } catch (Exception e) {
       logger.error(e);
@@ -381,8 +381,8 @@ public class ReqInfo {
   @Override
   public String toString() {
     return String.format(
-      "{\"url\":\"%s\",\"method\":\"%s\",\"queries\":\"%s\",\"StubData\": \"%s\"}",
-      url, method, queries, StubDatas);
+            "{\"url\":\"%s\",\"method\":\"%s\",\"queries\":\"%s\",\"StubData\": \"%s\"}",
+            url, method, queries, StubDatas);
   }
 
   private String getFormatedData(String key, Object value) {
@@ -557,12 +557,12 @@ public class ReqInfo {
       for (StackTraceElement element : stackTraceElements) {
         String className = element.getClassName();
         if (className.startsWith("java.")
-          || className.startsWith("sun.")
-          || className.startsWith("javax.")
-          || className.startsWith("SecAgent.")
-          || className.startsWith("org.eclipse.")
-          || className.startsWith("org.junit")
-          || className.startsWith("org.apache.")) continue;
+                || className.startsWith("sun.")
+                || className.startsWith("javax.")
+                || className.startsWith("SecAgent.")
+                || className.startsWith("org.eclipse.")
+                || className.startsWith("org.junit")
+                || className.startsWith("org.apache.")) continue;
         sb.append(element.toString() + "\n");
       }
       return sb.toString();

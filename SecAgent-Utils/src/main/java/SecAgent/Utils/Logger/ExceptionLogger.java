@@ -10,7 +10,7 @@ public class ExceptionLogger {
   public static void doExpLog(Exception e) {
     //        e.printStackTrace();
     if (logger != null) logger.error(e);
-    e.printStackTrace();
+//    e.printStackTrace();
 
     //    MysqlLogger.execute("select id, name from test");
     // todo async

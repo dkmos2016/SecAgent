@@ -7,6 +7,7 @@ import java.net.URLClassLoader;
 import SecAgent.Utils.Conf.Config;
 
 
+@Deprecated
 public class AgentLoader extends URLClassLoader {
 
     private final static String[] JAR_FILE_NAMEs;

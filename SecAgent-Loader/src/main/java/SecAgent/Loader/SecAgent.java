@@ -40,7 +40,8 @@ public class SecAgent {
         "oracle.jdbc.driver.OracleStatement",
         "oracle.jdbc.driverOracleResultSetImpl",
         "org.apache.tomcat.util.http.fileupload.FileUploadBase",
-        "ognl.Ognl"
+        "ognl.Ognl",
+        "javax.servlet.http.HttpServlet",
       };
 
     TARGET_OTHER_CLASSES =

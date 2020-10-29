@@ -482,7 +482,7 @@ public abstract class CommonStub extends AdviceAdapter implements Opcodes {
         //    AsmReqLocalOp.getReqInfo(mv, reqinfo_idx);
         //    debug_print_offline("hello");
 
-        findAndExecute("SecAgent.utils.ReqLocal", "getReqInfo", null, null_idx, null_idx, reqinfo_idx);
+        findAndExecute("SecAgent.Utils.utils.ReqLocal", "getReqInfo", null, null_idx, null_idx, reqinfo_idx);
     }
 
     /**
@@ -532,7 +532,7 @@ public abstract class CommonStub extends AdviceAdapter implements Opcodes {
         //    addListElement(param4Invoke_idx, src_type, tmp_obj);
 
         findAndExecute(
-                "SecAgent.utils.ReqInfo",
+                "SecAgent.Utils.utils.ReqInfo",
                 "putStubData",
                 new Class[]{String.class, Throwable.class, Object.class},
                 reqinfo_idx,
@@ -668,6 +668,7 @@ public abstract class CommonStub extends AdviceAdapter implements Opcodes {
      * @param obj_idx
      * @param dst_idx
      */
+    @SuppressWarnings("need to modify for other container")
     protected void findAndGetSecProxyInstance(int obj_idx, int dst_idx) {
 
         Label try_end_all = new Label();

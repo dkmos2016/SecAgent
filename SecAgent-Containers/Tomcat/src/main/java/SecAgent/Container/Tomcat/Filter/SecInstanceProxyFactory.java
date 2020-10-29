@@ -75,11 +75,6 @@ public class SecInstanceProxyFactory {
     };
   }
 
-  private void proxyGetParameterMap(Object obj) {
-    logger.debug("proxyGetParameterMap");
-    ReqLocal.getReqInfo().setQueries((Map) obj);
-  }
-
   @SuppressWarnings("unused")
   private ServletOutputStream proxyGetOutputStream(Object obj) throws IOException {
     return new ServletOutputStream() {
@@ -117,8 +112,6 @@ public class SecInstanceProxyFactory {
               String method_name = method.getName();
               if (obj instanceof InputStream && method_name.equals("getInputStream")) {
                 ret = proxyGetInputStream(obj);
-              } else if (obj instanceof Map && method.getName().equals("getParameterMap")) {
-                proxyGetParameterMap(obj);
               } else if (obj instanceof Map && method.getName().equals("getParameterMap")) {
                 ret = proxyGetOutputStream(obj);
               } else {

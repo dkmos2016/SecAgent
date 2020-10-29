@@ -18,8 +18,6 @@ public class TomcatStub1 extends CommonStub {
   }
 
   private void process() {
-    //    findAndGetSecProxyInstance(0, inst_idx);
-
     debug_print_offline(String.format("[DEBUG] [TomcatStub1]: %s", this.paramsInfo.toString()));
 
     findAndGetSecProxyInstance(1, inst_idx);

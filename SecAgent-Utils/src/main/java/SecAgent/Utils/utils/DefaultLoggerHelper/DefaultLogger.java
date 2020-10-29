@@ -11,9 +11,9 @@ public class DefaultLogger extends Logger {
 
   static {
     DEFAULT_LOGGER_NAME =
-        Config.DEFAULT_LOGGER_NAME.isEmpty() ? "DEFAULT" : Config.DEFAULT_LOGGER_NAME;
+            Config.DEFAULT_LOGGER_NAME.isEmpty() ? "DEFAULT" : Config.DEFAULT_LOGGER_NAME;
     DEFAULT_LEVEL =
-        Config.DEFAULT_LOGGER_LEVEL == null ? MyLevel.INFO : Config.DEFAULT_LOGGER_LEVEL;
+            Config.DEFAULT_LOGGER_LEVEL == null ? MyLevel.INFO : Config.DEFAULT_LOGGER_LEVEL;
     //    DEFAULT_LEVEL = MyLevel.INFO;
   }
 
@@ -39,7 +39,7 @@ public class DefaultLogger extends Logger {
   }
 
   protected DefaultLogger(String name, String log_path, String resourceBundleName)
-      throws IOException {
+          throws IOException {
     super(name, resourceBundleName);
     this.LOGGER_NAME = name;
     file_handler = new DefaultLogFileHandler(log_path);
@@ -56,7 +56,7 @@ public class DefaultLogger extends Logger {
   }
 
   protected DefaultLogger(Class cls, String log_path, String resourceBundleName)
-      throws IOException {
+          throws IOException {
     this(cls.getName(), log_path, resourceBundleName);
   }
 
@@ -75,7 +75,7 @@ public class DefaultLogger extends Logger {
     try {
       logger = new DefaultLogger();
     } catch (IOException e) {
-      System.out.println("getLogger(): ");
+//      System.out.println("getLogger(): ");
       e.printStackTrace();
     }
     return logger;
@@ -86,7 +86,7 @@ public class DefaultLogger extends Logger {
     try {
       logger = new DefaultLogger(name, null);
     } catch (IOException e) {
-      System.out.println("getLogger(String name): ");
+//      System.out.println("getLogger(String name): ");
       e.printStackTrace();
     }
     return logger;
@@ -97,7 +97,7 @@ public class DefaultLogger extends Logger {
     try {
       logger = new DefaultLogger(name, log_path);
     } catch (IOException e) {
-      System.out.println("getLogger(String name, String log_path): ");
+//      System.out.println("getLogger(String name, String log_path): ");
       e.printStackTrace();
       logger = null;
     }
@@ -116,7 +116,7 @@ public class DefaultLogger extends Logger {
   private void addDefaultHandle() {
     if (this.file_handler != null) this.addHandler(this.file_handler);
 
-    if (this.console_handler != null && Config.DEBUG) this.addHandler(this.console_handler);
+    if (this.console_handler != null && Config.CONSOLE_DEBUG) this.addHandler(this.console_handler);
   }
 
   public void setFormatter(Formatter formatter) throws IOException {
@@ -145,7 +145,7 @@ public class DefaultLogger extends Logger {
   public void log(Level level, String msg) {
     LogRecord lr = new LogRecord(level, msg);
     lr.setLoggerName(
-        LOGGER_NAME == null || LOGGER_NAME.isEmpty() ? DEFAULT_LOGGER_NAME : LOGGER_NAME);
+            LOGGER_NAME == null || LOGGER_NAME.isEmpty() ? DEFAULT_LOGGER_NAME : LOGGER_NAME);
 
     log(lr);
   }

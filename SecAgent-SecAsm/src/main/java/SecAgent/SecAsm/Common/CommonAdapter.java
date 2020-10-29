@@ -69,36 +69,35 @@ public class CommonAdapter extends ClassVisitor implements Opcodes {
         /**
          * todo load container's jar
          */
+        switch (methodname) {
+          case StubConfig.TOMCAT_STUB:
+          case StubConfig.TOMCAT_URL_STUB:
+          case StubConfig.DUBBO_STUB:
+            System.out.println(methodname);
+            Config.jarLoader.addURL(Config.CONTAINER_JAR_PATHs.getOrDefault("TOMCAT", null));
+            Class cls = Config.jarLoader.loadClass("SecAgent/Container/Tomcat/Stub/TomcatStub1");
+            constructor = getStubConstructor(cls);
+            constructors.put(StubConfig.TOMCAT_STUB, constructor);
+            break;
 
-        if (methodname.equals(StubConfig.TOMCAT_STUB) || methodname.equals(StubConfig.TOMCAT_URL_STUB) ){
-          Config.jarLoader.addURL(Config.CONTAINER_JAR_PATHs.getOrDefault("TOMCAT", null));
-          Class cls = Config.jarLoader.loadClass("SecAgent/Container/Tomcat/Stub/TomcatStub1");
-          constructors.put(StubConfig.TOMCAT_STUB, getStubConstructor(cls));
-
-          cls = Config.jarLoader.loadClass("SecAgent.Container.Tomcat.Stub.TomcatUrlStub");
-          constructors.put(StubConfig.TOMCAT_URL_STUB, getStubConstructor(cls));
-
-        } else if (methodname.equals(StubConfig.DUBBO_STUB)) {
-          Config.jarLoader.addURL(Config.CONTAINER_JAR_PATHs.getOrDefault("DUBBO", null));
-          Class cls = Config.jarLoader.loadClass("SecAgent.Container.DUBBO.Stub.DubboStub");
-          constructors.put(StubConfig.DUBBO_STUB, getStubConstructor(cls));
-
-        } else {
-
+          default:
+            if ( StubConfig.isIncludedMethod(paramsInfo.toString())) {
+              constructor = constructors.get("DEFAULT");
+            }
+            break;
         }
 
         constructor = constructors.getOrDefault(methodname, null);
-        if (constructor == null && StubConfig.isIncludedMethod(paramsInfo.toString())) {
-          constructor = constructors.get("DEFAULT");
-        }
+
       }
 
-      if (constructor != null)
+      if (constructor != null) {
+        System.out.println("found:" + methodname);
         mv = (MethodVisitor) constructor.newInstance(this.api, mv, access, name, descriptor, paramsInfo);
-      {
-//        System.out.println(methodname);
-//        System.out.println(constructor);
+      } else {
+//        System.out.println("not found: "+methodname);
       }
+
       /* Deprecated */
       /**
        *
