@@ -1,4 +1,0 @@
-
-
-rootProject.name='SecAgent-Containers'
-include ':SecAgent-Containers:Tomcat"'

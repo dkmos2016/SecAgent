@@ -21,8 +21,6 @@ public class SecAgent {
   private static Class[] classes;
 
   static {
-
-
     TARGET_BASIC_CLASSES =
       new String[] {
         "java.io.FileOutputStream",
@@ -66,7 +64,6 @@ public class SecAgent {
 
         String path = null;
         if ((path=JarUtils.doReleaseJar(file_name, null)) != null) {
-          ;
           // todo addUrl (JarClassLoader)
           /**
            * save unzipped jar's path to CONTAINER_JAR_PATHs
@@ -77,8 +74,6 @@ public class SecAgent {
     } catch (Exception e) {
       if (logger != null) logger.error(e);
     }
-
-
   }
 
   public static void premain(String args, Instrumentation instrumentation)

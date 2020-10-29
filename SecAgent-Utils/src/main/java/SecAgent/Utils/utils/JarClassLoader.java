@@ -6,6 +6,8 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.security.CodeSource;
 import java.security.PermissionCollection;
+import java.util.Arrays;
+import java.util.List;
 
 import SecAgent.Utils.Conf.Config;
 import SecAgent.Utils.utils.DefaultLoggerHelper.DefaultLogger;
@@ -24,6 +26,10 @@ public class JarClassLoader extends URLClassLoader {
     super(new URL[0]);
   }
 
+  public JarClassLoader(ClassLoader parent) {
+    super(new URL[0], parent);
+  }
+
   public JarClassLoader(URL[] urls, ClassLoader parent) {
     super(urls, parent);
   }
@@ -37,15 +43,17 @@ public class JarClassLoader extends URLClassLoader {
     if (url==null || url.isEmpty()) return;
 
     try {
-      nurl = new URL(baseUrl + File.separator + url);
+      File file = new File(url);
+      nurl = file.toURI().toURL();
     } catch (MalformedURLException e) {
-
+      e.printStackTrace();
     }
     this.addURL(nurl);
   }
 
   @Override
-  protected void addURL(URL url) {
+  public void addURL(URL url) {
+    System.out.println("add url:" + url);
     super.addURL(url);
   }
 
@@ -55,13 +63,20 @@ public class JarClassLoader extends URLClassLoader {
   }
 
   @Override
-  protected Class<?> findClass(String name) throws ClassNotFoundException {
+  public Class<?> findClass(String name) throws ClassNotFoundException {
     return super.findClass(name);
   }
 
+
+  /**
+   *
+   * @param name, ex: java/lang/String,...
+   * @return
+   * @throws ClassNotFoundException
+   */
   @Override
-  protected Class<?> loadClass(String name, boolean resolve) throws ClassNotFoundException {
-    return super.loadClass(name, resolve);
+  public Class<?> loadClass(String name) throws ClassNotFoundException {
+    return super.loadClass(name);
   }
 
   @Override
@@ -78,7 +93,7 @@ public class JarClassLoader extends URLClassLoader {
   }
 
   @Override
-  protected PermissionCollection getPermissions(CodeSource codesource) {
+  public PermissionCollection getPermissions(CodeSource codesource) {
     return super.getPermissions(codesource);
   }
 }

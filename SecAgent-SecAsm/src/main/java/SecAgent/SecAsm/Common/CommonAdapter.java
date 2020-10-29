@@ -57,10 +57,9 @@ public class CommonAdapter extends ClassVisitor implements Opcodes {
   @Override
   public MethodVisitor visitMethod(
       int access, String name, String descriptor, String signature, String[] exceptions) {
-    MethodVisitor mv = null;
+    MethodVisitor mv = super.visitMethod(access, name, descriptor, signature, exceptions);
 
     try {
-      mv = super.visitMethod(access, name, descriptor, signature, exceptions);
       ParamsInfo paramsInfo =
         new ParamsInfo(
           CLASSNAME, access, name, Type.getArgumentTypes(descriptor), descriptor, signature);
@@ -72,29 +71,34 @@ public class CommonAdapter extends ClassVisitor implements Opcodes {
          */
 
         if (methodname.equals(StubConfig.TOMCAT_STUB) || methodname.equals(StubConfig.TOMCAT_URL_STUB) ){
-          Config.jarLoader.addURL(Config.CONTAINER_JAR_FILE_NAMEs.getOrDefault("TOMCAT", null));
-          Class cls = Config.jarLoader.loadClass("SecAgent.Container.Tomcat.Stub.TomcatStub1");
+          Config.jarLoader.addURL(Config.CONTAINER_JAR_PATHs.getOrDefault("TOMCAT", null));
+          Class cls = Config.jarLoader.loadClass("SecAgent/Container/Tomcat/Stub/TomcatStub1");
           constructors.put(StubConfig.TOMCAT_STUB, getStubConstructor(cls));
 
           cls = Config.jarLoader.loadClass("SecAgent.Container.Tomcat.Stub.TomcatUrlStub");
           constructors.put(StubConfig.TOMCAT_URL_STUB, getStubConstructor(cls));
 
         } else if (methodname.equals(StubConfig.DUBBO_STUB)) {
-          Config.jarLoader.addURL(Config.CONTAINER_JAR_FILE_NAMEs.getOrDefault("DUBBO", null));
+          Config.jarLoader.addURL(Config.CONTAINER_JAR_PATHs.getOrDefault("DUBBO", null));
           Class cls = Config.jarLoader.loadClass("SecAgent.Container.DUBBO.Stub.DubboStub");
           constructors.put(StubConfig.DUBBO_STUB, getStubConstructor(cls));
+
         } else {
 
         }
 
-        constructor = constructors.get(methodname);
-        if (constructor == null) {
+        constructor = constructors.getOrDefault(methodname, null);
+        if (constructor == null && StubConfig.isIncludedMethod(paramsInfo.toString())) {
           constructor = constructors.get("DEFAULT");
         }
       }
 
-      mv = (MethodVisitor) constructor.newInstance(this.api, mv, access, name, descriptor, paramsInfo);
-
+      if (constructor != null)
+        mv = (MethodVisitor) constructor.newInstance(this.api, mv, access, name, descriptor, paramsInfo);
+      {
+//        System.out.println(methodname);
+//        System.out.println(constructor);
+      }
       /* Deprecated */
       /**
        *
@@ -105,6 +109,7 @@ public class CommonAdapter extends ClassVisitor implements Opcodes {
        */
     } catch (Exception e) {
       if (logger != null) logger.error(e);
+      e.printStackTrace();
     }
     return mv;
   }

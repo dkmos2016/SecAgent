@@ -5,21 +5,24 @@ import SecAgent.Utils.Conf.Config;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
+import SecAgent.Utils.utils.DefaultLoggerHelper.DefaultLogger;
 
 
 public class JarUtils {
   private final static String DST_DIR;
   private final static String BASE_DIR;
+  private final static DefaultLogger logger = DefaultLogger.getLogger(JarUtils.class, Config.EXCEPTION_PATH);
 
   static {
     BASE_DIR = "/libs/container";
-    DST_DIR = Config.JAR_PATH.substring(0, Config.JAR_PATH.lastIndexOf('/')) + File.separator + "libs";
-
+    DST_DIR = Config.JAR_PATH.substring(0, Config.JAR_PATH.lastIndexOf('/')) + BASE_DIR;
 
     File file = new File(DST_DIR);
     if (!file.exists()) {
-      file.mkdir();
+      file.mkdirs();
     }
+
+    if (logger != null) logger.setLevel(DefaultLogger.MyLevel.DEBUG);
 
   }
 
@@ -30,26 +33,23 @@ public class JarUtils {
   }
 
   public static String doReleaseJar(String file_name, String destination) {
-    String path = null;
+    String dst;
+    String src = BASE_DIR + "/" + file_name;
+
     try {
-      System.out.println(BASE_DIR + File.separator + file_name);
-      InputStream in = JarUtils.class.getResourceAsStream(BASE_DIR + File.separator + file_name);
+      InputStream in = JarUtils.class.getResourceAsStream(src);
       if (in == null) {
+        logger.error("file not exist in SecAgent.jar! " + src);
         return null;
       }
 
       FileOutputStream fout;
 
-      if (destination == null || destination.isEmpty()) {
-        path = DST_DIR + File.separator + file_name;
-      } else {
-        path = DST_DIR + File.separator + destination;
-      }
+      dst = DST_DIR + File.separator + (destination == null || destination.isEmpty()?file_name: destination);
 
-      fout = new FileOutputStream(path);
+      fout = new FileOutputStream(dst);
 
-
-      int v = -1;
+      int v;
       while ((v = in.read()) != -1) {
         fout.write(v);
       }
@@ -58,10 +58,12 @@ public class JarUtils {
       in.close();
 
     } catch (Exception e) {
-      path = null;
+      dst = null;
+      e.printStackTrace();
+      if (logger != null) logger.error(e);
     }
 
-    return path;
+    return dst;
   }
 
   public boolean Exist(String file_name) {

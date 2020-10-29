@@ -4,6 +4,7 @@ plugins {
 
 group 'com.pab'
 version '1.0.0-SNAPSHOT-BEAT'
+String moduleName='SecAgent-Tomcat'
 
 repositories {
     mavenCentral()
@@ -18,17 +19,7 @@ dependencies {
     implementation project(":SecAgent-SecAsm")
 }
 
-
 jar {
-    configurations.runtime.each { println it.path }
-    println "========="
-    configurations.compile.each { println it.path }
-    println "========="
-
-    archiveName("${project.name}-${version}.jar")
-
-    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
-    into('libs') {
-        from 'lib'
-    }
+    archiveName(moduleName+"-"+version+".jar")
 }
+

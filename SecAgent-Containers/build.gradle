@@ -2,18 +2,13 @@ plugins {
     id 'java'
 }
 
-subprojects {
-    apply plugin: 'java'
-    tasks.withType(Jar) {
-        destinationDir(file("$rootDir/build/New_libs"))
-    }
-}
 
 group 'com.pab'
 version '1.0.0-SNAPSHOT-BEAT'
 
 repositories {
     mavenCentral()
+    jcenter()
 }
 
 dependencies {
@@ -24,10 +19,6 @@ dependencies {
 
 
 jar {
-    archiveName("${rootProject.name}-${rootProject.version}.jar")
-
-    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
-
     copy {
         from "Tomcat/build/libs"
         into {

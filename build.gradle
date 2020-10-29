@@ -22,6 +22,7 @@ dependencies {
     compile project(":SecAgent-Utils")
     compile project(":SecAgent-SecAsm")
 //    implementation project(":SecAgent-Tomcat")
+    implementation project(":SecAgent-Containers:Tomcat")
 }
 
 jar {
@@ -51,7 +52,8 @@ jar {
 //    }
 
     into('libs/container/') {
-        from 'SecAgent-Tomcat/build/libs/'
+//        from 'SecAgent-Tomcat/build/libs/'
+        from 'SecAgent-Containers/libs/'
     }
 }
 

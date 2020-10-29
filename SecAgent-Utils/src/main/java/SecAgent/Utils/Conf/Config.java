@@ -4,6 +4,8 @@ import SecAgent.Utils.utils.DefaultLoggerHelper.DefaultLogger;
 import SecAgent.Utils.utils.JarClassLoader;
 import SecAgent.Utils.utils.Resources;
 
+import java.io.File;
+import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -31,11 +33,18 @@ public class Config {
 
   public static final String JAR_PATH;
 
-  public static final Map CONTAINER_JAR_PATHs = new HashMap<>();
 
   public static final JarClassLoader jarLoader;
 
+  /**
+   * name of containers' jar
+   */
   public final static Map<String, String> CONTAINER_JAR_FILE_NAMEs = new HashMap();
+
+  /**
+   * path of containers' jar
+   */
+  public static final Map<String, String> CONTAINER_JAR_PATHs = new HashMap<>();
 
   static {
     DEBUG = false;
@@ -63,11 +72,12 @@ public class Config {
 
     CONTAINER_JAR_FILE_NAMEs.put("TOMCAT", "SecAgent-Tomcat-1.0.0-SNAPSHOT-BEAT.jar");
     CONTAINER_JAR_FILE_NAMEs.put("DUBBO", "SecAgent-Dubbo.jar");
-    CONTAINER_JAR_FILE_NAMEs.put("JBOSS",  "SecAgent-Dubbo.jar");
+    CONTAINER_JAR_FILE_NAMEs.put("JBOSS",  "SecAgent-JBOSS.jar");
 
-    JAR_PATH = Config.class.getProtectionDomain().getCodeSource().getLocation().getPath();
+    JAR_PATH = Config.class.getProtectionDomain().getCodeSource().getLocation().toString().replace("file:/", "");
 
-    jarLoader = new JarClassLoader();
-    jarLoader.setBaseUrl(Config.class.getProtectionDomain().getCodeSource().getLocation().getPath());
+    ClassLoader parent = ClassLoader.getSystemClassLoader();
+    jarLoader = new JarClassLoader(parent);
+    jarLoader.setBaseUrl(JAR_PATH + File.separator + "libs/container/");
   }
 }

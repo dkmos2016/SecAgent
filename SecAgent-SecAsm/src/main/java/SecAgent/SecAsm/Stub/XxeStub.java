@@ -33,7 +33,7 @@ public class XxeStub extends CommonStub {
     addListElement(params_idx, T_OBJECT, 2);
 
     findAndExecute(
-        "SecAgent.utils.Common",
+        "SecAgent.Utils.utils.Common",
         "transferTo",
         new Class[] {InputStream.class},
         null_idx,
@@ -43,7 +43,7 @@ public class XxeStub extends CommonStub {
     newArrayList(params_idx);
     addListElement(params_idx, T_OBJECT, res_idx);
     findAndExecute(
-        "SecAgent.utils.Common",
+        "SecAgent.Utils.utils.Common",
         "transferFrom",
         new Class[] {ByteArrayOutputStream.class},
         null_idx,
@@ -54,7 +54,7 @@ public class XxeStub extends CommonStub {
     mv.visitVarInsn(ASTORE, 2);
 
     findAndExecute(
-        "SecAgent.utils.Common",
+        "SecAgent.Utils.utils.Common",
         "transferFrom",
         new Class[] {ByteArrayOutputStream.class},
         null_idx,

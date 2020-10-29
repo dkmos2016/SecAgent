@@ -12,7 +12,6 @@ repositories {
 
 dependencies {
 //    testCompile group: 'junit', name: 'junit', version: '4.12'
-
     implementation project(":SecAgent-Utils")
     implementation project(":SecAgent-SecAsm")
 }
@@ -22,10 +21,6 @@ jar {
     configurations.compile.each { println it.path }
     println "========="
 
-//    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
-//    into('assets') {
-//        from 'assets'
-//    }
     from {
         configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
     }

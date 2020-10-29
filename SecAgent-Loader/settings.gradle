@@ -1,7 +1,0 @@
-
-
-rootProject.name='SecAgent-Loader'
-
-
-include "SecAgent-Utils"
-include "SecAgent-SecAsm"

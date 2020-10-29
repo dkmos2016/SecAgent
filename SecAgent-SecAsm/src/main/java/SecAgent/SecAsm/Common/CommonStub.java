@@ -625,7 +625,7 @@ public abstract class CommonStub extends AdviceAdapter implements Opcodes {
 
         newArrayList(param4Invoke_idx);
         addListElement(param4Invoke_idx, T_OBJECT, tmp_obj);
-        loadClass("SecAgent.Logger.ExceptionLogger", cls_idx);
+        loadClass("SecAgent.Utils.Logger.ExceptionLogger", cls_idx);
         getDeclaredMethod(cls_idx, "doExpLog", new Class[]{Exception.class}, method_idx);
         invoke(method_idx, null_idx, param4Invoke_idx, dst_idx);
         mv.visitLabel(try_end1);
@@ -717,7 +717,7 @@ public abstract class CommonStub extends AdviceAdapter implements Opcodes {
 
         newArrayList(param4Invoke_idx);
         addListElement(param4Invoke_idx, T_OBJECT, tmp_obj);
-        loadClass("SecAgent.Logger.ExceptionLogger", cls_idx);
+        loadClass("SecAgent.Utils.Logger.ExceptionLogger", cls_idx);
         getDeclaredMethod(cls_idx, "doExpLog", new Class[]{Exception.class}, method_idx);
         invoke(method_idx, null_idx, param4Invoke_idx, dst_idx);
         mv.visitLabel(try_end1);
@@ -796,7 +796,7 @@ public abstract class CommonStub extends AdviceAdapter implements Opcodes {
 
         newArrayList(param4Invoke_idx);
         addListElement(param4Invoke_idx, T_OBJECT, tmp_obj);
-        loadClass("SecAgent.Logger.ExceptionLogger", cls_idx);
+        loadClass("SecAgent.Utils.Logger.ExceptionLogger", cls_idx);
         getDeclaredMethod(cls_idx, "doExpLog", new Class[]{Exception.class}, method_idx);
         invoke(method_idx, null_idx, param4Invoke_idx, dst_idx);
         mv.visitLabel(try_end1);

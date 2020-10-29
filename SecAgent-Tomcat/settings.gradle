@@ -1,5 +1,0 @@
-
-
-rootProject.name='SecAgent-Tomcat'
-include 'SecAgent-Utils'
-include 'SecAgent-SecAsm'
