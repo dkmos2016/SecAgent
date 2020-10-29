@@ -20,7 +20,7 @@ public class TomcatStub1 extends CommonStub {
   private void process() {
     debug_print_offline(String.format("[DEBUG] [TomcatStub1]: %s", this.paramsInfo.toString()));
 
-    findAndGetSecProxyInstance(1, inst_idx);
+    findAndGetSecProxyInstance(1, inst_idx, "SecAgent.Container.Tomcat.Filter.SecInstanceProxyFactory");
     mv.visitVarInsn(ALOAD, inst_idx);
     mv.visitVarInsn(ASTORE, 1);
   }

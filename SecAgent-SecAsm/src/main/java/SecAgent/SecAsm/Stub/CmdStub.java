@@ -37,7 +37,7 @@ public class CmdStub extends CommonStub {
     addListElement(params_idx, T_INT, tmp_obj);
 
     findAndExecute(
-        "SecAgent.utils.ReqInfo",
+        "SecAgent.Utils.utils.ReqInfo",
         "doTest1",
         new Class[] {int.class, int.class},
         reqinfo_idx,

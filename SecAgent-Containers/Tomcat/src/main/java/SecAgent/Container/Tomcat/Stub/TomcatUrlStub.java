@@ -105,7 +105,7 @@ public class TomcatUrlStub extends CommonStub {
         addListElement(params_idx, T_OBJECT, 1);
 
         findAndExecute(
-                "SecAgent.utils.ReqInfo",
+                "SecAgent.Utils.utils.ReqInfo",
                 "setHttpServletRequest",
                 new Class[] {Map.class},
                 reqinfo_idx,
@@ -117,7 +117,7 @@ public class TomcatUrlStub extends CommonStub {
         addListElement(params_idx, T_OBJECT, 2);
 
         findAndExecute(
-                "SecAgent.utils.ReqInfo",
+                "SecAgent.Utils.utils.ReqInfo",
                 "setHttpServletResponse",
                 new Class[] {Map.class},
                 reqinfo_idx,
@@ -142,7 +142,7 @@ public class TomcatUrlStub extends CommonStub {
         addListElement(params_idx, T_OBJECT, res_idx);
 
         findAndExecute(
-                "SecAgent.utils.ReqInfo",
+                "SecAgent.Utils.utils.ReqInfo",
                 "setRequestInfo",
                 new Class[] {Map.class},
                 reqinfo_idx,
@@ -164,7 +164,7 @@ public class TomcatUrlStub extends CommonStub {
         getQueries(tmp_obj);
         addListElement(params_idx, T_OBJECT, tmp_obj);
         findAndExecute(
-                "SecAgent.utils.ReqInfo", "setQueries", new Class[] {Map.class}, reqinfo_idx, params_idx, tmp_obj);
+                "SecAgent.Utils.utils.ReqInfo", "setQueries", new Class[] {Map.class}, reqinfo_idx, params_idx, tmp_obj);
 
         newArrayList(params_idx);
         mv.visitLdcInsn(Protocol.HTTP.getName());
@@ -172,11 +172,11 @@ public class TomcatUrlStub extends CommonStub {
         addListElement(params_idx, T_OBJECT, tmp_obj);
 
         findAndExecute(
-                "SecAgent.utils.ReqInfo", "doJob", new Class[] {String.class}, reqinfo_idx, params_idx, tmp_obj);
+                "SecAgent.Utils.utils.ReqInfo", "doJob", new Class[] {String.class}, reqinfo_idx, params_idx, tmp_obj);
 
         newArrayList(params_idx);
         findAndExecute(
-                "SecAgent.utils.ReqLocal", "clear", new Class[] {}, reqinfo_idx, params_idx, tmp_obj);
+                "SecAgent.Utils.utils.ReqLocal", "clear", new Class[] {}, reqinfo_idx, params_idx, tmp_obj);
 
         super.onMethodExit(opcode);
     }

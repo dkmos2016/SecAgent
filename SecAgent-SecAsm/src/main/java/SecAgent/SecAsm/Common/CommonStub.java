@@ -668,9 +668,8 @@ public abstract class CommonStub extends AdviceAdapter implements Opcodes {
      * @param obj_idx
      * @param dst_idx
      */
-    @SuppressWarnings("need to modify for other container")
-    protected void findAndGetSecProxyInstance(int obj_idx, int dst_idx) {
-
+    protected void findAndGetSecProxyInstance(int obj_idx, int dst_idx, String proxyFactory) {
+        if (proxyFactory == null || proxyFactory.isEmpty()) return;
         Label try_end_all = new Label();
         Label try_start0 = new Label();
         Label try_end0 = new Label();
@@ -686,7 +685,7 @@ public abstract class CommonStub extends AdviceAdapter implements Opcodes {
 
         //    debug_print_offline("to load: " + classname);
         //    debug_print_offline("getConstructor done");
-        loadClass("SecAgent.Filter.SecInstanceProxyFactory", cls_idx);
+        loadClass(proxyFactory, cls_idx);
 
         Class[] paramTypes = new Class[]{Object.class};
         getConstructor(cls_idx, paramTypes, method_idx);

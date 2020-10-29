@@ -69,27 +69,37 @@ public class CommonAdapter extends ClassVisitor implements Opcodes {
         /**
          * todo load container's jar
          */
+        Class cls = null;
         switch (methodname) {
           case StubConfig.TOMCAT_STUB:
-          case StubConfig.TOMCAT_URL_STUB:
-          case StubConfig.DUBBO_STUB:
-            System.out.println(methodname);
             Config.jarLoader.addURL(Config.CONTAINER_JAR_PATHs.getOrDefault("TOMCAT", null));
-            Class cls = Config.jarLoader.loadClass("SecAgent/Container/Tomcat/Stub/TomcatStub1");
-            constructor = getStubConstructor(cls);
-            constructors.put(StubConfig.TOMCAT_STUB, constructor);
+            cls = Config.jarLoader.loadClass("SecAgent.Container.Tomcat.Stub.TomcatStub1");
+            break;
+
+          case StubConfig.TOMCAT_URL_STUB:
+            Config.jarLoader.addURL(Config.CONTAINER_JAR_PATHs.getOrDefault("TOMCAT", null));
+            cls = Config.jarLoader.loadClass("SecAgent.Container.Tomcat.Stub.TomcatUrlStub");
+            break;
+
+          case StubConfig.DUBBO_STUB:
+            Config.jarLoader.addURL(Config.CONTAINER_JAR_PATHs.getOrDefault("DUBBO", null));
+            cls = Config.jarLoader.loadClass("SecAgent.Container.Tomcat.Stub.DubboStub");
             break;
 
           default:
-            if ( StubConfig.isIncludedMethod(paramsInfo.toString())) {
-              constructor = constructors.get("DEFAULT");
-            }
             break;
         }
 
-        constructor = constructors.getOrDefault(methodname, null);
-
+        if (cls != null) {
+          constructors.put(methodname, getStubConstructor(cls));
+        }
       }
+
+      constructor = constructors.getOrDefault(methodname, null);
+      if (constructor == null && StubConfig.isIncludedMethod(paramsInfo.toString())) {
+        constructor = constructors.get("DEFAULT");
+      }
+
 
       if (constructor != null) {
         System.out.println("found:" + methodname);
