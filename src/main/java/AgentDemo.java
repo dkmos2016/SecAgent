@@ -1,10 +1,15 @@
 import SecAgent.Conf.Config;
 import SecAgent.utils.DefaultLoggerHelper.DefaultLogger;
+import SecAgent.utils.HeartBeat;
 
 import java.io.FileOutputStream;
 import java.lang.instrument.Instrumentation;
 import java.lang.instrument.UnmodifiableClassException;
 import java.security.SecureClassLoader;
+import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 public class AgentDemo {
   private static final DefaultLogger logger =
@@ -54,6 +59,9 @@ public class AgentDemo {
       /* Override SecAgentInfo.log/SecAgentError.log */
       new FileOutputStream(Config.INFORMATION_PATH);
       new FileOutputStream(Config.EXCEPTION_PATH);
+
+      HeartBeat.start();
+
     } catch (Exception e) {
       if (logger != null) logger.error(e);
     }
