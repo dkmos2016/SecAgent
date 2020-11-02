@@ -15,6 +15,7 @@ dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
 
     implementation project(":SecAgent-Containers:Tomcat")
+    implementation project(":SecAgent-Containers:Dubbo")
 }
 
 

@@ -23,6 +23,7 @@ dependencies {
     compile project(":SecAgent-SecAsm")
 //    implementation project(":SecAgent-Tomcat")
     implementation project(":SecAgent-Containers:Tomcat")
+    implementation project(":SecAgent-Containers:Dubbo")
 }
 
 jar {

@@ -7,3 +7,5 @@ include 'SecAgent-SecAsm'
 //include 'SecAgent-Tomcat'
 //include 'SecAgent-Containers'
 include ':SecAgent-Containers:Tomcat'
+include 'SecAgent-Containers:Dubbo'
+
