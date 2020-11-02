@@ -71,7 +71,7 @@ public class CommonAdapter extends ClassVisitor implements Opcodes {
          */
         Class cls = null;
         switch (methodname) {
-          case StubConfig.TOMCAT_STUB:
+          case StubConfig.TOMCAT_STUB1:
             Config.jarLoader.addURL(Config.CONTAINER_JAR_PATHs.getOrDefault("TOMCAT", null));
             cls = Config.jarLoader.loadClass("SecAgent.Container.Tomcat.Stub.TomcatStub1");
             break;

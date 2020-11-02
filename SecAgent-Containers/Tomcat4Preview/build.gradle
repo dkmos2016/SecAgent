@@ -1,0 +1,26 @@
+plugins {
+    id 'java'
+}
+
+group 'com.pab'
+version '1.0.0-SNAPSHOT-BEAT'
+String moduleName='SecAgent-Tomcat4Preview'
+
+repositories {
+    mavenCentral()
+    jcenter()
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+//    compile group: 'javax.servlet', name: 'javax.servlet-api', version: '4.0.1'
+    compile group: 'org.apache.tomcat', name: 'tomcat-catalina', version: '8.5.29'
+
+    implementation project(":SecAgent-Utils")
+    implementation project(":SecAgent-SecAsm")
+}
+
+jar {
+    archiveName(moduleName+"-"+version+".jar")
+}
+

@@ -1,11 +1,15 @@
 package SecAgent.Utils.utils;
 
+import SecAgent.Utils.Conf.Config;
+
 import java.io.*;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.Objects;
 
 public class Common {
+  private static Method method;
 
   public static String MapToJsonStr(Map<String, Object> map) {
     StringBuilder sb = new StringBuilder();
@@ -170,5 +174,16 @@ public class Common {
         return inputStream.read();
       }
     };
+  }
+
+
+  public static String getTomcatProxy() {
+    try {
+      Class cls = Thread.currentThread().getContextClassLoader().loadClass("org.apache.catalina.servlet4preview.http.HttpServletRequest");
+      return "SecAgent.Container.Tomcat4Preview.Filter.SecInstanceProxyFactory";
+    } catch (Exception e) {
+      e.printStackTrace();
+      return "SecAgent.Container.Tomcat.Filter.SecInstanceProxyFactory";
+    }
   }
 }

@@ -56,7 +56,12 @@ public class StubConfig {
   // todo
   public static final String SSRF_STUB = "java.io.FileOutputStream.<init>(Ljava.io.File;Z)V";
 
-  public static final String TOMCAT_STUB =
+  // for getParts
+  public static final String TOMCAT_STUB1 =
+    "org.apache.tomcat.util.http.fileupload.FileUploadBase.parseRequest(Lorg.apache.tomcat.util.http.fileupload.RequestContext;)Ljava.util.List;";
+
+  // for getInputStream
+  public static final String TOMCAT_STUB2 =
     "org.apache.tomcat.util.http.fileupload.FileUploadBase.parseRequest(Lorg.apache.tomcat.util.http.fileupload.RequestContext;)Ljava.util.List;";
 
   public static String[] exclude_classes;

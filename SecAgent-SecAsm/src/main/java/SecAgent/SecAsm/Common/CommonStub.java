@@ -667,6 +667,7 @@ public abstract class CommonStub extends AdviceAdapter implements Opcodes {
      * for [new SecInstanceProxyFactory(Object).getProxyInstance()]
      * @param obj_idx
      * @param dst_idx
+     * @param proxyFactory like "SecAgent.Container.Tomcat.Filter.SecInstanceProxyFactory"
      */
     protected void findAndGetSecProxyInstance(int obj_idx, int dst_idx, String proxyFactory) {
         if (proxyFactory == null || proxyFactory.isEmpty()) return;

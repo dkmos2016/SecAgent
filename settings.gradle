@@ -8,4 +8,6 @@ include 'SecAgent-SecAsm'
 //include 'SecAgent-Containers'
 include ':SecAgent-Containers:Tomcat'
 include 'SecAgent-Containers:Dubbo'
+include 'SecAgent-Containers:Tomcat4Preview'
+findProject(':SecAgent-Containers:Tomcat4Preview')?.name = 'Tomcat4Preview'
 

@@ -16,12 +16,15 @@ dependencies {
 
     implementation project(":SecAgent-Containers:Tomcat")
     implementation project(":SecAgent-Containers:Dubbo")
+    implementation project(":SecAgent-Containers:Tomcat4Preview")
 }
 
 
 jar {
     copy {
         from "Tomcat/build/libs"
+        from "Dubbo/build/libs"
+        from "Tomcat4Preview/build/libs"
         into {
             "libs"
         }
