@@ -37,8 +37,7 @@ public class StubConfig {
   public static final String UPLOAD_STUB = "java.io.FileOutputStream.<init>(Ljava.io.File;Z)V";
   //    public static final String SPRING_URL_STUB =
   // "org.springframework.web.servlet.DispatcherServlet.doService(Ljavax.servlet.http.HttpServletRequest;Ljavax.servlet.http.HttpServletResponse;)V";\
-  public static final String TOMCAT_URL_STUB =
-    "javax.servlet.http.HttpServlet.service(Ljavax.servlet.http.HttpServletRequest;Ljavax.servlet.http.HttpServletResponse;)V";
+
 
   public static final String PAFA5_HANDLE_REQUEST = "com.pingan.pafa.papp.sar.SARContextBean.handleRequest(Lcom/paic/pafa/app/dto/ServiceRequest;)Lcom/paic/pafa/app/dto/ServiceResponse;";
   public static final String PAFA5_HANDLE_WEB_REQUEST = "com.pingan.pafa.papp.sar.SARContextBean.handleWebRequest(Ljavax/servlet/http/HttpServletRequest;Ljavax/servlet/http/HttpServletResponse;)Z";
@@ -56,8 +55,11 @@ public class StubConfig {
   // todo
   public static final String SSRF_STUB = "java.io.FileOutputStream.<init>(Ljava.io.File;Z)V";
 
+  public static final String TOMCAT_URL_STUB =
+          "javax.servlet.http.HttpServlet.service(Ljavax.servlet.http.HttpServletRequest;Ljavax.servlet.http.HttpServletResponse;)V";
+
   // for getParts
-  public static final String TOMCAT_STUB1 =
+  public static final String TOMCAT_STUB =
     "org.apache.tomcat.util.http.fileupload.FileUploadBase.parseRequest(Lorg.apache.tomcat.util.http.fileupload.RequestContext;)Ljava.util.List;";
 
   // for getInputStream

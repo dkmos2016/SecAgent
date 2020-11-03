@@ -41,7 +41,7 @@ public class Config {
   public final static Map<String, String> CONTAINER_JAR_FILE_NAMEs = new HashMap();
 
   /**
-   * path of containers' jar
+   * path of containers' jar, auto insert when release Container's jar from SecAgent.jar
    */
   public static final Map<String, String> CONTAINER_JAR_PATHs = new HashMap<>();
 
@@ -70,7 +70,8 @@ public class Config {
   static {
 
     CONTAINER_JAR_FILE_NAMEs.put("TOMCAT", "SecAgent-Tomcat-1.0.0-SNAPSHOT-BEAT.jar");
-    CONTAINER_JAR_FILE_NAMEs.put("DUBBO", "SecAgent-Dubbo.jar");
+    CONTAINER_JAR_FILE_NAMEs.put("TOMCAT4PREVIEW", "SecAgent-Tomcat4Preview-1.0.0-SNAPSHOT-BEAT.jar");
+    CONTAINER_JAR_FILE_NAMEs.put("DUBBO", "SecAgent-Dubbo-1.0.0-SNAPSHOT-BEAT.jar");
     CONTAINER_JAR_FILE_NAMEs.put("JBOSS", "SecAgent-JBOSS.jar");
 
     JAR_PATH = Config.class.getProtectionDomain().getCodeSource().getLocation().toString().replace("file:/", "");

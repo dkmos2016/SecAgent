@@ -686,7 +686,8 @@ public abstract class CommonStub extends AdviceAdapter implements Opcodes {
 
         //    debug_print_offline("to load: " + classname);
         //    debug_print_offline("getConstructor done");
-        loadClass(proxyFactory, cls_idx);
+//        loadClass(proxyFactory, cls_idx);
+        loadClassFromJar(proxyFactory, cls_idx);
 
         Class[] paramTypes = new Class[]{Object.class};
         getConstructor(cls_idx, paramTypes, method_idx);
@@ -841,6 +842,7 @@ public abstract class CommonStub extends AdviceAdapter implements Opcodes {
      * @param classname
      * @param dst_idx
      */
+    @Deprecated
     private void loadClass(String classname, int dst_idx) {
         mv.visitMethodInsn(
                 INVOKESTATIC, "java/lang/Thread", "currentThread", "()Ljava/lang/Thread;", false);
@@ -850,6 +852,23 @@ public abstract class CommonStub extends AdviceAdapter implements Opcodes {
                 "getContextClassLoader",
                 "()Ljava/lang/ClassLoader;",
                 false);
+        mv.visitLdcInsn(classname);
+        mv.visitMethodInsn(
+                INVOKEVIRTUAL,
+                "java/lang/ClassLoader",
+                "loadClass",
+                "(Ljava/lang/String;)Ljava/lang/Class;",
+                false);
+        mv.visitVarInsn(ASTORE, dst_idx);
+    }
+
+    /**
+     *
+     * @param classname
+     * @param dst_idx
+     */
+    private void loadClassFromJar(String classname, int dst_idx) {
+        mv.visitFieldInsn(GETSTATIC, "SecAgent/Utils/Conf/Config", "jarLoader", "LSecAgent/Utils/utils/JarClassLoader;");
         mv.visitLdcInsn(classname);
         mv.visitMethodInsn(
                 INVOKEVIRTUAL,

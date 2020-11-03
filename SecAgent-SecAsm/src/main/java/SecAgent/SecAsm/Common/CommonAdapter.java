@@ -20,7 +20,7 @@ import java.util.HashMap;
 
 public class CommonAdapter extends ClassVisitor implements Opcodes {
   private static final DefaultLogger logger =
-      DefaultLogger.getLogger(CommonAdapter.class, Config.EXCEPTION_PATH);
+          DefaultLogger.getLogger(CommonAdapter.class, Config.EXCEPTION_PATH);
   private final String CLASSNAME;
 
   private final static HashMap<String, Constructor> constructors = new HashMap();
@@ -56,13 +56,13 @@ public class CommonAdapter extends ClassVisitor implements Opcodes {
 
   @Override
   public MethodVisitor visitMethod(
-      int access, String name, String descriptor, String signature, String[] exceptions) {
+          int access, String name, String descriptor, String signature, String[] exceptions) {
     MethodVisitor mv = super.visitMethod(access, name, descriptor, signature, exceptions);
 
     try {
       ParamsInfo paramsInfo =
-        new ParamsInfo(
-          CLASSNAME, access, name, Type.getArgumentTypes(descriptor), descriptor, signature);
+              new ParamsInfo(
+                      CLASSNAME, access, name, Type.getArgumentTypes(descriptor), descriptor, signature);
       String methodname = paramsInfo.toString();
       Constructor constructor = constructors.getOrDefault(methodname, null);
       if (constructor == null) {
@@ -71,28 +71,40 @@ public class CommonAdapter extends ClassVisitor implements Opcodes {
          */
         Class cls = null;
         switch (methodname) {
-          case StubConfig.TOMCAT_STUB1:
+          case StubConfig.TOMCAT_STUB:
             Config.jarLoader.addURL(Config.CONTAINER_JAR_PATHs.getOrDefault("TOMCAT", null));
+            Config.jarLoader.addURL(Config.CONTAINER_JAR_PATHs.getOrDefault("TOMCAT4PREVIEW", null));
+
             cls = Config.jarLoader.loadClass("SecAgent.Container.Tomcat.Stub.TomcatStub1");
+            if (cls!=null) constructors.put(methodname, getStubConstructor(cls));
+
+//            Config.jarLoader.addURL(Config.CONTAINER_JAR_PATHs.getOrDefault("TOMCAT4PREVIEW", null));
+//            cls = Config.jarLoader.loadClass("SecAgent.Container.Tomcat4Preview.Stub.TomcatStub1");
+//            if (cls!=null) constructors.put(methodname, getStubConstructor(cls));
             break;
 
           case StubConfig.TOMCAT_URL_STUB:
             Config.jarLoader.addURL(Config.CONTAINER_JAR_PATHs.getOrDefault("TOMCAT", null));
+            Config.jarLoader.addURL(Config.CONTAINER_JAR_PATHs.getOrDefault("TOMCAT4PREVIEW", null));
             cls = Config.jarLoader.loadClass("SecAgent.Container.Tomcat.Stub.TomcatUrlStub");
+            if (cls!=null) constructors.put(methodname, getStubConstructor(cls));
+
+//            Config.jarLoader.addURL(Config.CONTAINER_JAR_PATHs.getOrDefault("TOMCAT4PREVIEW", null));
+//            cls = Config.jarLoader.loadClass("SecAgent.Container.Tomcat4Preview.Stub.TomcatUrlStub");
+//            if (cls!=null) constructors.put(methodname, getStubConstructor(cls));
             break;
 
           case StubConfig.DUBBO_STUB:
+            System.out.println(Config.CONTAINER_JAR_PATHs.getOrDefault("DUBBO", null));
             Config.jarLoader.addURL(Config.CONTAINER_JAR_PATHs.getOrDefault("DUBBO", null));
-            cls = Config.jarLoader.loadClass("SecAgent.Container.Tomcat.Stub.DubboStub");
+            cls = Config.jarLoader.loadClass("SecAgent.Container.Dubbo.Stub.DubboStub");
+            if (cls != null) constructors.put(methodname, getStubConstructor(cls));
             break;
 
           default:
             break;
         }
 
-        if (cls != null) {
-          constructors.put(methodname, getStubConstructor(cls));
-        }
       }
 
       constructor = constructors.getOrDefault(methodname, null);

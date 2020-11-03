@@ -21,6 +21,10 @@ dependencies {
 
 
 jar {
+    clean {
+        delete "libs"
+    }
+
     copy {
         from "Tomcat/build/libs"
         from "Dubbo/build/libs"

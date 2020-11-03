@@ -1,4 +1,4 @@
-package SecAgent.Conainer.Dubbo;
+package SecAgent.Container.Dubbo.Stub;
 
 import SecAgent.SecAsm.Common.CommonStub;
 import SecAgent.Utils.utils.ParamsInfo;
@@ -15,14 +15,6 @@ public class DubboStub extends CommonStub {
     }
 
     private void process() {
-//        newArrayList(params_idx);
-//        addListElement(params_idx, T_OBJECT, 1);
-//        addListElement(params_idx, T_OBJECT, 2);
-//        addListElement(params_idx, T_OBJECT, 3);
-//        addListElement(params_idx, T_OBJECT, 4);
-//        addListElement(params_idx, T_OBJECT, 5);
-        //        putStubData("DUBBO", T_OBJECT, res_idx);
-
         newInstance(HashMap.class, res_idx);
         put(res_idx, "channel", T_OBJECT, 1);
         put(res_idx, "message", T_OBJECT, 2);
@@ -38,7 +30,7 @@ public class DubboStub extends CommonStub {
 
 
         findAndExecute(
-                "SecAgent.utils.ReqInfo",
+                "SecAgent.Utils.utils.ReqInfo",
                 "setDubboInfo",
                 new Class[] {Map.class},
                 reqinfo_idx,
@@ -62,12 +54,12 @@ public class DubboStub extends CommonStub {
 
         addListElement(params_idx, T_OBJECT, tmp_obj);
         findAndExecute(
-                "SecAgent.utils.ReqInfo", "doJob", new Class[] {String.class}, reqinfo_idx, params_idx, tmp_obj);
+                "SecAgent.Utils.utils.ReqInfo", "doJob", new Class[] {String.class}, reqinfo_idx, params_idx, tmp_obj);
 
 
         newArrayList(params_idx);
         findAndExecute(
-                "SecAgent.utils.ReqLocal", "clear", new Class[] {}, reqinfo_idx, params_idx, tmp_obj);
+                "SecAgent.Utils.utils.ReqLocal", "clear", new Class[] {}, reqinfo_idx, params_idx, tmp_obj);
 
 
         super.onMethodExit(opcode);

@@ -6,8 +6,6 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.security.CodeSource;
 import java.security.PermissionCollection;
-import java.util.Arrays;
-import java.util.List;
 
 import SecAgent.Utils.Conf.Config;
 import SecAgent.Utils.utils.DefaultLoggerHelper.DefaultLogger;
@@ -76,7 +74,18 @@ public class JarClassLoader extends URLClassLoader {
    */
   @Override
   public Class<?> loadClass(String name) throws ClassNotFoundException {
-    return super.loadClass(name);
+    Class cls;
+    try{
+      return super.loadClass(name);
+    } catch (ClassNotFoundException e) {
+      e.printStackTrace();
+    }
+
+    try {
+      return Thread.currentThread().getContextClassLoader().loadClass(name);
+    } catch (ClassNotFoundException e) {
+      throw e;
+    }
   }
 
   @Override

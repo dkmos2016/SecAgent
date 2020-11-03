@@ -113,7 +113,10 @@ public class SecInstanceProxyFactory {
               if (obj instanceof InputStream && method_name.equals("getInputStream")) {
                 ret = proxyGetInputStream(obj);
               } else if (obj instanceof Map && method.getName().equals("getParameterMap")) {
+                ret = obj;
+              } else if (obj instanceof Map && method.getName().equals("getParameterMap")) {
                 ret = proxyGetOutputStream(obj);
+                ret = obj;
               } else {
                 ret = obj;
               }

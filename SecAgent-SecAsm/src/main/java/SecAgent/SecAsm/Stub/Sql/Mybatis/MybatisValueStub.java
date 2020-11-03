@@ -25,7 +25,7 @@ public class MybatisValueStub extends CommonStub {
     addListElement(params_idx, T_OBJECT, 1);
     addListElement(params_idx, T_OBJECT, bak_obj);
     findAndGetInstance(
-        "SecAgent.utils.Pair", new Class[] {Object.class, Object.class}, params_idx, res_idx);
+        "SecAgent.Utils.utils.Pair", new Class[] {Object.class, Object.class}, params_idx, res_idx);
 
     newArrayList(params_idx);
     mv.visitVarInsn(ALOAD, 0);

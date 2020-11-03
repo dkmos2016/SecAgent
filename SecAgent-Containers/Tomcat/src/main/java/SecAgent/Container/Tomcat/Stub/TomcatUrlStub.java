@@ -151,11 +151,22 @@ public class TomcatUrlStub extends CommonStub {
 
     }
 
+    private void process2() {
+        debug_print_offline(String.format("[DEBUG] [TomcatUrlStub]: %s", this.paramsInfo.toString()));
+
+        findAndExecute("SecAgent.Utils.utils.Common", "getTomcatProxy", new Class[]{}, null_idx, null_idx, tmp_obj);
+        debug_print_online(T_OBJECT, tmp_obj);
+
+        findAndGetSecProxyInstance(1, inst_idx, "SecAgent.Container.Tomcat.Filter.SecInstanceProxyFactory");
+        mv.visitVarInsn(ALOAD, inst_idx);
+        mv.visitVarInsn(ASTORE, 1);
+    }
+
     @Override
     protected void onMethodEnter() {
         super.onMethodEnter();
 
-        process();
+        process2();
     }
 
     @Override

@@ -1,6 +1,7 @@
 package SecAgent.Utils.utils;
 
 import SecAgent.Utils.Conf.Config;
+import SecAgent.Utils.utils.DefaultLoggerHelper.DefaultLogger;
 
 import java.io.*;
 import java.lang.reflect.Method;
@@ -9,7 +10,14 @@ import java.util.Map;
 import java.util.Objects;
 
 public class Common {
+  private static DefaultLogger logger = DefaultLogger.getLogger(Common.class, Config.EXCEPTION_PATH);
+  private static String TOMCAT_PROXY_NAME = null;
   private static Method method;
+
+  static {
+    if (logger != null) logger.setLevel(DefaultLogger.MyLevel.DEBUG);
+  }
+
 
   public static String MapToJsonStr(Map<String, Object> map) {
     StringBuilder sb = new StringBuilder();
@@ -177,13 +185,21 @@ public class Common {
   }
 
 
-  public static String getTomcatProxy() {
+  /**
+   * deside which proxyfactor of tomcat can be used
+   * @return
+   */
+  public static String getTomcatProxy(Object obj) {
+    if (TOMCAT_PROXY_NAME != null && TOMCAT_PROXY_NAME.isEmpty()) return TOMCAT_PROXY_NAME;
     try {
       Class cls = Thread.currentThread().getContextClassLoader().loadClass("org.apache.catalina.servlet4preview.http.HttpServletRequest");
-      return "SecAgent.Container.Tomcat4Preview.Filter.SecInstanceProxyFactory";
+      TOMCAT_PROXY_NAME = "SecAgent.Container.Tomcat4Preview.Filter.SecInstanceProxyFactory";
+
     } catch (Exception e) {
-      e.printStackTrace();
-      return "SecAgent.Container.Tomcat.Filter.SecInstanceProxyFactory";
+      logger.error(e);
+      TOMCAT_PROXY_NAME = "SecAgent.Container.Tomcat.Filter.SecInstanceProxyFactory";
     }
+
+    return TOMCAT_PROXY_NAME;
   }
 }
