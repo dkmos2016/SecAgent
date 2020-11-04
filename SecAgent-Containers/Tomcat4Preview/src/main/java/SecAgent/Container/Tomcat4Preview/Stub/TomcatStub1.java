@@ -26,11 +26,23 @@ public class TomcatStub1 extends CommonStub {
     mv.visitVarInsn(ASTORE, 1);
   }
 
+  private void process2() {
+    mv.visitVarInsn(ALOAD, 1);
+    mv.visitVarInsn(ASTORE, bak_obj);
+
+    newArrayList(params_idx);
+    addListElement(params_idx, T_OBJECT, 1);
+
+    findAndExecute("SecAgent.Utils.utils.Common", "getTomcatProxyFactory", new Class[]{Object.class}, null_idx, params_idx, inst_idx);
+    replaceIfNotNull(T_OBJECT, 1, bak_obj, inst_idx);
+
+  }
+
   @Override
   protected void onMethodEnter() {
     super.onMethodEnter();
 
-    process();
+    process2();
   }
 
   @Override

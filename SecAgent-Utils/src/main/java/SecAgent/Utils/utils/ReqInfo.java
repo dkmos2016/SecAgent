@@ -465,7 +465,6 @@ public class ReqInfo {
     return sb.toString();
   }
 
-
   private void doLogRecords() {
     for (Map.Entry<String, ArrayList<StubData>> entry : StubDatas.entrySet()) {
       String type = entry.getKey();
@@ -497,6 +496,14 @@ public class ReqInfo {
     }
   }
 
+
+  private void test() {
+    logger.debug("test start.");
+    logger.debug(new String(Common.transferTo(this.inputStream).toByteArray()));
+    logger.debug("test here...");
+    logger.debug(new String(this.outputStream.toByteArray()));
+    logger.debug("test done.");
+  }
   /**
    * for SecAgent to do some other jobs
    */
@@ -507,6 +514,8 @@ public class ReqInfo {
     if (this.current_protocol != null && this.current_protocol.getName().equals(name)) {
       doLogRecords();
     }
+
+    test();
   }
 
   public void setInputStream(InputStream inputStream) {

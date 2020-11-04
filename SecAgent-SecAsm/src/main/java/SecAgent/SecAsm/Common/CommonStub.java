@@ -269,31 +269,56 @@ public abstract class CommonStub extends AdviceAdapter implements Opcodes {
     /**
      * for basic type, not implement Array
      *
-     * @param type
+     * @param type, like T_CHAR, T_INT
+     * @param isLoad, for load/store
      * @return
      */
-    private int getOpCode(int type) {
+    private int getOpCode(int type, boolean isLoad) {
         switch (type) {
             case T_BYTE:
             case T_SHORT:
             case T_INT:
             case T_BOOLEAN:
             case T_CHAR:
-                return ILOAD;
+                return isLoad?ILOAD: ISTORE;
 
             case T_LONG:
-                return LLOAD;
+                return isLoad?LLOAD: LSTORE;
 
             case T_DOUBLE:
-                return DLOAD;
+                return isLoad?DLOAD: DSTORE;
 
             case T_FLOAT:
-                return FLOAD;
+                return isLoad?FLOAD: FSTORE;
 
             case T_OBJECT:
             default:
-                return ALOAD;
+                return isLoad?ALOAD: ASTORE;
         }
+    }
+
+    /**
+     * replace old with new when new is not null.
+     * @param type eg: T_INT
+     * @param dst_idx target
+     * @param old_idx old value's index
+     * @param new_idx new value's index
+     */
+    protected void replaceIfNotNull(int type, int dst_idx, int old_idx, int new_idx) {
+        Label if_null = newLabel();
+        Label if_end = newLabel();
+
+        mv.visitVarInsn(ALOAD, new_idx);
+        mv.visitJumpInsn(IFNULL, if_null);
+        mv.visitVarInsn(getOpCode(type, true), new_idx);
+        mv.visitVarInsn(getOpCode(type, false), dst_idx);
+        mv.visitJumpInsn(GOTO, if_end);
+
+        mv.visitLabel(if_null);
+        mv.visitVarInsn(getOpCode(type, true), old_idx);
+        mv.visitVarInsn(getOpCode(type, false), dst_idx);
+
+        mv.visitLabel(if_end);
     }
 
     /**
@@ -307,7 +332,7 @@ public abstract class CommonStub extends AdviceAdapter implements Opcodes {
     protected void put(int map_idx, String key, int type, int obj_idx) {
         mv.visitVarInsn(ALOAD, map_idx);
         mv.visitLdcInsn(key);
-        mv.visitVarInsn(getOpCode(type), obj_idx);
+        mv.visitVarInsn(getOpCode(type, true), obj_idx);
 //    mv.visitInsn(POP);
 
 //    System.out.println(getOpCode(type));
@@ -663,96 +688,6 @@ public abstract class CommonStub extends AdviceAdapter implements Opcodes {
         mv.visitFrame(Opcodes.F_CHOP, 1, null, 0, null);
     }
 
-    /**
-     *
-     * @param obj_idx
-     * @param dst_idx
-     * @param proxyFactory
-     */
-    protected void findAndGetSecProxyInstance(int obj_idx, int dst_idx, int proxyFactory) {
-        Label try_end_all = new Label();
-        Label try_start0 = new Label();
-        Label try_end0 = new Label();
-        Label try_excep0 = new Label();
-        Label if_false = new Label();
-
-        mv.visitTryCatchBlock(try_start0, try_end0, try_excep0, "java/lang/Exception");
-        mv.visitLabel(try_start0);
-
-        hasInterface(obj_idx, flag_idx);
-        mv.visitVarInsn(ILOAD, flag_idx);
-        mv.visitJumpInsn(IFEQ, if_false);
-
-        loadClassFromJar(proxyFactory, cls_idx);
-
-        Class[] paramTypes = new Class[]{Object.class};
-        getConstructor(cls_idx, paramTypes, method_idx);
-
-        newArrayList(param4Invoke_idx);
-        addListElement(param4Invoke_idx, T_OBJECT, obj_idx);
-
-        invokeConstructor(method_idx, param4Invoke_idx, inst_idx);
-        getDeclaredMethod(cls_idx, "getProxyInstance", new Class[]{}, method_idx);
-
-        newArrayList(param4Invoke_idx);
-        invoke(method_idx, inst_idx, param4Invoke_idx, dst_idx);
-
-        mv.visitLabel(try_end0);
-
-        mv.visitJumpInsn(GOTO, try_end_all);
-
-        mv.visitLabel(try_excep0);
-        mv.visitFrame(F_SAME1, 0, null, 1, new Object[]{"java/lang/Exception"});
-        mv.visitVarInsn(ASTORE, tmp_obj);
-
-        //   ExceptionLogger.doExpLog(Exception e)
-        Label try_start1 = new Label();
-        Label try_excep1 = new Label();
-        Label try_end1 = new Label();
-
-        mv.visitTryCatchBlock(try_start1, try_end1, try_excep1, "java/lang/Exception");
-        mv.visitLabel(try_start1);
-
-        newArrayList(param4Invoke_idx);
-        addListElement(param4Invoke_idx, T_OBJECT, tmp_obj);
-        loadClass("SecAgent.Utils.Logger.ExceptionLogger", cls_idx);
-        getDeclaredMethod(cls_idx, "doExpLog", new Class[]{Exception.class}, method_idx);
-        invoke(method_idx, null_idx, param4Invoke_idx, dst_idx);
-        mv.visitLabel(try_end1);
-
-        mv.visitJumpInsn(GOTO, try_end_all);
-
-        int size = this.paramsInfo.getIn_types().length + 1;
-        ArrayList tmp_list;
-
-        if (Modifier.isStatic(this.paramsInfo.getAccess())) {
-
-            tmp_list = new ArrayList(size);
-        } else {
-
-            size += 1;
-            tmp_list = new ArrayList(size);
-            tmp_list.add(this.paramsInfo.getClazz().replace('.', '/'));
-        }
-
-        for (Type type : this.paramsInfo.getIn_types()) {
-            tmp_list.add(getInnerNameforClass(type));
-        }
-        tmp_list.add("java/lang/Exception");
-
-        mv.visitLabel(try_excep1);
-        mv.visitFrame(F_FULL, size, tmp_list.toArray(), 1, new Object[]{"java/lang/Exception"});
-        //    mv.visitVarInsn(ASTORE, tmp_obj);
-        ////        mv.visitVarInsn(ALOAD, tmp_obj);
-        //
-        //    mv.visitVarInsn(ALOAD, tmp_obj);
-        mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Exception", "printStackTrace", "()V", false);
-
-        mv.visitLabel(if_false);
-        mv.visitLabel(try_end_all);
-
-        mv.visitFrame(Opcodes.F_CHOP, 1, null, 0, null);
-    }
     /**
      * for [new SecInstanceProxyFactory(Object).getProxyInstance()]
      * @param obj_idx

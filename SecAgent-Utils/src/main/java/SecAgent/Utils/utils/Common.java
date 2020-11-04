@@ -162,9 +162,14 @@ public class Common {
     return sb.toString();
   }
 
-  public static OutputStream transferTo(InputStream in) {
-    Objects.requireNonNull(in, "in");
+  public static ByteArrayOutputStream transferTo(InputStream in) {
     ByteArrayOutputStream ba = new ByteArrayOutputStream();
+
+    if (in == null) {
+      logger.debug("inputstream is null.");
+      return ba;
+    }
+
     try {
       int v = -1;
       while ((v = in.read()) > -1) ba.write(v);
@@ -175,7 +180,10 @@ public class Common {
   }
 
   public static InputStream transferFrom(ByteArrayOutputStream outputStream) {
-    Objects.requireNonNull(outputStream, "out");
+    if (outputStream == null) {
+      logger.debug("outputsteam is null.");
+      return new ByteArrayInputStream(new ByteArrayOutputStream().toByteArray());
+    }
     InputStream inputStream = new ByteArrayInputStream(outputStream.toByteArray());
 
     return new InputStream() {
@@ -191,15 +199,13 @@ public class Common {
    * deside which proxyfactor of tomcat can be used, and get instance
    * @return
    */
-  public static Object getTomcatProxy(Object object) {
+  public static Object getTomcatProxyFactory(Object object) {
     Object result;
 
     if (TOMCAT_PROXY_NAME == null || TOMCAT_PROXY_NAME.isEmpty()) {
       try {
         Class cls = Thread.currentThread().getContextClassLoader().loadClass("org.apache.catalina.servlet4preview.http.HttpServletRequest");
         TOMCAT_PROXY_NAME = "SecAgent.Container.Tomcat4Preview.Filter.SecInstanceProxyFactory";
-
-
       } catch (Exception e) {
         logger.error(e);
         TOMCAT_PROXY_NAME = "SecAgent.Container.Tomcat.Filter.SecInstanceProxyFactory";
@@ -213,7 +219,7 @@ public class Common {
       Object instance = constructor.newInstance(object);
 
       Method method = cls.getMethod("getProxyInstance", new Class[0]);
-      result = method.invoke(instance);
+      result = method.invoke(instance, null);
     } catch (Exception e) {
       logger.error(e);
       result = object;
