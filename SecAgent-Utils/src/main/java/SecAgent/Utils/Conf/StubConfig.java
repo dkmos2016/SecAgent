@@ -64,7 +64,7 @@ public class StubConfig {
 
   // for getInputStream
   public static final String TOMCAT_STUB2 =
-    "org.apache.tomcat.util.http.fileupload.FileUploadBase.parseRequest(Lorg.apache.tomcat.util.http.fileupload.RequestContext;)Ljava.util.List;";
+    "org.apache.catalina.connector.RequestFacade.<init>(Lorg.apache.catalina.connector.Request;)V";
 
   public static String[] exclude_classes;
   public static String[] exclude_methods;
@@ -110,6 +110,7 @@ public class StubConfig {
         // tomcat
         "org.apache.tomcat.util.http.fileupload.FileUploadBase",
         "oracle.jdbc.driver.OracleSql",
+        "org.apache.catalina.connector.RequestFacade",
 
         //          "org.apache.ibatis.mapping.MappedStatement",
         //          "org.apache.ibatis.scripting.xmltags.MixedSqlNode",
@@ -174,6 +175,7 @@ public class StubConfig {
 
         // receiver
 //                "com.alibaba.dubbo.remoting.transport.DecodeHandler.received",
+              "org.apache.catalina.connector.RequestFacade.<init>",
       };
   }
 

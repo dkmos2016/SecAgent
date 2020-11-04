@@ -2,8 +2,10 @@ package SecAgent.Utils.utils;
 
 import SecAgent.Utils.Conf.Config;
 import SecAgent.Utils.utils.DefaultLoggerHelper.DefaultLogger;
+import org.objectweb.asm.MethodVisitor;
 
 import java.io.*;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Map;
@@ -186,20 +188,37 @@ public class Common {
 
 
   /**
-   * deside which proxyfactor of tomcat can be used
+   * deside which proxyfactor of tomcat can be used, and get instance
    * @return
    */
-  public static String getTomcatProxy(Object obj) {
-    if (TOMCAT_PROXY_NAME != null && TOMCAT_PROXY_NAME.isEmpty()) return TOMCAT_PROXY_NAME;
-    try {
-      Class cls = Thread.currentThread().getContextClassLoader().loadClass("org.apache.catalina.servlet4preview.http.HttpServletRequest");
-      TOMCAT_PROXY_NAME = "SecAgent.Container.Tomcat4Preview.Filter.SecInstanceProxyFactory";
+  public static Object getTomcatProxy(Object object) {
+    Object result;
 
-    } catch (Exception e) {
-      logger.error(e);
-      TOMCAT_PROXY_NAME = "SecAgent.Container.Tomcat.Filter.SecInstanceProxyFactory";
+    if (TOMCAT_PROXY_NAME == null || TOMCAT_PROXY_NAME.isEmpty()) {
+      try {
+        Class cls = Thread.currentThread().getContextClassLoader().loadClass("org.apache.catalina.servlet4preview.http.HttpServletRequest");
+        TOMCAT_PROXY_NAME = "SecAgent.Container.Tomcat4Preview.Filter.SecInstanceProxyFactory";
+
+
+      } catch (Exception e) {
+        logger.error(e);
+        TOMCAT_PROXY_NAME = "SecAgent.Container.Tomcat.Filter.SecInstanceProxyFactory";
+      }
     }
 
-    return TOMCAT_PROXY_NAME;
+    try {
+      Class cls = Config.jarLoader.loadClass(TOMCAT_PROXY_NAME);
+
+      Constructor constructor = cls.getConstructor(Object.class);
+      Object instance = constructor.newInstance(object);
+
+      Method method = cls.getMethod("getProxyInstance", new Class[0]);
+      result = method.invoke(instance);
+    } catch (Exception e) {
+      logger.error(e);
+      result = object;
+    }
+
+    return result;
   }
 }

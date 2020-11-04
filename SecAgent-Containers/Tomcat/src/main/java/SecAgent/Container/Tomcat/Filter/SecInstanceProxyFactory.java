@@ -5,10 +5,7 @@ import javax.servlet.ReadListener;
 import javax.servlet.ServletInputStream;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.WriteListener;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
@@ -114,9 +111,8 @@ public class SecInstanceProxyFactory {
                 ret = proxyGetInputStream(obj);
               } else if (obj instanceof Map && method.getName().equals("getParameterMap")) {
                 ret = obj;
-              } else if (obj instanceof Map && method.getName().equals("getParameterMap")) {
+              } else if (obj instanceof OutputStream && method.getName().equals("getOutputStream")) {
                 ret = proxyGetOutputStream(obj);
-                ret = obj;
               } else {
                 ret = obj;
               }
