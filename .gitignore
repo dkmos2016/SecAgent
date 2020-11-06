@@ -10,3 +10,7 @@ out/
 log.txt
 test.http
 *.log
+
+
+**/build
+**/libs
